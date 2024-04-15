@@ -259,7 +259,7 @@ export const surveyJson = {
                         isRequired: true,
                     }, {
                         name: "onsiteAvailability",
-                        title: "Are you able to come for a one hour study appointment at our onsite location south of Glendale, California?",
+                        title: "Are you able to come for a three hour study appointment at our onsite location south of Glendale, California?",
                         type: "radiogroup",
                         choices: ["Yes", "No"],
                         isRequired: true,
