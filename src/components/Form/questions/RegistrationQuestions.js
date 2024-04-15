@@ -13,8 +13,11 @@ export const surveyJson = {
                     html: `<div style="text-align: center;">`
                         + `<div style="text-align: left;">`
                         + `<h3 style="text-align: center; color: #49166D"><strong>Onsite Study Blackburn in Los Angeles, CA</strong></h3></br>`
-                        + `<p><span><span style="font-weight: 400;">TELUS International is seeking </span><span style="font-weight: 400;">participants for an onsite study just south of Glendale. During your session onsite, you will be video-recorded performing various actions and standstill stances.</span></span></p>`
+                        + `<p><span><span style="font-weight: 400;">TELUS International is seeking participants for an onsite study just south of Glendale. During your session onsite, you will be photographed and video-recorded while performing basic movements, which may include walking, sitting, standing up, different gestures, or facial expressions. You may be interacting with props and furniture.
+                         The study will also collect photos, videos, and audios and measurements of individuals’ head, face, and hands in still and moving poses, under various lighting conditions. Finally, a specialist will make an impression of your outer ear. The tasks can be easily completed by anyone and do not require prior experience or special skills.</span></p>`
+                        + `<p>Payments will be made via Hyperwallet, where you can choose PayPal, bank transfer, or Venmo as the payment method.</p>`
                         + `<br/>`
+                        + `<b>Task requirements:</b>`
                         + `<ul>`
                         + `<li class="done" aria-level="1"><span><strong>Earn $300 for completing a 3-hour session</strong></span></li>`
                         + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Be photographed or video recorded following directives from our team for a total duration of 3 hours (including short breaks)</span></li>`
@@ -255,22 +258,8 @@ export const surveyJson = {
                         choices: ["Yes", "No"],
                         isRequired: true,
                     }, {
-                        name: "has_vlog",
-                        title: "Do you have a blog or vlog?",
-                        type: "radiogroup",
-                        choices: ["Yes", "No"],
-                        isRequired: true,
-                    }, {
-                        name: "vlog",
-                        title: "Link of blog / vlog",
-                        type: "text",
-                        isRequired: true,
-                        inputMask: "url",
-                        startWithNewLine: false,
-                        visibleIf: '{has_vlog} = "Yes"'
-                    }, {
                         name: "onsiteAvailability",
-                        title: "Are you able to come for a one hour study appointment at our onsite location in Sunnyvale, California?",
+                        title: "Are you able to come for a one hour study appointment at our onsite location south of Glendale, California?",
                         type: "radiogroup",
                         choices: ["Yes", "No"],
                         isRequired: true,
@@ -357,9 +346,9 @@ export const surveyJson = {
                             height: 4em;
                             font-size: 5em
                           }</style>
-                        <strong>What is your skin tone (before sun exposure)? Please select one of the options below, drawn from the dermatologically recognized Monk skin tone scale </strong>
-                        <table style="; margin-top:2em; text-align:center; margin:0.25em">
-                        <tr>
+                        <strong>What is your skin tone (before sun exposure)? Please select one of the options below, drawn from the dermatologically recognized Monk Skin tone Scale: </strong>
+                        <table style="; margin-top:2em; text-align:center; margin:0.25; border: 1px solid gray">
+                        <tr >
                           <td style="background-color: #f6ede4;">1</td>
                           <td style="background-color: #f3e7db">2</td> 
                           <td style="background-color: #f7ead0;">3</td> 
@@ -388,25 +377,9 @@ export const surveyJson = {
                     {
                         type: "html",
                         html: `<h4 style="text-align: center;">`
-                            + `Vision Correction and Identification`
+                            + `Identification`
                             + `</h4>
                             <hr>`
-                    }, {
-                        type: "html",
-                        html: `<div>
-                        <p>We need participants with contact lenses, glasses and without any vision correction. <strong>Providing accurate information during this qualifying stage will improve your chances of getting selected for the study.</strong> We may have no choice but to disqualify you if you come for a session onsite and your vision correction differs from what you have indicated here.</p>
-                        </div>`
-                    }, {
-                        name: "visionCorrection",
-                        type: "radiogroup",
-                        title: "Do you wear prescription glasses or contact lenses?",
-                        choices: [
-                            "I do not wear prescription glasses or contact lenses",
-                            "Contact lenses",
-                            "Glasses - distance",
-                            "Glasses - progressive, bifocal or multifocal",
-                            "Glasses - reading"
-                        ]
                     }, {
                         type: "html",
                         html: `<p><span style="font-weight: 400;">Please upload an image of your ID, preferably driver’s license. You need to hide the </span><span style="font-weight: 400;">address, social security number, ID number on the documents you upload.</span></p>
@@ -592,13 +565,17 @@ export const surveyJson = {
                     name: "signatureFirstName",
                     title: "First name:",
                     type: "text",
-                    isRequired: true
+                    isRequired: true,
+                    readOnly: true,
+                    defaultValueExpression: "{first_name}"
                 }, {
                     name: "signatureLastName",
                     title: "Last name:",
                     type: "text",
                     isRequired: true,
-                    startWithNewLine: false
+                    startWithNewLine: false,
+                    readOnly: true,
+                    defaultValueExpression: "{last_name}"
                 }, {
                     name: "date",
                     title: "Signature Date",
