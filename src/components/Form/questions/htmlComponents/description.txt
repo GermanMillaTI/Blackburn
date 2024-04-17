@@ -1,0 +1,41 @@
+<div style="text-align: center;">
+    <div style="text-align: left;">
+        <h3 style="text-align: center; color: #49166D"><strong>Onsite Study Blackburn in Los Angeles, CA</strong></h3>
+        </br>
+        <p><span><span style="font-weight: 400;">TELUS International is seeking participants for an onsite study just
+                    south of Glendale. During your session onsite, you will be photographed and video-recorded while
+                    performing basic movements, which may include walking, sitting, standing up, different gestures, or
+                    facial expressions. You may be interacting with props and furniture.
+                    The study will also collect photos, videos, and audios and measurements of individuals' head, face,
+                    and hands in still and moving poses, under various lighting conditions. Finally, a specialist will
+                    make an impression of your outer ear. The tasks can be easily completed by anyone and do not require
+                    prior experience or special skills.</span></p>
+        <p>Payments will be made via Hyperwallet, where you can choose PayPal, bank transfer, or Venmo as the payment
+            method.</p>
+        <br />
+        <b>Task requirements:</b>
+        <ul>
+            <li class="done" aria-level="1"><span><strong>Earn $300 for completing a 3-hour session</strong></span></li>
+
+            <li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Be photographed or
+                    video recorded following directives from our team for a total duration of 3 hours (including short
+                    breaks)</span></li>
+            <li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Wear form-fitting
+                    compression tops and shorts provided on-site</span></li>
+            <li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Agree to body
+                    composition measurements to be taken during the study</span></li>
+            <li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">All ages 13-75 are
+                    qualified to participate</span></li>
+            <ul>
+                <li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">13-17-year-olds
+                        need a legal guardian to register, provide consent, and need to be accompanied for the
+                        session</span></li>
+            </ul>
+            <li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Must be able to
+                    read, speak, and understand instructions provided in English</span></li>
+            <li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Must be a US
+                    citizen, legal permanent resident, or authorized to work in the USA (proof will be required)</span>
+            </li>
+        </ul>
+    </div>
+</div>

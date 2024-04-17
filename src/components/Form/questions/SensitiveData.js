@@ -1,464 +1,247 @@
-
-
-export const surveyJson = {
+export const SensitiveData = {
     showQuestionNumbers: false,
     waitForUpload: true,
     completedHtml: "<div style=\"max-width:688px;text-align:center;margin: 16px auto;\">\n\n<div style=\"padding:0 24px;\">\n<h4>Thank you for your registration.</h4>\n<br>\n<p>We will review your registration and contact you with any further steps.</p>\n</div>\n\n</div>\n",
-    pages: [
-        {
-            name: "page1",
-            elements: [
-                {
-                    type: "panel",
-                    name: "selectionInfo",
-                    elements: [
-                        {
-                            type: "html",
-                            html: `<div style="text-align: center;">`
-                                + `<div style="text-align: left;">`
-                                + `<h3 style="text-align: center; color: #49166D"><strong>Onsite Study Blackburn in Los Angeles, CA</strong></h3></br>`
-                                + `<p><span><span style="font-weight: 400;">TELUS International is seeking participants for an onsite study just south of Glendale. During your session onsite, you will be photographed and video-recorded while performing basic movements, which may include walking, sitting, standing up, different gestures, or facial expressions. You may be interacting with props and furniture.
-                                 The study will also collect photos, videos, and audios and measurements of individuals’ head, face, and hands in still and moving poses, under various lighting conditions. Finally, a specialist will make an impression of your outer ear. The tasks can be easily completed by anyone and do not require prior experience or special skills.</span></p>`
-                                + `<p>Payments will be made via Hyperwallet, where you can choose PayPal, bank transfer, or Venmo as the payment method.</p>`
-                                + `<br/>`
-                                + `<b>Task requirements:</b>`
-                                + `<ul>`
-                                + `<li class="done" aria-level="1"><span><strong>Earn $300 for completing a 3-hour session</strong></span></li>`
-                                + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Be photographed or video recorded following directives from our team for a total duration of 3 hours (including short breaks)</span></li>`
-                                + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Wear form-fitting compression tops and shorts provided on-site</span></li>`
-                                + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Agree to body composition measurements to be taken during the study</span></li>`
-                                + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">All ages 13-75 are qualified to participate</span></li>`
-                                + `<ul>
-                                <li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">13-17-year-olds need a legal guardian to register, provide consent, and need to be accompanied for the session</span></li>
-                                </ul>`
-                                + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Must be able to read, speak, and understand instructions provided in English</span></li>`
-                                + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Must be a US citizen, legal permanent resident, or authorized to work in the USA (proof will be required)</span></li>`
-                                + `</ul>`
-                                + `</div>`
-                                + `</div>`
-                        },
-                        {
-                            name: "registeredAs",
-                            title: "Please select:",
-                            type: "radiogroup",
-                            choices: [
-                                'I am registering as a participant over the age of 18',
-                                'I am a parent or guardian registering a child under 18'
-                            ],
-                            isRequired: true
-                        }
-                    ]
-                }
-            ]
-
-        },
-        {
-            name: "page2",
-            elements: [{
+    pages: [{
+        name: "page1",
+        elements: [
+            {
                 type: "panel",
-                name: "introduction",
-                elements: [{
-                    name: "introductoryText",
-                    type: "html",
-                    html: `<div style="text-align: center;">`
-                        + `<div style="text-align: left;">`
-                        + `<h3 style="text-align: center; color: #49166D"><strong>Onsite Study Blackburn in Los Angeles, CA</strong></h3></br>`
-                        + `<p><span><span style="font-weight: 400;">TELUS International is seeking participants for an onsite study just south of Glendale. During your session onsite, you will be photographed and video-recorded while performing basic movements, which may include walking, sitting, standing up, different gestures, or facial expressions. You may be interacting with props and furniture.
-                     The study will also collect photos, videos, and audios and measurements of individuals’ head, face, and hands in still and moving poses, under various lighting conditions. Finally, a specialist will make an impression of your outer ear. The tasks can be easily completed by anyone and do not require prior experience or special skills.</span></p>`
-                        + `<p>Payments will be made via Hyperwallet, where you can choose PayPal, bank transfer, or Venmo as the payment method.</p>`
-                        + `<br/>`
-                        + `<b>Task requirements:</b>`
-                        + `<ul>`
-                        + `<li class="done" aria-level="1"><span><strong>Earn $300 for completing a 3-hour session</strong></span></li>`
-                        + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Be photographed or video recorded following directives from our team for a total duration of 3 hours (including short breaks)</span></li>`
-                        + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Wear form-fitting compression tops and shorts provided on-site</span></li>`
-                        + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Agree to body composition measurements to be taken during the study</span></li>`
-                        + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">All ages 13-75 are qualified to participate</span></li>`
-                        + `<ul>
-                    <li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">13-17-year-olds need a legal guardian to register, provide consent, and need to be accompanied for the session</span></li>
-                    </ul>`
-                        + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Must be able to read, speak, and understand instructions provided in English</span></li>`
-                        + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Must be a US citizen, legal permanent resident, or authorized to work in the USA (proof will be required)</span></li>`
-                        + `</ul>`
-                        + `</div>`
-                        + `</div>`
-                }]
-            }, {
-                type: "panel",
-                name: "contactInfo",
-                elements: [
-                    {
-                        type: "html",
-                        html: `<h4 style="text-align: center;">`
-                            + `Personal Information`
-                            + `</h4>
-                            <hr>`,
-                        visibleIf: "{registeredAs} = 'I am registering as a participant over the age of 18'"
-
-                    },
-                    {
-                        type: "html",
-                        html: `<h4 style="text-align: center;">`
-                            + `Parent or Guardian Contact Information`
-                            + `</h4>
-                            <hr>`,
-                        visibleIf: "{registeredAs} != 'I am registering as a participant over the age of 18'"
-
-                    },
-                    {
-                        name: "grd_fname",
-                        title: "First name:",
-                        type: "text",
-                        isRequired: true,
-                        visibleIf: "{registeredAs} != 'I am registering as a participant over the age of 18'"
-                    },
-                    {
-                        name: "grd_lname",
-                        title: "Last name:",
-                        type: "text",
-                        isRequired: true,
-                        startWithNewLine: false,
-                        visibleIf: "{registeredAs} != 'I am registering as a participant over the age of 18'"
-
-                    },
-                    {
-                        name: "grd_email",
-                        type: "text",
-                        title: "Email address:",
-                        validators: [
-                            { type: "email", text: "Value must be a valid email" }
-                        ],
-                        isRequired: true,
-                        visibleIf: "{registeredAs} != 'I am registering as a participant over the age of 18'"
-                    },
-                    {
-                        name: "grd_phone",
-                        type: "text",
-                        title: "Phone number:",
-                        inputMask: "phone",
-                        inputFormat: "+1(999)-999-9999",
-                        isRequired: true,
-                        startWithNewLine: false,
-                        visibleIf: "{registeredAs} != 'I am registering as a participant over the age of 18'",
-                    },
-                    {
-                        type: "html",
-                        html: `<h4 style="text-align: center;">`
-                            + `Personal Information of the Child or Minor Participant`
-                            + `</h4>
-                            <hr>`,
-                        visibleIf: "{registeredAs} != 'I am registering as a participant over the age of 18'"
-
-                    },
-
-                    {
-                        name: "first_name",
-                        title: "First name:",
-                        type: "text",
-                        isRequired: true
-                    },
-                    {
-                        name: "last_name",
-                        title: "Last name:",
-                        type: "text",
-                        isRequired: true,
-                        startWithNewLine: false
-                    }, {
-                        name: "email",
-                        type: "text",
-                        title: "Email address:",
-                        validators: [
-                            { type: "email", text: "Value must be a valid email" }
-                        ],
-                        isRequired: true,
-                    }, {
-                        name: "phone",
-                        type: "text",
-                        title: "Phone number:",
-                        inputMask: "phone",
-                        inputFormat: "+1(999)-999-9999",
-                        visibleIf: "{registeredAs} = 'I am registering as a participant over the age of 18'",
-                        isRequired: true,
-                        startWithNewLine: false
-                    }, {
-                        name: "gender",
-                        title: "Gender at birth:",
-                        type: "dropdown",
-                        choices: [
-                            'Male',
-                            'Female',
-                            'Non-binary',
-                            'Prefer not to say'
-                        ],
-                        isRequired: true
-                    }, {
-                        name: "date_of_birth",
-                        title: "Date of birth:",
-                        type: "text",
-                        inputType: "date",
-                        isRequired: true,
-                        startWithNewLine: false
-                    }, {
-                        name: "country_of_residence",
-                        title: "Country of residence:",
-                        type: "dropdown",
-                        choices: [
-                            { value: 'United States' },
-                            { value: 'Other' },
-
-                        ],
-                        isRequired: true
-                    }, {
-                        name: "state_of_residence",
-                        title: "State of residence:",
-                        type: "dropdown",
-                        choices: [
-                            { value: 'Alabama' },
-                            { value: 'Alaska' },
-                            { value: 'Arizona' },
-                            { value: 'Arkansas' },
-                            { value: 'California' },
-                            { value: 'Colorado' },
-                            { value: 'Connecticut' },
-                            { value: 'Delaware' },
-                            { value: 'Florida' },
-                            { value: 'Georgia' },
-                            { value: 'Hawaii' },
-                            { value: 'Idaho' },
-                            { value: 'Illinois' },
-                            { value: 'Indiana' },
-                            { value: 'Iowa' },
-                            { value: 'Kansas' },
-                            { value: 'Kentucky' },
-                            { value: 'Louisiana' },
-                            { value: 'Maine' },
-                            { value: 'Maryland' },
-                            { value: 'Massachusetts' },
-                            { value: 'Michigan' },
-                            { value: 'Minnesota' },
-                            { value: 'Mississippi' },
-                            { value: 'Missouri' },
-                            { value: 'Montana' },
-                            { value: 'Nebraska' },
-                            { value: 'Nevada' },
-                            { value: 'New Hampshire' },
-                            { value: 'New Jersey' },
-                            { value: 'New Mexico' },
-                            { value: 'New York' },
-                            { value: 'North Carolina' },
-                            { value: 'North Dakota' },
-                            { value: 'Ohio' },
-                            { value: 'Oklahoma' },
-                            { value: 'Oregon' },
-                            { value: 'Pennsylvania' },
-                            { value: 'Rhode Island' },
-                            { value: 'South Carolina' },
-                            { value: 'South Dakota' },
-                            { value: 'Tennessee' },
-                            { value: 'Texas' },
-                            { value: 'Utah' },
-                            { value: 'Vermont' },
-                            { value: 'Virginia' },
-                            { value: 'Washington' },
-                            { value: 'Washington, D.C.' },
-                            { value: 'West Virginia' },
-                            { value: 'Wisconsin' },
-                            { value: 'Wyoming' },
-                        ],
-                        isRequired: true,
-                        visibleIf: "{country_of_residence} = 'United States'",
-                        startWithNewLine: false,
-                    }, {
-                        name: "countryOfResidence_other",
-                        title: "Country of residence / other:",
-                        type: "text",
-                        isRequired: true,
-                        startWithNewLine: false,
-                        placeholder: 'Please specify the country of residence',
-                        visibleIf: "{country_of_residence} = 'Other'"
-
-                    }, {
-                        name: "city_of_residence",
-                        title: "City of residence:",
-                        type: "text",
-                        isRequired: true,
-                        startWithNewLine: false,
-                    },
-                    {
-                        name: "onsiteAvailability",
-                        title: "Are you able to come for a three hour study appointment at our onsite location south of Glendale, California?",
-                        type: "radiogroup",
-                        choices: ["Yes", "No"],
-                        isRequired: true,
-                    },
-                    {
-                        name: "noAvailabilityReason",
-                        title: "Can you tell us why you are not able to come to the onsite location?",
-                        type: "checkbox",
-                        choices: [
-                            'I am not interested in participating in this study.',
-                            'I am generally not interested in going to an onsite study.',
-                            'I do not have time at the moment.',
-                            'The place is too far for me.',
-                            'The compensation is not enough for me to go to Los Angeles. I would go if the place would be nearer.',
-                            'The compensation is generally not enough for me.',
-                            'I am worried about sharing personal information.',
-                            "I am hesitant to join a study when I don't know what it is about but I would like to have more information.",
-                            'Something else - please provide more information in the feedback if you want.',
-                            'I do not want to answer this question.'
-                        ],
-                        visibleIf: "{onsiteAvailability} = 'No'",
-                        maxSelectedChoices: 10,
-                        isRequired: true
-                    }
-                ]
-            }, {
-                type: "panel",
-                name: "identification",
-                elements: [
-                    {
-                        type: "html",
-                        html: `<h4 style="text-align: center;">`
-                            + `Identification`
-                            + `</h4>
-                            <hr>`
-                    }, {
-                        type: "html",
-                        html: `<p><span style="font-weight: 400;">Please upload an image of your ID, preferably driver’s license. You need to hide the </span><span style="font-weight: 400;">address, social security number, ID number on the documents you upload.</span></p>
-                            <p>We will need to confirm your identity to qualify you for the study.</p>`
-                    },
-                    {
-                        type: "file",
-                        title: "Driver's license or other form of identification",
-                        name: "identificationFile",
-                        waitForUpload: true,
-                        allowMultiple: false,
-                        maxWidth: "40%",
-                        height: 10,
-                        isRequired: true
-                    }, {
-                        type: "html",
-                        html: `<div><span style="color: #ff0000;"><strong>NB: </strong>you MUST   HIDE the address, social security number, ID number on the documents you upload.</span></div>`
-                    }]
-            }, {
-                type: "panel",
-                name: "otherInformation",
+                name: "personalInfo",
                 elements: [{
                     type: "html",
                     html: `<h4 style="text-align: center;">`
-                        + `Other Information`
+                        + `Consent Form for Sensitive Category Data Processing `
                         + `</h4>
-                        <hr>`
+                        <hr>`,
+
                 }, {
-                    name: "source",
-                    title: "How did you find out about this research study?",
+                    name: "isMultipleEthnicities",
+                    title: "Do you identify with more than 1 ethnicity?",
                     type: "radiogroup",
+                    choices: ["Yes", "No"],
+                    isRequired: true,
+                }, {
+                    type: "radiogroup",
+                    name: "ethnicity",
+                    title: "Which ethnicity do you identify with?",
                     choices: [
-                        'TELUS International Website',
-                        'Facebook',
-                        'LinkedIn',
-                        'Flyer',
-                        'Newspaper',
-                        'I was referred by someone',
-                        'Instagram',
-                        'Indeed',
-                        'FlexJobs',
-                        'Work Market platform',
-                        'Through my association',
-                        'Twitter',
-                        'Craiglist',
-                        'Google Ad',
-                        "I'm a TELUS International employee",
-                        'I was contacted by TELUS International directly',
-                        'Snapchat',
-                        'Reddit',
-                        'Retirement Jobs',
-                        'TikTok'
+                        "Aboriginal Australians/Papuans",
+                        "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African]",
+                        "Alaskan Native",
+                        "American Indian [American Indian, Central of South American Indian]",
+                        "East Asian [Chinese, Japanese, Korean, Taiwanese]",
+                        "Hispanic/Latin American/Spanish [Colombian, Cuban, Dominican, Ecuadorian, Honduran, Mexican or Mexican American, Puerto Rican, Salvadorian, Spanish]",
+                        "Middle Eastern/North African [Afghan, Algerian, Egyptian, Iranian, Iraqi, Israeli, Lebanese, Moroccan, Syrian, Tunisian]",
+                        "Native Hawaiian/Pacific Islander/Indigenous people of Oceania [Chamarro, Chuukese, Fijian, Marshallese, Native Hawaiian, Palauan, Samoan, Tahitian, Tongan]",
+                        "South Asian [Asian Indian, Bangladeshi, Pakistani]",
+                        "Southeast Asian [Cambodian, Filipino, Hmong, Malaysian, Thai, Singaporean, Vietnamese]",
+                        "White - Northern European [Dutch, English, Northern French, German, Irish, Norwegian, Northern European (not listed)]",
+                        "White - Southern European [Italian, Southern French, Spanish, Portuguese, Southern European (not listed)]",
+                        "Prefer not to state"
                     ],
+                    visibleIf: '{isMultipleEthnicities} = "No"',
                     showOtherItem: true,
                     otherText: "Other",
-                    colCount: "4",
-                    isRequired: true,
-                    maxSelectedChoices: "1",
-                    visibleIf: "{source} != 'Respondent'"
+                    isRequired: true
                 }, {
-                    name: "otherCompanies",
-                    title: "Do you, or does any member of your immediate family, currently work for any of the below companies?",
                     type: "checkbox",
+                    name: "ethnicities",
+                    title: "Which ethnicities do you identify with?",
                     choices: [
-                        'Alphabet',
-                        'Amazon',
-                        'Appen',
-                        'Apple',
-                        'BOSE',
-                        'Google',
-                        'HTC',
-                        'Huawei',
-                        'IBM',
-                        'LG',
-                        'Magic Leap',
-                        'Meta',
-                        'Microsoft',
-                        'Netflix',
-                        'Nuance',
-                        'Samsung',
-                        'Sony',
-                        'Yahoo'
+                        "Aboriginal Australians/Papuans",
+                        "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African]",
+                        "Alaskan Native",
+                        "American Indian [American Indian, Central of South American Indian]",
+                        "East Asian [Chinese, Japanese, Korean, Taiwanese]",
+                        "Hispanic/Latin American/Spanish [Colombian, Cuban, Dominican, Ecuadorian, Honduran, Mexican or Mexican American, Puerto Rican, Salvadorian, Spanish]",
+                        "Middle Eastern/North African [Afghan, Algerian, Egyptian, Iranian, Iraqi, Israeli, Lebanese, Moroccan, Syrian, Tunisian]",
+                        "Native Hawaiian/Pacific Islander/Indigenous people of Oceania [Chamarro, Chuukese, Fijian, Marshallese, Native Hawaiian, Palauan, Samoan, Tahitian, Tongan]",
+                        "South Asian [Asian Indian, Bangladeshi, Pakistani]",
+                        "Southeast Asian [Cambodian, Filipino, Hmong, Malaysian, Thai, Singaporean, Vietnamese]",
+                        "White - Northern European [Dutch, English, Northern French, German, Irish, Norwegian, Northern European (not listed)]",
+                        "White - Southern European [Italian, Southern French, Spanish, Portuguese, Southern European (not listed)]",
+                        "Prefer not to state"
+                    ],
+                    visibleIf: '{isMultipleEthnicities} = "Yes"',
+                    showOtherItem: true,
+                    otherText: "Other",
+                    isRequired: true
+                }, {
+                    type: "html",
+                    html: `<style>
+                        td {
+                            border: 1px solid black;
+                            border-radius: 50%;
+                            width: 4em;
+                            height: 4em;
+                            font-size: 5em
+                          }</style>
+                        <strong>Monk skin type</strong>
+                        <p>The Monk Skin Tone Scale is the work of Harvard professor and sociologist Dr Ellis Monk. The 10-point scale helps machines better understand and, therefore, better represent more varied skin tones</p>
+                        <table style="; margin-top:2em; text-align:center; margin:0.25; border: 1px solid gray">
+                        <tr >
+                          <td style="background-color: #f6ede4;">1</td>
+                          <td style="background-color: #f3e7db">2</td> 
+                          <td style="background-color: #f7ead0;">3</td> 
+                          <td style="background-color: #eadaba;">4</td>
+                          <td style="background-color: #d7bd96;">5</td> 
+                          <td style="background-color: #a07e56; color:white">6</td> 
+                          <td style="background-color: #825c43; color:white">7</td> 
+                          <td style="background-color: #604134; color:white">8</td>
+                          <td style="background-color: #3a312a; color:white">9</td> 
+                          <td style="background-color: #292420; color:white">10</td> 
+                        </tr>
+                      </table>`
+                }, {
+                    name: "skinTone",
+                    title: "Select your skin tone based on the diagram above:",
+                    type: "rating",
+                    rateValues: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    maxSelectedChoices: 1,
+                    isRequired: true
+                }, {
+                    name: "weight_lbs",
+                    title: "Your weight (lbs):",
+                    description: "In pounds",
+                    type: "text",
+                    inputType: "number",
+                    min: 1,
+                    isRequired: true,
+                }, {
+                    name: "height_ft",
+                    title: "Your height (feet):",
+                    description: "between 1-8 feet",
+                    type: "text",
+                    inputType: "number",
+                    min: 1,
+                    max: 8,
+                    isRequired: true,
+                    startWithNewLine: false,
+                }, {
+                    name: "height_in",
+                    title: "Your height (inches):",
+                    description: "between 0-11 inches",
+                    type: "text",
+                    inputType: "number",
+                    min: 0,
+                    max: 11,
+                    isRequired: true,
+                    startWithNewLine: false,
+                }, {
+                    name: "hairtype",
+                    title: "Hair type:",
+                    type: "dropdown",
+                    description: "Select one of the available options",
+                    choices: [
+                        'Curly',
+                        'Coily',
+                        'Straight',
+                        'Wavy'
+                    ],
+                    isRequired: true,
+
+                }, {
+                    name: "hairLength",
+                    title: "Hair length:",
+                    type: "dropdown",
+                    description: "between None - Long",
+                    choices: [
+                        'Bald',
+                        'Short',
+                        'Medium',
+                        'Long'
+                    ],
+                    isRequired: true,
+                    startWithNewLine: false,
+                }, {
+                    name: "hairColor",
+                    title: "Hair color:",
+                    type: "dropdown",
+                    description: "Select one of the available options",
+                    choices: [
+                        'Black',
+                        'Blonde',
+                        'Brown',
+                        'Grey',
+                        'Red',
+                        'White',
+                        'Colorful'
+                    ],
+                    isRequired: true,
+                    startWithNewLine: false,
+                }, {
+                    name: "facialhair",
+                    title: "Facial hair:",
+                    type: "dropdown",
+                    description: "Select one of the available options",
+                    choices: [
+                        'Full beard',
+                        'Stubble',
+                        'Mustache',
+                        'Goatee',
+                        'None'
+                    ],
+                    isRequired: true,
+
+                }, {
+                    name: "tattoos",
+                    title: "Tattoos:",
+                    type: "dropdown",
+                    description: "Select one of the available options",
+                    choices: [
+                        'Face, neck or head',
+                        'Arms',
+                        'Upper body or torso',
+                        'Legs',
+                        'None'
+                    ],
+                    isRequired: true,
+                    startWithNewLine: false,
+
+                }, {
+                    name: "piercings",
+                    title: "Piercings:",
+                    type: "dropdown",
+                    description: "Select one of the available options",
+                    choices: [
+                        'Face, neck or head',
+                        'Arms',
+                        'Upper body or torso',
+                        'Legs',
+                        'None'
+                    ],
+                    isRequired: true,
+                    startWithNewLine: false,
+
+                }, {
+                    name: "isPregnant",
+                    title: "Are you pregnant?",
+                    type: "radiogroup",
+                    choices: ["Yes", "No"],
+                    isRequired: true,
+                }, {
+                    type: "checkbox",
+                    name: "healthConditions",
+                    title: "Have you experienced or do you have any of the following conditions? Select all that apply:",
+                    choices: [
+                        "Diabetes",
+                        "Diagnosis of photo-induced seizures or epilepsy",
+                        "Medical eye condition (other than prescriptive lenses or LASIK surgery)",
+                        "High blood pressure",
+                        "Heart condition",
+                        "Currently taking photosensitizing medications or have any known photosensitizing medical conditions",
+                        "Need assistance standing or have difficulty remaining standing for 10-20 minutes (for example, you feel unsteady on your feet)",
+                        "Known neurological disorder",
+                        "Hearing loss",
+                        "Seizures",
+                        "Need assistance climbing a flight of stairs",
+                        "Migraines/Headaches",
 
                     ],
-                    separateSpecialChoices: true,
                     showNoneItem: true,
-                    noneText: "None of these",
-                    maxSelectedChoices: 10,
-                    colCount: "5",
+                    noneText: "None of the above",
                     isRequired: true,
-                }, {
-                    name: "industry",
-                    title: "What industry do you work in?",
-                    type: "radiogroup",
-                    choices: [
-                        'Aerospace',
-                        'Commercial Services',
-                        'Health Care and Medicine',
-                        'Public Services',
-                        'Agriculture',
-                        'Construction',
-                        'Hospitality',
-                        'Technology',
-                        'Advertising',
-                        'Education',
-                        'Marketing and Media',
-                        'Telecommunitacions',
-                        'Fashion',
-                        'Entertainment',
-                        'Manufacturing',
-                        'Tourism',
-                        'Finance',
-                        'Energy Sector',
-                        'Mining',
-                        'Transportation',
-                        'Charity or NGO',
-                        'Environmental Sciences',
-                        'Pharmaceutics',
-                        'I am currently not working',
-                    ],
-                    colCount: "5",
-                    isRequired: true,
-                }, {
-                    name: "interestedInRecruiting",
-                    type: "radiogroup",
-                    title: "I'm interested in helping TELUS International find more participants like me: ",
-                    choices: ["Yes", "No"]
-                }]
-            }, {
-                type: "panel",
-                name: "contributorServiceAgreement",
-                elements: [{
-                    type: "html",
-                    html: `<h4 style="text-align: center;">`
-                        + `Contributor Services Agreement`
-                        + `</h4>
-                        <hr>`
                 }, {
                     type: "html",
                     html: `<span style="color:red">Please, kindly read and sign the Contributor Services Agreement below, if you wish to participate in this project (please scroll to view the entire document):</span>`
@@ -595,61 +378,27 @@ export const surveyJson = {
                         </ol>`
                         + `</div>`
                 }, {
-                    type: "html",
-                    html: `<div><strong>Consent to the Collection of Personal Data:</strong></div>
-                        <ul>
-                        <li>I consent to TIAI’s collection of my personal data "Data Collected". TIAI will retain my personal data for one year, unless local law requires a shorter period.</li>
-                        <li>I consent to the collection of my personal data "Data Collected" by TIAI’s customer.</li>
-                        <li>I consent to TIAI’s collection of my health information. TIAI will retain my health information for one year, unless local law requires a shorter period.</li>
-                        <li>I consent to the collection of my health information by TIAI’s customer.</li>
-                        <li>I consent to TIAI’s collection of my racial or ethnic origin data. TIAI will retain my racial or ethnic origin data for one year, unless local law requires a shorter period.</li>
-                        <li>I consent to the collection of my racial or ethnic origin data by TIAI’s customer.</li>
-                        </ul>`
-                }, {
-                    name: "agreementConfirmation",
-                    title: "\n",
-                    type: "checkbox",
-                    choices: [
-                        'I confirm and agree with all of the above',
-                    ],
-                    isRequired: true
-                }, {
-                    type: "html",
-                    html: `<span style="color:red">If you are a parent or guardian registering a minor, please enter your first and last name and sign the document</span>`,
-                    visibleIf: "{registeredAs} != 'I am registering as a participant over the age of 18'"
-                }, {
-                    name: "signatureFirstName",
+                    name: "scd_fname",
                     title: "First name:",
                     type: "text",
                     isRequired: true,
                 }, {
-                    name: "signatureLastName",
+                    name: "scd_lname",
                     title: "Last name:",
                     type: "text",
                     isRequired: true,
                     startWithNewLine: false,
                 }, {
-                    name: "date",
-                    title: "Signature Date",
-                    type: "text",
-                    inputType: "date",
-                    defaultValueExpression: "today()",
-                    minValueExpression: "today()",
-                    isRequired: true,
-                    startWithNewLine: false,
-                    readOnly: true
-
-                }, {
                     type: "signaturepad",
-                    name: "signature",
+                    name: "scd_signature",
                     title: "Signature",
                     signatureWidth: 700,
                     signatureHeight: 400,
                     penColor: "black",
                     isRequired: true,
-                }]
-            }]
-        }
-    ],
-
-};
+                }
+                ]
+            }
+        ]
+    }]
+}
