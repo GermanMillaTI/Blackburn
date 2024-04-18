@@ -30,7 +30,6 @@ function Registration() {
     const survey = new Model(surveyJson);
     survey.applyTheme(themeObj);
 
-    const navigate = useNavigate();
 
     const createTransactionID = async () => {
 
@@ -65,9 +64,6 @@ function Registration() {
             const firebasePath = `/participants/${pptId}/`;
             updateValue(firebasePath, senderObj);
 
-
-            navigate(`/DataProcessingForm/${pptId}`);
-
         }
 
         survey.onCompleting.add(completeFunction);
@@ -83,11 +79,11 @@ function Registration() {
         <div>
             <div id='loading'></div>
             {showtymsg && <div id="ThankyouPage">
-                <img className="telus-logo" src={telus} style={{ width: "20%", maxWidth: "100%" }} alt="TELUS Logo" />
+                <img className="telus-logo" src={telus} style={{ width: "300px", maxWidth: "100%" }} alt="TELUS Logo" />
 
                 <h4>Thank you for your registration.</h4><br />
                 <p>We will review your registration and contact you with any further steps.</p>            </div>}
-            <img className="telus-logo" src={telus} style={{ width: "20%", maxWidth: "100%" }} alt="" />
+            <img className="telus-logo" src={telus} style={{ width: "300px", maxWidth: "100%" }} alt="" />
             <Survey model={survey}></Survey>
         </div>
     );
