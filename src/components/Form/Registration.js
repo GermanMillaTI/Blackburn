@@ -5,7 +5,7 @@ import { inputmask } from "surveyjs-widgets";
 import * as SurveyCore from "survey-core";
 import { useNavigate, useParams } from 'react-router-dom';
 import { surveyJson } from './questions/RegistrationQuestions';
-import 'survey-core/defaultV2.min.css'
+import 'survey-core/defaultV2.min.css';
 import { themeObj } from '../themes/registrationTheme';
 import telus from '../telus.png';
 import { useEffect, useState, useCallback } from 'react';

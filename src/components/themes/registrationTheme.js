@@ -11,8 +11,8 @@ export const themeObj = {
         "--sjs-primary-backcolor": "#66CC00",
         "--sjs-primary-forecolor": "#333",
         "--sjs-primary-forecolor-light": "rgba(255, 255, 255, 0.25)",
-        "--sjs-base-unit": "8px",
-        "--sjs-corner-radius": "4px",
+        "--sjs-base-unit": "6px",
+        "--sjs-corner-radius": "3px",
         "--sjs-secondary-backcolor": "rgba(255, 152, 20, 1)",
         "--sjs-secondary-backcolor-light": "rgba(255, 152, 20, 0.1)",
         "--sjs-secondary-backcolor-semi-light": "rgba(255, 152, 20, 0.25)",
@@ -73,7 +73,8 @@ export const themeObj = {
         "--sjs-article-font-medium-lineHeight": "32px",
         "--sjs-article-font-medium-paragraphIndent": "0px",
         "--sjs-article-font-medium-textCase": "none",
-        "--sjs-article-font-default-fontSize": "16px",
+        "--sjs-font-size": "15px",
+        "--sjs-internal-font-editorfont-size": "15px",
         "--sjs-article-font-default-textDecoration": "none",
         "--sjs-article-font-default-fontWeight": "400",
         "--sjs-article-font-default-fontStyle": "normal",
@@ -81,9 +82,13 @@ export const themeObj = {
         "--sjs-article-font-default-letterSpacing": "0",
         "--sjs-article-font-default-lineHeight": "28px",
         "--sjs-article-font-default-paragraphIndent": "0px",
-        "--sjs-article-font-default-textCase": "none"
+        "--sjs-article-font-default-textCase": "none",
+        "--base-unit": "5px",
     },
     "isPanelless": false,
     "themeName": "doubleborder",
-    "colorPalette": "light"
+    "colorPalette": "light",
+    "panel": {
+        "width": "70%"
+    }
 }

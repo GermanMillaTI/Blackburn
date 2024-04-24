@@ -53,6 +53,13 @@ export const surveyJson = {
                     {
                         type: "html",
                         html: `<h4 style="text-align: center;">`
+                            + `Registration Form (1/2)`
+                            + `</h4>`,
+
+                    },
+                    {
+                        type: "html",
+                        html: `<h4 style="text-align: center;">`
                             + `Personal Information`
                             + `</h4>
                             <hr>`,
@@ -115,13 +122,13 @@ export const surveyJson = {
                     },
 
                     {
-                        name: "first_name",
+                        name: "fname",
                         title: "First name:",
                         type: "text",
                         isRequired: true
                     },
                     {
-                        name: "last_name",
+                        name: "lname",
                         title: "Last name:",
                         type: "text",
                         isRequired: true,
@@ -585,12 +592,16 @@ export const surveyJson = {
                     title: "First name:",
                     type: "text",
                     isRequired: true,
+                    defaultValueExpression: "{fname}",
+                    readOnly: true
                 }, {
                     name: "signatureLastName",
                     title: "Last name:",
                     type: "text",
                     isRequired: true,
                     startWithNewLine: false,
+                    defaultValueExpression: "{lname}",
+                    readOnly: true
                 }, {
                     name: "date",
                     title: "Signature Date",
@@ -621,7 +632,7 @@ export const surveyJson = {
                     elements: [{
                         type: "html",
                         html: `<h4 style="text-align: center;">`
-                            + `Consent Form for Sensitive Category Data Processing `
+                            + `Registration Form (2/2) `
                             + `</h4>
                             <hr>`,
 
@@ -639,7 +650,7 @@ export const surveyJson = {
                             "Aboriginal Australians/Papuans",
                             "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African]",
                             "Alaskan Native",
-                            "American Indian [American Indian, Central of South American Indian]",
+                            "Native American [Native American, Central of South Native American]",
                             "East Asian [Chinese, Japanese, Korean, Taiwanese]",
                             "Hispanic/Latin American/Spanish [Colombian, Cuban, Dominican, Ecuadorian, Honduran, Mexican or Mexican American, Puerto Rican, Salvadorian, Spanish]",
                             "Middle Eastern/North African [Afghan, Algerian, Egyptian, Iranian, Iraqi, Israeli, Lebanese, Moroccan, Syrian, Tunisian]",
@@ -688,28 +699,57 @@ export const surveyJson = {
                                 font-size: 5em
                               }</style>
                             <strong>Monk skin type</strong>
-                            <p>The Monk Skin Tone Scale is the work of Harvard professor and sociologist Dr Ellis Monk. The 10-point scale helps machines better understand and, therefore, better represent more varied skin tones</p>
-                            <table style="; margin-top:2em; text-align:center; margin:0.25; border: 1px solid gray">
-                            <tr >
-                              <td style="background-color: #f6ede4;">1</td>
-                              <td style="background-color: #f3e7db">2</td> 
-                              <td style="background-color: #f7ead0;">3</td> 
-                              <td style="background-color: #eadaba;">4</td>
-                              <td style="background-color: #d7bd96;">5</td> 
-                              <td style="background-color: #a07e56; color:white">6</td> 
-                              <td style="background-color: #825c43; color:white">7</td> 
-                              <td style="background-color: #604134; color:white">8</td>
-                              <td style="background-color: #3a312a; color:white">9</td> 
-                              <td style="background-color: #292420; color:white">10</td> 
-                            </tr>
-                          </table>`
+                            <p>The Monk Skin Tone Scale is the work of Harvard professor and sociologist Dr Ellis Monk. The 10-point scale helps machines better understand and, therefore, better represent more varied skin tones</p>`
                     }, {
-                        name: "skinTone",
-                        title: "Select your skin tone based on the diagram above:",
-                        type: "rating",
-                        rateValues: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                        maxSelectedChoices: 1,
-                        isRequired: true
+                        "type": "imagepicker",
+                        "name": "skintone",
+                        title: 'Select your skin tone based on the diagram above:',
+                        isRequired: true,
+                        "choices": [
+                            {
+                                "value": "1",
+                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_1.png?alt=media&token=17dba544-f475-4c4d-b8ab-ad92b58b2e1a"
+                            },
+                            {
+                                "value": "2",
+                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_2.png?alt=media&token=88288d11-4da5-4215-82ca-240bbcbd7dc5"
+                            },
+                            {
+                                "value": "3",
+                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_3.png?alt=media&token=767c1808-1460-4e34-9e1a-901ad2077f17"
+                            },
+                            {
+                                "value": "4",
+                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_4.png?alt=media&token=114130e5-ce14-42a3-a6c2-5d1eef2cd1b7"
+                            },
+                            {
+                                "value": "5",
+                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_5.png?alt=media&token=4399cd39-ef8f-4fcb-a103-e960a170f64b"
+                            },
+                            {
+                                "value": "6",
+                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_6.png?alt=media&token=06290e36-8caa-4249-8999-a34932d07cfc"
+                            },
+                            {
+                                "value": "7",
+                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_7.png?alt=media&token=cdd446bd-9f39-46d2-abfd-70556223de20"
+                            },
+                            {
+                                "value": "8",
+                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_8.png?alt=media&token=23c43f77-be10-48f6-8e6f-5fc9e7cadc18"
+                            },
+                            {
+                                "value": "9",
+                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_9.png?alt=media&token=526e3ba1-3056-4bd9-b1a4-3c0360e215c0"
+                            },
+                            {
+                                "value": "10",
+                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_10.png?alt=media&token=d54e506b-d57b-4a26-8898-64c53b517ed0"
+                            }
+                        ],
+                        "imageHeight": 75,
+                        "imageWidth": 75,
+                        "imageFit": "fill",
                     }, {
                         name: "weight_lbs",
                         title: "Your weight (lbs):",
@@ -755,7 +795,7 @@ export const surveyJson = {
                         name: "hairLength",
                         title: "Hair length:",
                         type: "dropdown",
-                        description: "between None - Long",
+                        description: "between Bald - Long",
                         choices: [
                             'Bald',
                             'Short',
@@ -779,7 +819,7 @@ export const surveyJson = {
                             'Colorful'
                         ],
                         isRequired: true,
-                        startWithNewLine: false,
+
                     }, {
                         name: "facialhair",
                         title: "Facial hair:",
@@ -793,12 +833,13 @@ export const surveyJson = {
                             'None'
                         ],
                         isRequired: true,
+                        startWithNewLine: false,
 
                     }, {
                         name: "tattoos",
                         title: "Tattoos:",
-                        type: "dropdown",
-                        description: "Select one of the available options",
+                        type: "checkbox",
+                        description: "Select all of the available options",
                         choices: [
                             'Face, neck or head',
                             'Arms',
@@ -807,13 +848,12 @@ export const surveyJson = {
                             'None'
                         ],
                         isRequired: true,
-                        startWithNewLine: false,
 
                     }, {
                         name: "piercings",
                         title: "Piercings:",
-                        type: "dropdown",
-                        description: "Select one of the available options",
+                        type: "checkbox",
+                        description: "Select all of the available options",
                         choices: [
                             'Face, neck or head',
                             'Arms',
@@ -992,12 +1032,27 @@ export const surveyJson = {
                         title: "First name:",
                         type: "text",
                         isRequired: true,
+                        defaultValueExpression: "{fname}",
+                        readOnly: true
                     }, {
                         name: "scd_lname",
                         title: "Last name:",
                         type: "text",
                         isRequired: true,
                         startWithNewLine: false,
+                        defaultValueExpression: "{lname}",
+                        readOnly: true
+                    }, {
+                        name: "csadate",
+                        title: "Agreement Date",
+                        type: "text",
+                        inputType: "date",
+                        defaultValueExpression: "today()",
+                        minValueExpression: "today()",
+                        isRequired: true,
+                        startWithNewLine: false,
+                        readOnly: true
+
                     }, {
                         type: "signaturepad",
                         name: "scd_signature",
@@ -1012,5 +1067,6 @@ export const surveyJson = {
             ]
         }
     ],
+
 
 };
