@@ -9,8 +9,10 @@ import 'survey-core/defaultV2.min.css';
 import { themeObj } from '../themes/registrationTheme';
 import telus from '../telus.png';
 import { useEffect, useState, useCallback } from 'react';
-import { realtimeDb, onValue, ref, get, updateValue } from '../../firebase/config';
+import { realtimeDb, onValue, ref, get, updateValue, storage } from '../../firebase/config';
 import { runTransaction } from 'firebase/database';
+import Constants from '../Constants'
+import { uploadBytesResumable, getDownloadURL, ref as storeRef } from "firebase/storage";
 
 function Registration() {
     const [showtymsg, setShowtymsg] = useState(false);
@@ -25,11 +27,21 @@ function Registration() {
 
     };
 
+
+
     inputmask(SurveyCore);
     surveyLocalization.locales["en"] = localeSettings;
     const survey = new Model(surveyJson);
+    const tempFileStorage = {};
     survey.applyTheme(themeObj);
 
+    const questions = survey.getAllQuestions();
+    for (const question of questions) {
+        const type = question.getType();
+        if (type === "file") {
+            question.storeDataAsText = false;
+        }
+    }
 
     const createTransactionID = async () => {
 
@@ -43,9 +55,108 @@ function Registration() {
         return pptId
     }
 
-
-
     useEffect(() => {
+
+        //
+        const uploadFunction = async (sender, options) => {
+            document.getElementById("loading").style.display = "block";
+
+            // Add files to the temporary storage
+            if (tempFileStorage[options.name] !== undefined) {
+                tempFileStorage[options.name].concat(options.files);
+            } else {
+                tempFileStorage[options.name] = options.files;
+            }
+
+            // Load file previews
+            const content = [];
+            options.files.forEach(file => {
+                const fileReader = new FileReader();
+                fileReader.onload = () => {
+                    content.push({
+                        name: file.name,
+                        type: file.type,
+                        content: fileReader.result,
+                        file: file
+                    });
+
+                    if (content.length === options.files.length) {
+                        // Return a file for preview as a { file, content } object 
+                        const promises = content.map(fileContent => {
+                            return new Promise((resolve, reject) => {
+                                const byteChars = atob(fileContent.content.split(',')[1]);
+                                const byteArrays = [];
+
+                                for (let offset = 0; offset < byteChars.length; offset += 512) {
+                                    const slice = byteChars.slice(offset, offset + 512);
+                                    const byteNumbers = new Array(slice.length);
+
+                                    for (let i = 0; i < slice.length; i++) {
+                                        byteNumbers[i] = slice.charCodeAt(i);
+                                    }
+
+                                    const byteArray = new Uint8Array(byteNumbers);
+                                    byteArrays.push(byteArray);
+                                }
+
+                                const imageBlob = new Blob(byteArrays, { type: file.type });
+
+                                const storageRef = storeRef(storage, `participants/${"a"}/identification/${file.name}`);
+
+                                uploadBytesResumable(storageRef, imageBlob).then((onFulfill) => {
+                                    if (onFulfill.state === 'success') {
+                                        // Resolve with the preview object only after successful upload
+                                        resolve({
+                                            file: fileContent.file,
+                                            content: fileContent.content
+                                        });
+                                    } else {
+                                        // Reject if upload is not successful
+                                        reject(new Error("Upload failed"));
+                                    }
+                                    getDownloadURL(storageRef).then(url => {
+                                        document.getElementById("loading").style.display = "";
+                                    })
+
+                                }).catch(error => {
+                                    reject(error);
+                                });
+                            });
+                        });
+
+                        // Wait for all promises to resolve before calling the callback
+                        Promise.all(promises)
+                            .then(previews => {
+                                options.callback(previews);
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    }
+                };
+                fileReader.readAsDataURL(file);
+            });
+
+        }
+
+        const clearFileFunction = (_, options) => {
+            if (options.fileName === null) {
+                tempFileStorage[options.name] = [];
+                options.callback("success");
+                return;
+            }
+
+            // Remove an individual file
+            const tempFiles = tempFileStorage[options.name];
+            if (!!tempFiles) {
+                const fileInfoToRemove = tempFiles.filter(file => file.name === options.fileName)[0];
+                if (fileInfoToRemove) {
+                    const index = tempFiles.indexOf(fileInfoToRemove);
+                    tempFiles.splice(index, 1);
+                }
+            }
+            options.callback("success");
+        }
 
         const completeFunction = async (sender, options) => {
             options.allow = false;
@@ -54,12 +165,17 @@ function Registration() {
 
             Object.keys(sender.data).forEach(element => {
 
-                if (!["signature", "signatureFirstName", "signatureLastName", "termsAgreement", "futureProjectsInterest", "identificationFile", "agreementConfirmation"].includes(element)) {
+                if (!Constants.tobeExcluded.includes(element)) {
                     senderObj[element] = sender.data[element];
                 }
 
             })
 
+            //Reassignment of Object properties based on Constants
+            senderObj['registeredAs'] = parseInt(Constants.getKeyByValue(Constants['registeredAs'], sender.data['registeredAs']));
+            senderObj['gender'] = parseInt(Constants.getKeyByValue(Constants['genders'], sender.data['gender']));
+
+            //assignment of participant ID and db record
             const pptId = await createTransactionID();
             const firebasePath = `/participants/${pptId}/`;
             updateValue(firebasePath, senderObj);
@@ -67,12 +183,17 @@ function Registration() {
         }
 
         survey.onCompleting.add(completeFunction);
+        survey.onUploadFiles.add(uploadFunction);
+        survey.onClearFiles.add(clearFileFunction);
 
         return () => {
-            survey.onComplete.remove(completeFunction);
+            survey.onCompleting.remove(completeFunction);
+            survey.onUploadFiles.remove(uploadFunction);
+            survey.onClearFiles.remove(clearFileFunction);
+
         }
 
-    }, []);
+    }, [survey.onCompleting, survey.onUploadFiles, survey.onClearFiles]);
 
 
     return (

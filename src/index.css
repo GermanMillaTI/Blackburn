@@ -22,3 +22,15 @@ code {
   align-items: center;
 
 }
+
+#loading {
+  position: fixed;
+  top: 0;
+  display: none;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(11, 11, 11, 0.5);
+  opacity: 50;
+  z-index: 10;
+}

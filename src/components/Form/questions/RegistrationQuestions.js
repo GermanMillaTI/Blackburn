@@ -1,4 +1,4 @@
-
+import exampleimage from './exampleImage.png';
 
 export const surveyJson = {
     showQuestionNumbers: false,
@@ -92,7 +92,7 @@ export const surveyJson = {
 
                     },
                     {
-                        name: "grd_email",
+                        name: "email",
                         type: "text",
                         title: "Email address:",
                         validators: [
@@ -138,9 +138,10 @@ export const surveyJson = {
                         type: "text",
                         title: "Email address:",
                         validators: [
-                            { type: "email", text: "Value must be a valid email" }
+                            { type: "email", text: "Value must be a valid email" },
                         ],
                         isRequired: true,
+                        visibleIf: "{registeredAs} = 'I am registering as a participant over the age of 18'"
                     }, {
                         name: "phone",
                         type: "text",
@@ -255,7 +256,7 @@ export const surveyJson = {
                         startWithNewLine: false,
                     },
                     {
-                        name: "onsiteAvailability",
+                        name: "availability",
                         title: "Are you able to come for a three hour study appointment at our onsite location south of Glendale, California?",
                         type: "radiogroup",
                         choices: ["Yes", "No"],
@@ -266,18 +267,18 @@ export const surveyJson = {
                         title: "Can you tell us why you are not able to come to the onsite location?",
                         type: "checkbox",
                         choices: [
-                            'I am not interested in participating in this study.',
                             'I am generally not interested in going to an onsite study.',
-                            'I do not have time at the moment.',
-                            'The place is too far for me.',
-                            'The compensation is not enough for me to go to Los Angeles. I would go if the place would be nearer.',
-                            'The compensation is generally not enough for me.',
-                            'I am worried about sharing personal information.',
                             "I am hesitant to join a study when I don't know what it is about but I would like to have more information.",
+                            'I am not interested in participating in this study.',
+                            'I am worried about sharing personal information.',
+                            'I do not have time at the moment.',
+                            'I do not want to answer this question.',
                             'Something else - please provide more information in the feedback if you want.',
-                            'I do not want to answer this question.'
+                            'The compensation is generally not enough for me.',
+                            'The compensation is not enough for me to go to Los Angeles. I would go if the place would be nearer.',
+                            'The place is too far for me.'
                         ],
-                        visibleIf: "{onsiteAvailability} = 'No'",
+                        visibleIf: "{availability} = 'No'",
                         maxSelectedChoices: 10,
                         isRequired: true
                     }
@@ -295,7 +296,9 @@ export const surveyJson = {
                     }, {
                         type: "html",
                         html: `<p><span style="font-weight: 400;">Please upload an image of your ID, preferably driver’s license. You need to hide the </span><span style="font-weight: 400;">address, social security number, ID number on the documents you upload.</span></p>
-                            <p>We will need to confirm your identity to qualify you for the study.</p>`
+                            <p>We will need to confirm your identity to qualify you for the study.</p>
+                            <p><b>Example Image:</b></p>
+                            <img style='height:300px' src='${exampleimage}' />`
                     },
                     {
                         type: "file",
@@ -622,75 +625,75 @@ export const surveyJson = {
                     penColor: "black",
                     isRequired: true,
                 }]
-            }]
-        }, {
-            name: "page2",
-            elements: [
-                {
-                    type: "panel",
-                    name: "personalInfo",
-                    elements: [{
-                        type: "html",
-                        html: `<h4 style="text-align: center;">`
-                            + `Registration Form (2/2) `
-                            + `</h4>
+            },//]
+            //}, {
+            //name: "page2",
+            //elements: [
+            {
+                type: "panel",
+                name: "personalInfo",
+                elements: [{
+                    type: "html",
+                    html: `<h4 style="text-align: center;">`
+                        + `Registration Form (2/2) `
+                        + `</h4>
                             <hr>`,
 
-                    }, {
-                        name: "isMultipleEthnicities",
-                        title: "Do you identify with more than 1 ethnicity?",
-                        type: "radiogroup",
-                        choices: ["Yes", "No"],
-                        isRequired: true,
-                    }, {
-                        type: "radiogroup",
-                        name: "ethnicity",
-                        title: "Which ethnicity do you identify with?",
-                        choices: [
-                            "Aboriginal Australians/Papuans",
-                            "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African]",
-                            "Alaskan Native",
-                            "Native American [Native American, Central of South Native American]",
-                            "East Asian [Chinese, Japanese, Korean, Taiwanese]",
-                            "Hispanic/Latin American/Spanish [Colombian, Cuban, Dominican, Ecuadorian, Honduran, Mexican or Mexican American, Puerto Rican, Salvadorian, Spanish]",
-                            "Middle Eastern/North African [Afghan, Algerian, Egyptian, Iranian, Iraqi, Israeli, Lebanese, Moroccan, Syrian, Tunisian]",
-                            "Native Hawaiian/Pacific Islander/Indigenous people of Oceania [Chamarro, Chuukese, Fijian, Marshallese, Native Hawaiian, Palauan, Samoan, Tahitian, Tongan]",
-                            "South Asian [Asian Indian, Bangladeshi, Pakistani]",
-                            "Southeast Asian [Cambodian, Filipino, Hmong, Malaysian, Thai, Singaporean, Vietnamese]",
-                            "White - Northern European [Dutch, English, Northern French, German, Irish, Norwegian, Northern European (not listed)]",
-                            "White - Southern European [Italian, Southern French, Spanish, Portuguese, Southern European (not listed)]",
-                            "Prefer not to state"
-                        ],
-                        visibleIf: '{isMultipleEthnicities} = "No"',
-                        showOtherItem: true,
-                        otherText: "Other",
-                        isRequired: true
-                    }, {
-                        type: "checkbox",
-                        name: "ethnicities",
-                        title: "Which ethnicities do you identify with?",
-                        choices: [
-                            "Aboriginal Australians/Papuans",
-                            "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African]",
-                            "Alaskan Native",
-                            "American Indian [American Indian, Central of South American Indian]",
-                            "East Asian [Chinese, Japanese, Korean, Taiwanese]",
-                            "Hispanic/Latin American/Spanish [Colombian, Cuban, Dominican, Ecuadorian, Honduran, Mexican or Mexican American, Puerto Rican, Salvadorian, Spanish]",
-                            "Middle Eastern/North African [Afghan, Algerian, Egyptian, Iranian, Iraqi, Israeli, Lebanese, Moroccan, Syrian, Tunisian]",
-                            "Native Hawaiian/Pacific Islander/Indigenous people of Oceania [Chamarro, Chuukese, Fijian, Marshallese, Native Hawaiian, Palauan, Samoan, Tahitian, Tongan]",
-                            "South Asian [Asian Indian, Bangladeshi, Pakistani]",
-                            "Southeast Asian [Cambodian, Filipino, Hmong, Malaysian, Thai, Singaporean, Vietnamese]",
-                            "White - Northern European [Dutch, English, Northern French, German, Irish, Norwegian, Northern European (not listed)]",
-                            "White - Southern European [Italian, Southern French, Spanish, Portuguese, Southern European (not listed)]",
-                            "Prefer not to state"
-                        ],
-                        visibleIf: '{isMultipleEthnicities} = "Yes"',
-                        showOtherItem: true,
-                        otherText: "Other",
-                        isRequired: true
-                    }, {
-                        type: "html",
-                        html: `<style>
+                }, {
+                    name: "isMultipleEthnicities",
+                    title: "Do you identify with more than 1 ethnicity?",
+                    type: "radiogroup",
+                    choices: ["Yes", "No"],
+                    isRequired: true,
+                }, {
+                    type: "radiogroup",
+                    name: "ethnicity",
+                    title: "Which ethnicity do you identify with?",
+                    choices: [
+                        "Aboriginal Australians/Papuans",
+                        "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African]",
+                        "Alaskan Native",
+                        "Native American [Native American, Central of South Native American]",
+                        "East Asian [Chinese, Japanese, Korean, Taiwanese]",
+                        "Hispanic/Latin American/Spanish [Colombian, Cuban, Dominican, Ecuadorian, Honduran, Mexican or Mexican American, Puerto Rican, Salvadorian, Spanish]",
+                        "Middle Eastern/North African [Afghan, Algerian, Egyptian, Iranian, Iraqi, Israeli, Lebanese, Moroccan, Syrian, Tunisian]",
+                        "Native Hawaiian/Pacific Islander/Indigenous people of Oceania [Chamarro, Chuukese, Fijian, Marshallese, Native Hawaiian, Palauan, Samoan, Tahitian, Tongan]",
+                        "South Asian [Asian Indian, Bangladeshi, Pakistani]",
+                        "Southeast Asian [Cambodian, Filipino, Hmong, Malaysian, Thai, Singaporean, Vietnamese]",
+                        "White - Northern European [Dutch, English, Northern French, German, Irish, Norwegian, Northern European (not listed)]",
+                        "White - Southern European [Italian, Southern French, Spanish, Portuguese, Southern European (not listed)]",
+                        "Prefer not to state"
+                    ],
+                    visibleIf: '{isMultipleEthnicities} = "No"',
+                    showOtherItem: true,
+                    otherText: "Other",
+                    isRequired: true
+                }, {
+                    type: "checkbox",
+                    name: "ethnicities",
+                    title: "Which ethnicities do you identify with?",
+                    choices: [
+                        "Aboriginal Australians/Papuans",
+                        "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African]",
+                        "Alaskan Native",
+                        "Native American [Native American, Central of South Native American]",
+                        "East Asian [Chinese, Japanese, Korean, Taiwanese]",
+                        "Hispanic/Latin American/Spanish [Colombian, Cuban, Dominican, Ecuadorian, Honduran, Mexican or Mexican American, Puerto Rican, Salvadorian, Spanish]",
+                        "Middle Eastern/North African [Afghan, Algerian, Egyptian, Iranian, Iraqi, Israeli, Lebanese, Moroccan, Syrian, Tunisian]",
+                        "Native Hawaiian/Pacific Islander/Indigenous people of Oceania [Chamarro, Chuukese, Fijian, Marshallese, Native Hawaiian, Palauan, Samoan, Tahitian, Tongan]",
+                        "South Asian [Asian Indian, Bangladeshi, Pakistani]",
+                        "Southeast Asian [Cambodian, Filipino, Hmong, Malaysian, Thai, Singaporean, Vietnamese]",
+                        "White - Northern European [Dutch, English, Northern French, German, Irish, Norwegian, Northern European (not listed)]",
+                        "White - Southern European [Italian, Southern French, Spanish, Portuguese, Southern European (not listed)]",
+                        "Prefer not to state"
+                    ],
+                    visibleIf: '{isMultipleEthnicities} = "Yes"',
+                    showOtherItem: true,
+                    otherText: "Other",
+                    isRequired: true
+                }, {
+                    type: "html",
+                    html: `<style>
                             td {
                                 border: 1px solid black;
                                 border-radius: 50%;
@@ -700,205 +703,207 @@ export const surveyJson = {
                               }</style>
                             <strong>Monk skin type</strong>
                             <p>The Monk Skin Tone Scale is the work of Harvard professor and sociologist Dr Ellis Monk. The 10-point scale helps machines better understand and, therefore, better represent more varied skin tones</p>`
-                    }, {
-                        "type": "imagepicker",
-                        "name": "skintone",
-                        title: 'Select your skin tone based on the diagram above:',
-                        isRequired: true,
-                        "choices": [
-                            {
-                                "value": "1",
-                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_1.png?alt=media&token=17dba544-f475-4c4d-b8ab-ad92b58b2e1a"
-                            },
-                            {
-                                "value": "2",
-                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_2.png?alt=media&token=88288d11-4da5-4215-82ca-240bbcbd7dc5"
-                            },
-                            {
-                                "value": "3",
-                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_3.png?alt=media&token=767c1808-1460-4e34-9e1a-901ad2077f17"
-                            },
-                            {
-                                "value": "4",
-                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_4.png?alt=media&token=114130e5-ce14-42a3-a6c2-5d1eef2cd1b7"
-                            },
-                            {
-                                "value": "5",
-                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_5.png?alt=media&token=4399cd39-ef8f-4fcb-a103-e960a170f64b"
-                            },
-                            {
-                                "value": "6",
-                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_6.png?alt=media&token=06290e36-8caa-4249-8999-a34932d07cfc"
-                            },
-                            {
-                                "value": "7",
-                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_7.png?alt=media&token=cdd446bd-9f39-46d2-abfd-70556223de20"
-                            },
-                            {
-                                "value": "8",
-                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_8.png?alt=media&token=23c43f77-be10-48f6-8e6f-5fc9e7cadc18"
-                            },
-                            {
-                                "value": "9",
-                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_9.png?alt=media&token=526e3ba1-3056-4bd9-b1a4-3c0360e215c0"
-                            },
-                            {
-                                "value": "10",
-                                "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_10.png?alt=media&token=d54e506b-d57b-4a26-8898-64c53b517ed0"
-                            }
-                        ],
-                        "imageHeight": 75,
-                        "imageWidth": 75,
-                        "imageFit": "fill",
-                    }, {
-                        name: "weight_lbs",
-                        title: "Your weight (lbs):",
-                        description: "In pounds",
-                        type: "text",
-                        inputType: "number",
-                        min: 1,
-                        isRequired: true,
-                    }, {
-                        name: "height_ft",
-                        title: "Your height (feet):",
-                        description: "between 1-8 feet",
-                        type: "text",
-                        inputType: "number",
-                        min: 1,
-                        max: 8,
-                        isRequired: true,
-                        startWithNewLine: false,
-                    }, {
-                        name: "height_in",
-                        title: "Your height (inches):",
-                        description: "between 0-11 inches",
-                        type: "text",
-                        inputType: "number",
-                        min: 0,
-                        max: 11,
-                        isRequired: true,
-                        startWithNewLine: false,
-                    }, {
-                        name: "hairtype",
-                        title: "Hair type:",
-                        type: "dropdown",
-                        description: "Select one of the available options",
-                        choices: [
-                            'Curly',
-                            'Coily',
-                            'Straight',
-                            'Wavy'
-                        ],
-                        isRequired: true,
+                }, {
+                    "type": "imagepicker",
+                    "name": "skintone",
+                    title: 'Select your skin tone:',
+                    isRequired: true,
+                    "choices": [
+                        {
+                            "value": "1",
+                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_1.png?alt=media&token=17dba544-f475-4c4d-b8ab-ad92b58b2e1a"
+                        },
+                        {
+                            "value": "2",
+                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_2.png?alt=media&token=88288d11-4da5-4215-82ca-240bbcbd7dc5"
+                        },
+                        {
+                            "value": "3",
+                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_3.png?alt=media&token=767c1808-1460-4e34-9e1a-901ad2077f17"
+                        },
+                        {
+                            "value": "4",
+                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_4.png?alt=media&token=114130e5-ce14-42a3-a6c2-5d1eef2cd1b7"
+                        },
+                        {
+                            "value": "5",
+                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_5.png?alt=media&token=4399cd39-ef8f-4fcb-a103-e960a170f64b"
+                        },
+                        {
+                            "value": "6",
+                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_6.png?alt=media&token=06290e36-8caa-4249-8999-a34932d07cfc"
+                        },
+                        {
+                            "value": "7",
+                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_7.png?alt=media&token=cdd446bd-9f39-46d2-abfd-70556223de20"
+                        },
+                        {
+                            "value": "8",
+                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_8.png?alt=media&token=23c43f77-be10-48f6-8e6f-5fc9e7cadc18"
+                        },
+                        {
+                            "value": "9",
+                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_9.png?alt=media&token=526e3ba1-3056-4bd9-b1a4-3c0360e215c0"
+                        },
+                        {
+                            "value": "10",
+                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_10.png?alt=media&token=d54e506b-d57b-4a26-8898-64c53b517ed0"
+                        }
+                    ],
+                    "imageHeight": 75,
+                    "imageWidth": 75,
+                    "imageFit": "fill",
+                }, {
+                    name: "weight_lbs",
+                    title: "Your weight (lbs):",
+                    description: "In pounds",
+                    type: "text",
+                    inputType: "number",
+                    min: 1,
+                    isRequired: true,
+                }, {
+                    name: "height_ft",
+                    title: "Your height (feet):",
+                    description: "between 1-8 feet",
+                    type: "text",
+                    inputType: "number",
+                    min: 1,
+                    max: 8,
+                    isRequired: true,
+                    startWithNewLine: false,
+                }, {
+                    name: "height_in",
+                    title: "Your height (inches):",
+                    description: "between 0-11 inches",
+                    type: "text",
+                    inputType: "number",
+                    min: 0,
+                    max: 11,
+                    isRequired: true,
+                    startWithNewLine: false,
+                }, {
+                    name: "hairtype",
+                    title: "Hair type:",
+                    type: "dropdown",
+                    description: "Select one of the available options",
+                    choices: [
+                        'Curly',
+                        'Coily',
+                        'Straight',
+                        'Wavy'
+                    ],
+                    isRequired: true,
 
-                    }, {
-                        name: "hairLength",
-                        title: "Hair length:",
-                        type: "dropdown",
-                        description: "between Bald - Long",
-                        choices: [
-                            'Bald',
-                            'Short',
-                            'Medium',
-                            'Long'
-                        ],
-                        isRequired: true,
-                        startWithNewLine: false,
-                    }, {
-                        name: "hairColor",
-                        title: "Hair color:",
-                        type: "dropdown",
-                        description: "Select one of the available options",
-                        choices: [
-                            'Black',
-                            'Blonde',
-                            'Brown',
-                            'Grey',
-                            'Red',
-                            'White',
-                            'Colorful'
-                        ],
-                        isRequired: true,
+                }, {
+                    name: "hairLength",
+                    title: "Hair length:",
+                    type: "dropdown",
+                    description: "between Bald - Long",
+                    choices: [
+                        'Bald',
+                        'Short',
+                        'Medium',
+                        'Long'
+                    ],
+                    isRequired: true,
+                    startWithNewLine: false,
+                }, {
+                    name: "hairColor",
+                    title: "Hair color:",
+                    type: "dropdown",
+                    description: "Select one of the available options",
+                    choices: [
+                        'Black',
+                        'Blonde',
+                        'Brown',
+                        'Grey',
+                        'Red',
+                        'White',
+                        'Colorful'
+                    ],
+                    isRequired: true,
 
-                    }, {
-                        name: "facialhair",
-                        title: "Facial hair:",
-                        type: "dropdown",
-                        description: "Select one of the available options",
-                        choices: [
-                            'Full beard',
-                            'Stubble',
-                            'Mustache',
-                            'Goatee',
-                            'None'
-                        ],
-                        isRequired: true,
-                        startWithNewLine: false,
+                }, {
+                    name: "facialhair",
+                    title: "Facial hair:",
+                    type: "dropdown",
+                    description: "Select one of the available options",
+                    choices: [
+                        'Full beard',
+                        'Stubble',
+                        'Mustache',
+                        'Goatee',
+                        'None'
+                    ],
+                    isRequired: true,
+                    startWithNewLine: false,
 
-                    }, {
-                        name: "tattoos",
-                        title: "Tattoos:",
-                        type: "checkbox",
-                        description: "Select all of the available options",
-                        choices: [
-                            'Face, neck or head',
-                            'Arms',
-                            'Upper body or torso',
-                            'Legs',
-                            'None'
-                        ],
-                        isRequired: true,
+                }, {
+                    name: "tattoos",
+                    title: "Tattoos:",
+                    type: "checkbox",
+                    description: "Select all of the available options",
+                    choices: [
+                        'Face, neck or head',
+                        'Arms',
+                        'Upper body or torso',
+                        'Legs',
+                    ],
+                    isRequired: true,
+                    showNoneItem: true,
+                    noneText: "None",
 
-                    }, {
-                        name: "piercings",
-                        title: "Piercings:",
-                        type: "checkbox",
-                        description: "Select all of the available options",
-                        choices: [
-                            'Face, neck or head',
-                            'Arms',
-                            'Upper body or torso',
-                            'Legs',
-                            'None'
-                        ],
-                        isRequired: true,
-                        startWithNewLine: false,
+                }, {
+                    name: "piercings",
+                    title: "Piercings:",
+                    type: "checkbox",
+                    description: "Select all of the available options",
+                    choices: [
+                        'Face, neck or head',
+                        'Arms',
+                        'Upper body or torso',
+                        'Legs',
+                    ],
+                    isRequired: true,
+                    startWithNewLine: false,
+                    showNoneItem: true,
+                    noneText: "None",
 
-                    }, {
-                        name: "isPregnant",
-                        title: "Are you pregnant?",
-                        type: "radiogroup",
-                        choices: ["Yes", "No"],
-                        isRequired: true,
-                    }, {
-                        type: "checkbox",
-                        name: "healthConditions",
-                        title: "Have you experienced or do you have any of the following conditions? Select all that apply:",
-                        choices: [
-                            "Diabetes",
-                            "Diagnosis of photo-induced seizures or epilepsy",
-                            "Medical eye condition (other than prescriptive lenses or LASIK surgery)",
-                            "High blood pressure",
-                            "Heart condition",
-                            "Currently taking photosensitizing medications or have any known photosensitizing medical conditions",
-                            "Need assistance standing or have difficulty remaining standing for 10-20 minutes (for example, you feel unsteady on your feet)",
-                            "Known neurological disorder",
-                            "Hearing loss",
-                            "Seizures",
-                            "Need assistance climbing a flight of stairs",
-                            "Migraines/Headaches",
-
-                        ],
-                        showNoneItem: true,
-                        noneText: "None of the above",
-                        isRequired: true,
-                    }, {
-                        type: "html",
-                        html: `<span style="color:red">Please, kindly read and sign the Contributor Services Agreement below, if you wish to participate in this project (please scroll to view the entire document):</span>`
-                    }, {
-                        type: "html",
-                        html: `<div style="width:100%;height:600px;overflow:auto;border:1px solid #555; padding-left:10px">`
-                            + `<p style="text-align: center;"><strong>INFORMATION COLLECTION, AGREEMENT, AND RELEASE</strong></p>
+                }, {
+                    name: "isPregnant",
+                    title: "Are you pregnant?",
+                    type: "radiogroup",
+                    choices: ["Yes", "No"],
+                    isRequired: true,
+                }, {
+                    type: "checkbox",
+                    name: "healthConditions",
+                    title: "Have you experienced or do you have any of the following conditions? Select all that apply:",
+                    choices: [
+                        "Currently taking photosensitizing medications or have any known photosensitizing medical conditions",
+                        "Diabetes",
+                        "Diagnosis of photo-induced seizures or epilepsy",
+                        "Hearing loss",
+                        "Heart condition",
+                        "High blood pressure",
+                        "Known neurological disorder",
+                        "Medical eye condition (other than prescriptive lenses or LASIK surgery)",
+                        "Migraines/Headaches",
+                        "Need assistance climbing a flight of stairs",
+                        "Need assistance standing or have difficulty remaining standing for 10-20 minutes (for example, you feel unsteady on your feet)",
+                        "Seizures"
+                    ]
+                    ,
+                    showNoneItem: true,
+                    noneText: "None of the above",
+                    isRequired: true,
+                }, {
+                    type: "html",
+                    html: `<span style="color:red">Please, kindly read and sign the Consent Form for Sensitive Category Data Processing below, if you wish to participate in this project (please scroll to view the entire document):</span>`
+                }, {
+                    type: "html",
+                    html: `<div style="width:100%;height:600px;overflow:auto;border:1px solid #555; padding-left:10px">`
+                        + `<p style="text-align: center;"><strong>INFORMATION COLLECTION, AGREEMENT, AND RELEASE</strong></p>
                             <p><span style="font-weight: 400;">Thank you for your interest in Project Foraker (the “</span><strong>Project</strong><span style="font-weight: 400;">”). Please read the description below, and if you are interested in participating, review and execute the Contributor Services Agreement and Release.&nbsp;</span></p>
                             <p><strong>Process of Data Collection</strong><strong>:</strong><span style="font-weight: 400;">&nbsp; TIAI is collecting the information that you submit on behalf of a non-affiliated customer in the technology industry (“</span><strong>Customer</strong><span style="font-weight: 400;">”).&nbsp;&nbsp;</span></p>
                             <p><span style="font-weight: 400;">TIAI is collecting the information below to determine your eligibility to participate in a research study on behalf of our Customer. If you meet the criteria [established by our Customer], then we will provide you with a link in which to submit additional information.</span></p>
@@ -1026,44 +1031,44 @@ export const surveyJson = {
                             <li><strong>Enforceability</strong><span style="font-weight: 400;">. In the event any portion of the arbitration provision and/or the Agreement is deemed unenforceable, the remainder of the arbitration provision and/or the Agreement will remain in full force and effect.<br /><br /></span></li>
                             <li><strong>Prevailing Language.</strong><span style="font-weight: 400;"> The parties have expressly requested that this contract be drafted in the English language. </span><em><span style="font-weight: 400;">Les parties ont expressément requis que ce contrat soit rédigée en anglais. </span></em><span style="font-weight: 400;">If this Agreement is translated into a language other than English for any purpose, the English version shall prevail in the event of any differences, questions or disputes concerning the meaning, form, validity or interpretation of this Agreement.<br /></span></li>
                             </ol>`
-                            + `</div>`
-                    }, {
-                        name: "scd_fname",
-                        title: "First name:",
-                        type: "text",
-                        isRequired: true,
-                        defaultValueExpression: "{fname}",
-                        readOnly: true
-                    }, {
-                        name: "scd_lname",
-                        title: "Last name:",
-                        type: "text",
-                        isRequired: true,
-                        startWithNewLine: false,
-                        defaultValueExpression: "{lname}",
-                        readOnly: true
-                    }, {
-                        name: "csadate",
-                        title: "Agreement Date",
-                        type: "text",
-                        inputType: "date",
-                        defaultValueExpression: "today()",
-                        minValueExpression: "today()",
-                        isRequired: true,
-                        startWithNewLine: false,
-                        readOnly: true
+                        + `</div>`
+                }, {
+                    name: "scd_fname",
+                    title: "First name:",
+                    type: "text",
+                    isRequired: true,
+                    defaultValueExpression: "{fname}",
+                    readOnly: true
+                }, {
+                    name: "scd_lname",
+                    title: "Last name:",
+                    type: "text",
+                    isRequired: true,
+                    startWithNewLine: false,
+                    defaultValueExpression: "{lname}",
+                    readOnly: true
+                }, {
+                    name: "csadate",
+                    title: "Agreement Date",
+                    type: "text",
+                    inputType: "date",
+                    defaultValueExpression: "today()",
+                    minValueExpression: "today()",
+                    isRequired: true,
+                    startWithNewLine: false,
+                    readOnly: true
 
-                    }, {
-                        type: "signaturepad",
-                        name: "scd_signature",
-                        title: "Signature",
-                        signatureWidth: 700,
-                        signatureHeight: 400,
-                        penColor: "black",
-                        isRequired: true,
-                    }
-                    ]
+                }, {
+                    type: "signaturepad",
+                    name: "scd_signature",
+                    title: "Signature",
+                    signatureWidth: 700,
+                    signatureHeight: 400,
+                    penColor: "black",
+                    isRequired: true,
                 }
+                ]
+            }
             ]
         }
     ],
