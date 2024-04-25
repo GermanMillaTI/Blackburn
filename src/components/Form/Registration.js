@@ -12,11 +12,11 @@ import { useEffect, useState, useCallback } from 'react';
 import { realtimeDb, onValue, ref, get, updateValue, storage } from '../../firebase/config';
 import { runTransaction } from 'firebase/database';
 import Constants from '../Constants'
-import { uploadBytesResumable, getDownloadURL, ref as storeRef } from "firebase/storage";
+import { uploadBytesResumable, getDownloadURL, ref as storeRef, deleteObject } from "firebase/storage";
 
 function Registration() {
     const [showtymsg, setShowtymsg] = useState(false);
-
+    let idName;
     const localeSettings = {
         completeText: "Submit",
         requiredError: "This item is required",
@@ -57,9 +57,21 @@ function Registration() {
 
     useEffect(() => {
 
-        //
+
+
+        //current issue: IdName doesn't work unless I assign the variable without useState
+        //also, If the files get replaced, it deletes the previous file from firebase storage, but if you do it again, it won't delete them anymore
         const uploadFunction = async (sender, options) => {
             document.getElementById("loading").style.display = "block";
+
+            if (idName !== undefined) {
+                const storageRef = storeRef(storage, `participants/a/identification/exampleImage.png`);
+                deleteObject(storageRef).then(() => {
+                    console.log("deleted")
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
 
             // Add files to the temporary storage
             if (tempFileStorage[options.name] !== undefined) {
@@ -67,6 +79,8 @@ function Registration() {
             } else {
                 tempFileStorage[options.name] = options.files;
             }
+
+            idName = options.files[0]['name'];
 
             // Load file previews
             const content = [];
@@ -127,6 +141,7 @@ function Registration() {
                         // Wait for all promises to resolve before calling the callback
                         Promise.all(promises)
                             .then(previews => {
+                                //setIdName((options.files[0]['name']));
                                 options.callback(previews);
                             })
                             .catch(error => {
@@ -135,16 +150,29 @@ function Registration() {
                     }
                 };
                 fileReader.readAsDataURL(file);
+
+
+
             });
+
+
 
         }
 
         const clearFileFunction = (_, options) => {
+            const storageRef = storeRef(storage, `participants/a/identification/exampleImage.png`);
+            deleteObject(storageRef).then(() => {
+                console.log("deleted")
+            }).catch(error => {
+                console.log(error)
+            })
+
             if (options.fileName === null) {
                 tempFileStorage[options.name] = [];
                 options.callback("success");
                 return;
             }
+
 
             // Remove an individual file
             const tempFiles = tempFileStorage[options.name];
@@ -155,7 +183,9 @@ function Registration() {
                     tempFiles.splice(index, 1);
                 }
             }
+
             options.callback("success");
+
         }
 
         const completeFunction = async (sender, options) => {
