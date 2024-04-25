@@ -16,6 +16,8 @@ import { uploadBytesResumable, getDownloadURL, ref as storeRef, deleteObject } f
 
 function Registration() {
     const [showtymsg, setShowtymsg] = useState(false);
+    const [pptId, setPptId] = useState('');
+
     let idName;
     const localeSettings = {
         completeText: "Submit",
@@ -57,15 +59,19 @@ function Registration() {
 
     useEffect(() => {
 
-
+        survey.onAfterRenderHeader.add(async (_, options) => {
+            const tempId = await createTransactionID();
+            setPptId(tempId)
+        })
 
         //current issue: IdName doesn't work unless I assign the variable without useState
         //also, If the files get replaced, it deletes the previous file from firebase storage, but if you do it again, it won't delete them anymore
         const uploadFunction = async (sender, options) => {
+
             document.getElementById("loading").style.display = "block";
 
             if (idName !== undefined) {
-                const storageRef = storeRef(storage, `participants/a/identification/exampleImage.png`);
+                const storageRef = storeRef(storage, `participants/${pptId}/identification/exampleImage.png`);
                 deleteObject(storageRef).then(() => {
                     console.log("deleted")
                 }).catch(error => {
@@ -115,7 +121,7 @@ function Registration() {
 
                                 const imageBlob = new Blob(byteArrays, { type: file.type });
 
-                                const storageRef = storeRef(storage, `participants/${"a"}/identification/${file.name}`);
+                                const storageRef = storeRef(storage, `participants/${pptId}/identification/${file.name}`);
 
                                 uploadBytesResumable(storageRef, imageBlob).then((onFulfill) => {
                                     if (onFulfill.state === 'success') {
@@ -160,7 +166,7 @@ function Registration() {
         }
 
         const clearFileFunction = (_, options) => {
-            const storageRef = storeRef(storage, `participants/a/identification/exampleImage.png`);
+            const storageRef = storeRef(storage, `participants/${pptId}/identification/exampleImage.png`);
             deleteObject(storageRef).then(() => {
                 console.log("deleted")
             }).catch(error => {
@@ -206,7 +212,7 @@ function Registration() {
             senderObj['gender'] = parseInt(Constants.getKeyByValue(Constants['genders'], sender.data['gender']));
 
             //assignment of participant ID and db record
-            const pptId = await createTransactionID();
+
             const firebasePath = `/participants/${pptId}/`;
             updateValue(firebasePath, senderObj);
 

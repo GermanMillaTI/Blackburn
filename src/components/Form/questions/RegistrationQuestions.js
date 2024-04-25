@@ -1,4 +1,14 @@
 import exampleimage from './exampleImage.png';
+import MST_1 from './mst_swatches/MST_1.png';
+import MST_2 from './mst_swatches/MST_2.png';
+import MST_3 from './mst_swatches/MST_3.png';
+import MST_4 from './mst_swatches/MST_4.png';
+import MST_5 from './mst_swatches/MST_5.png';
+import MST_6 from './mst_swatches/MST_6.png';
+import MST_7 from './mst_swatches/MST_7.png';
+import MST_8 from './mst_swatches/MST_8.png';
+import MST_9 from './mst_swatches/MST_9.png';
+import MST_10 from './mst_swatches/MST_10.png';
 
 export const surveyJson = {
     showQuestionNumbers: false,
@@ -710,49 +720,49 @@ export const surveyJson = {
                     isRequired: true,
                     "choices": [
                         {
-                            "value": "1",
-                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_1.png?alt=media&token=17dba544-f475-4c4d-b8ab-ad92b58b2e1a"
+                            value: 1,
+                            imageLink: MST_1
                         },
                         {
-                            "value": "2",
-                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_2.png?alt=media&token=88288d11-4da5-4215-82ca-240bbcbd7dc5"
+                            value: 2,
+                            imageLink: MST_2
                         },
                         {
-                            "value": "3",
-                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_3.png?alt=media&token=767c1808-1460-4e34-9e1a-901ad2077f17"
+                            value: 3,
+                            imageLink: MST_3
                         },
                         {
-                            "value": "4",
-                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_4.png?alt=media&token=114130e5-ce14-42a3-a6c2-5d1eef2cd1b7"
+                            value: 4,
+                            imageLink: MST_4
                         },
                         {
-                            "value": "5",
-                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_5.png?alt=media&token=4399cd39-ef8f-4fcb-a103-e960a170f64b"
+                            value: 5,
+                            imageLink: MST_5
                         },
                         {
-                            "value": "6",
-                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_6.png?alt=media&token=06290e36-8caa-4249-8999-a34932d07cfc"
+                            value: 6,
+                            imageLink: MST_6
                         },
                         {
-                            "value": "7",
-                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_7.png?alt=media&token=cdd446bd-9f39-46d2-abfd-70556223de20"
+                            value: 7,
+                            imageLink: MST_7
                         },
                         {
-                            "value": "8",
-                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_8.png?alt=media&token=23c43f77-be10-48f6-8e6f-5fc9e7cadc18"
+                            value: 8,
+                            imageLink: MST_8
                         },
                         {
-                            "value": "9",
-                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_9.png?alt=media&token=526e3ba1-3056-4bd9-b1a4-3c0360e215c0"
+                            value: 9,
+                            imageLink: MST_9
                         },
                         {
-                            "value": "10",
-                            "imageLink": "https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/skinstonescales%2FMST_10.png?alt=media&token=d54e506b-d57b-4a26-8898-64c53b517ed0"
+                            value: 10,
+                            imageLink: MST_10
                         }
                     ],
-                    "imageHeight": 75,
-                    "imageWidth": 75,
-                    "imageFit": "fill",
+                    imageHeight: 75,
+                    imageWidth: 75,
+                    imageFit: "fill",
                 }, {
                     name: "weight_lbs",
                     title: "Your weight (lbs):",
