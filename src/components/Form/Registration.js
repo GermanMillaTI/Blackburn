@@ -10,13 +10,13 @@ import { themeObj } from '../themes/registrationTheme';
 import telus from '../telus.png';
 import { useEffect, useState, useCallback } from 'react';
 import { realtimeDb, onValue, ref, get, updateValue, storage } from '../../firebase/config';
-import { runTransaction } from 'firebase/database';
+import { off, runTransaction } from 'firebase/database';
 import Constants from '../Constants'
 import { uploadBytesResumable, getDownloadURL, ref as storeRef, deleteObject } from "firebase/storage";
 
 function Registration() {
     const [showtymsg, setShowtymsg] = useState(false);
-    const [pptId, setPptId] = useState('');
+    let pptId;
 
     let idName;
     const localeSettings = {
@@ -57,17 +57,44 @@ function Registration() {
         return pptId
     }
 
+    const uploadSignature = async (imgData, id, subpath) => {
+        const byteChars = atob(imgData.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""));
+        let byteArrays = [];
+
+        for (let offset = 0; offset < byteChars.length; offset += 512) {
+            const slice = byteChars.slice(offset, offset + 512);
+            const byteNumbers = new Array(slice.length);
+
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+
+        const imageBlob = new Blob(byteArrays, { type: 'image/png' });
+        const storageRef = storeRef(storage, `participants/${id}/${subpath}/${id}_${subpath}.png`);
+        const uploadTask = uploadBytesResumable(storageRef, imageBlob);
+
+        return uploadTask;
+
+    }
+
     useEffect(() => {
 
-        survey.onAfterRenderHeader.add(async (_, options) => {
-            const tempId = await createTransactionID();
-            setPptId(tempId)
-        })
 
         //current issue: IdName doesn't work unless I assign the variable without useState
         //also, If the files get replaced, it deletes the previous file from firebase storage, but if you do it again, it won't delete them anymore
         const uploadFunction = async (sender, options) => {
 
+            await createTransactionID().then(onFulfill => {
+                pptId = onFulfill;
+
+
+            });
+
+            console.log(pptId)
             document.getElementById("loading").style.display = "block";
 
             if (idName !== undefined) {
@@ -197,24 +224,37 @@ function Registration() {
         const completeFunction = async (sender, options) => {
             options.allow = false;
 
-            let senderObj = {};
 
-            Object.keys(sender.data).forEach(element => {
+            const uploadTask = uploadSignature(sender.data['sdc_signature'], pptId, "sdc");
 
-                if (!Constants.tobeExcluded.includes(element)) {
-                    senderObj[element] = sender.data[element];
-                }
+            uploadTask.then(() => {
+                const newUploadTask = uploadSignature(sender.data['signature'], pptId, "sla");
+
+                newUploadTask.then(() => {
+                    let senderObj = {};
+
+                    Object.keys(sender.data).forEach(element => {
+
+                        if (!Constants.tobeExcluded.includes(element)) {
+                            senderObj[element] = sender.data[element];
+                        }
+
+                    })
+
+                    //Reassignment of Object properties based on Constants
+                    senderObj['registeredAs'] = parseInt(Constants.getKeyByValue(Constants['registeredAs'], sender.data['registeredAs']));
+                    senderObj['gender'] = parseInt(Constants.getKeyByValue(Constants['genders'], sender.data['gender']));
+                    senderObj['res_st'] = parseInt(Constants.getKeyByValue(Constants['usStates'], sender.data['res_st']));
+                    senderObj['source'] = parseInt(Constants.getKeyByValue(Constants['sources'], sender.data['source']));
+
+                    //db record
+                    const firebasePath = `/participants/${pptId}/`;
+                    updateValue(firebasePath, senderObj);
+                });
 
             })
 
-            //Reassignment of Object properties based on Constants
-            senderObj['registeredAs'] = parseInt(Constants.getKeyByValue(Constants['registeredAs'], sender.data['registeredAs']));
-            senderObj['gender'] = parseInt(Constants.getKeyByValue(Constants['genders'], sender.data['gender']));
 
-            //assignment of participant ID and db record
-
-            const firebasePath = `/participants/${pptId}/`;
-            updateValue(firebasePath, senderObj);
 
         }
 
@@ -230,7 +270,6 @@ function Registration() {
         }
 
     }, [survey.onCompleting, survey.onUploadFiles, survey.onClearFiles]);
-
 
     return (
         <div>

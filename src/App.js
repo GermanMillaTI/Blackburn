@@ -9,7 +9,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="/registration" element={<Registration />} />
-        <Route path="*" element={<Navigate to="/registration" replace />} />
         <Route path="/DataProcessingForm/:pptId" element={<SensitiveDataConsent />} />
       </Routes>
     </Router>

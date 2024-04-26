@@ -190,7 +190,7 @@ export const surveyJson = {
                         ],
                         isRequired: true
                     }, {
-                        name: "state_of_residence",
+                        name: "res_st",
                         title: "State of residence:",
                         type: "dropdown",
                         choices: [
@@ -358,8 +358,6 @@ export const surveyJson = {
                         'Retirement Jobs',
                         'TikTok'
                     ],
-                    showOtherItem: true,
-                    otherText: "Other",
                     colCount: "4",
                     isRequired: true,
                     maxSelectedChoices: "1",
@@ -1070,7 +1068,7 @@ export const surveyJson = {
 
                 }, {
                     type: "signaturepad",
-                    name: "scd_signature",
+                    name: "sdc_signature",
                     title: "Signature",
                     signatureWidth: 700,
                     signatureHeight: 400,
