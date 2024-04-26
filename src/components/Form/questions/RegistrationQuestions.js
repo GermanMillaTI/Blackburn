@@ -173,14 +173,14 @@ export const surveyJson = {
                         ],
                         isRequired: true
                     }, {
-                        name: "date_of_birth",
+                        name: "dob",
                         title: "Date of birth:",
                         type: "text",
                         inputType: "date",
                         isRequired: true,
                         startWithNewLine: false
                     }, {
-                        name: "country_of_residence",
+                        name: "country",
                         title: "Country of residence:",
                         type: "dropdown",
                         choices: [
@@ -247,7 +247,7 @@ export const surveyJson = {
                             { value: 'Wyoming' },
                         ],
                         isRequired: true,
-                        visibleIf: "{country_of_residence} = 'United States'",
+                        visibleIf: "{country} = 'United States'",
                         startWithNewLine: false,
                     }, {
                         name: "countryOfResidence_other",
@@ -256,7 +256,7 @@ export const surveyJson = {
                         isRequired: true,
                         startWithNewLine: false,
                         placeholder: 'Please specify the country of residence',
-                        visibleIf: "{country_of_residence} = 'Other'"
+                        visibleIf: "{country} = 'Other'"
 
                     }, {
                         name: "city_of_residence",
@@ -604,14 +604,33 @@ export const surveyJson = {
                     type: "text",
                     isRequired: true,
                     defaultValueExpression: "{fname}",
+                    visibleIf: "{registeredAs} = 'I am registering as a participant over the age of 18'",
                     readOnly: true
                 }, {
                     name: "signatureLastName",
                     title: "Last name:",
                     type: "text",
                     isRequired: true,
-                    startWithNewLine: false,
+                    visibleIf: "{registeredAs} = 'I am registering as a participant over the age of 18'",
                     defaultValueExpression: "{lname}",
+                    readOnly: true,
+                    startWithNewLine: false,
+                }, {
+                    name: "grd_signatureFirstName",
+                    title: "First name:",
+                    type: "text",
+                    isRequired: true,
+                    defaultValueExpression: "{grd_fname}",
+                    visibleIf: "{registeredAs} = 'I am a parent or guardian registering a child under 18'",
+                    readOnly: true
+                }, {
+                    name: "grd_signatureLastName",
+                    title: "Last name:",
+                    type: "text",
+                    isRequired: true,
+                    startWithNewLine: false,
+                    defaultValueExpression: "{grd_lname}",
+                    visibleIf: "{registeredAs} = 'I am a parent or guardian registering a child under 18'",
                     readOnly: true
                 }, {
                     name: "date",
@@ -1041,20 +1060,41 @@ export const surveyJson = {
                             </ol>`
                         + `</div>`
                 }, {
-                    name: "scd_fname",
+                    name: "sdc_fname",
                     title: "First name:",
                     type: "text",
                     isRequired: true,
                     defaultValueExpression: "{fname}",
+                    visibleIf: "{registeredAs} = 'I am registering as a participant over the age of 18'",
+                    readOnly: true
+                },
+                {
+                    name: "grd_sdc_fname",
+                    title: "First name:",
+                    type: "text",
+                    isRequired: true,
+                    defaultValueExpression: "{grd_fname}",
+                    startWithNewLine: false,
+                    visibleIf: "{registeredAs} = 'I am a parent or guardian registering a child under 18'",
                     readOnly: true
                 }, {
-                    name: "scd_lname",
+                    name: "sdc_lname",
                     title: "Last name:",
                     type: "text",
                     isRequired: true,
                     startWithNewLine: false,
                     defaultValueExpression: "{lname}",
-                    readOnly: true
+                    readOnly: true,
+                    visibleIf: "{registeredAs} = 'I am registering as a participant over the age of 18'"
+                }, {
+                    name: "grd_sdc_lname",
+                    title: "Last name:",
+                    type: "text",
+                    isRequired: true,
+                    startWithNewLine: false,
+                    defaultValueExpression: "{grd_lname}",
+                    visibleIf: "{registeredAs} = 'I am a parent or guardian registering a child under 18'",
+                    readOnly: true,
                 }, {
                     name: "csadate",
                     title: "Agreement Date",

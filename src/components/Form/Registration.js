@@ -10,7 +10,7 @@ import { themeObj } from '../themes/registrationTheme';
 import telus from '../telus.png';
 import { useEffect, useState, useCallback } from 'react';
 import { realtimeDb, onValue, ref, get, updateValue, storage } from '../../firebase/config';
-import { off, runTransaction } from 'firebase/database';
+import { runTransaction } from 'firebase/database';
 import Constants from '../Constants'
 import { uploadBytesResumable, getDownloadURL, ref as storeRef, deleteObject } from "firebase/storage";
 
@@ -82,7 +82,6 @@ function Registration() {
     }
 
     useEffect(() => {
-
 
         //current issue: IdName doesn't work unless I assign the variable without useState
         //also, If the files get replaced, it deletes the previous file from firebase storage, but if you do it again, it won't delete them anymore
@@ -246,6 +245,7 @@ function Registration() {
                     senderObj['gender'] = parseInt(Constants.getKeyByValue(Constants['genders'], sender.data['gender']));
                     senderObj['res_st'] = parseInt(Constants.getKeyByValue(Constants['usStates'], sender.data['res_st']));
                     senderObj['source'] = parseInt(Constants.getKeyByValue(Constants['sources'], sender.data['source']));
+                    senderObj['industry'] = parseInt(Constants.getKeyByValue(Constants['industries'], sender.data['industry']));
 
                     //db record
                     const firebasePath = `/participants/${pptId}/`;
