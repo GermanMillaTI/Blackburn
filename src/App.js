@@ -7,61 +7,45 @@ import { realtimeDb, auth } from './firebase/config';
 import { ref, onValue, off } from 'firebase/database';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUserInfo } from './Redux/Features';
-
-
+import Navbar from './components/Navbar';
+import Participants from './components/Participants';
 
 function App() {
   const [userId, setUserId] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [database, setDatabase] = useState({});
-  const [role, setRole] = useState(null);
-  const [userRights, setUserRights] = useState([]);
-  const [external, setExternal] = useState(false);
-  const [externalParticipantId, setExternalParticipantId] = useState(0);
-
+  const [showStats, setShowStats] = useState(false);
+  const [showLog, setShowLog] = useState(false);
 
 
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.userInfo.value || {});
 
-
-
-
   useEffect(() => {
 
     if (!userId) return;
 
-    onValue(ref(realtimeDb, "/users/" + userId), (user) => {
-      dispatch(updateUserInfo(user.val() || {}));
+    const userRef = ref(realtimeDb, "/users/" + userId);
+    const listener = onValue(userRef, (snapshot) => {
+      dispatch(updateUserInfo(snapshot.val() || {}));
     });
 
-    onValue(ref(realtimeDb, "/external/" + userId), (pid) => {
-      pid = pid.val();
-
-      if (pid) {
-        setExternal(true);
-        externalParticipantId(parseInt(pid))
-      }
-    })
-
-
     return () => {
-      off(realtimeDb, "/users/" + userId);
-      off(realtimeDb, "/external/" + userId);
+      off(userRef, "value", listener);
 
     }
-  }, [userId])
+  }, [userId, dispatch])
 
 
   function getElement(path) {
 
     switch (path) {
       case "/":
-        return null;
+        return <span>Blank...</span>;
       case "/login":
         return <LoginPage setUserId={setUserId} />;
       case "/registration":
         return <Registration />;
+      case "/participants":
+        return <Participants />;
       default:
         return null;
     }
@@ -70,9 +54,12 @@ function App() {
 
   return (
     <div id="mainContainer">
+      {userInfo['role'] && <Navbar setUserId={setUserId} showStats={showStats} setShowStats={setShowStats} showLog={showLog} setShowLog={setShowLog} />}
       <Routes>
         <Route path="/" element={getElement("/registration")} />
+        <Route path="/login" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
         <Route path="/registration" element={getElement('/registration')} />
+        <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
       </Routes>
     </div>
   );
