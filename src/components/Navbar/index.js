@@ -8,10 +8,36 @@ import Swal from 'sweetalert2';
 import { realtimeDb } from '../../firebase/config';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUserInfo } from '../../Redux/Features';
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import telusLogo from './telusLogo.png';
 
 import './index.css';
-import telusLogo from './telusLogo.png';
 import Constants from '../Constants';
+
+const theme = createTheme({
+    palette: {
+        telus: {
+            main: '#49166D',
+            black: '#444',
+            green: '#8BE234',
+            lightpurple: '#C8BBD0',
+            lightblack: "#666"
+        },
+    },
+});
+
+const customButtonStyle = {
+    fontSize: '12px',
+    color: 'telus.lightblack',
+    bgcolor: 'white',
+    fontWeight: 600,
+    height: 25,
+    '&:hover': {
+        bgcolor: 'telus.main',
+        color: 'white'
+    },
+    textTransform: 'none',
+};
 
 function Navbar({ setUserId, showStats, setShowStats, showLog, setShowLog }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
@@ -35,14 +61,16 @@ function Navbar({ setUserId, showStats, setShowStats, showLog, setShowLog }) {
     };
 
 
-    return <nav id="navbar">
-        <img src={telusLogo} alt="Telus International" />
-        <span id="navbarTitle" />
-        {admin && <a href="/participants" onClick={(e) => { e.preventDefault(); navigate("/participants"); }}>Participants</a>}
+    return (
+        <ThemeProvider theme={theme}>
+            <nav id="navbar">
+                <img src={telusLogo} style={{ height: '22px', width: 'auto', position: "absolute", left: "0" }} alt='TELUS International Logo' ></img>
+                {admin && <a href="/participants" onClick={(e) => { e.preventDefault(); navigate("/participants"); }}>Participants</a>}
+                <a href="/" onClick={(e) => { e.preventDefault(); handleLogout(); navigate("/"); }}>Logout</a>
+            </nav>
 
-        <a href="/" onClick={(e) => { e.preventDefault(); handleLogout(); navigate("/"); }}>Logout</a>
-    </nav>
-
+        </ThemeProvider>
+    )
 }
 
 export default Navbar;
