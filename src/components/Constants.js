@@ -91,9 +91,10 @@ const Constants = {
         45: 'Vermont',
         46: 'Virginia',
         47: 'Washington',
-        48: 'West Virginia',
-        49: 'Wisconsin',
-        50: 'Wyoming'
+        48: 'Washington, D.C.',
+        49: 'West Virginia',
+        50: 'Wisconsin',
+        51: 'Wyoming'
     },
 
     noAvailabilityReasons: {
@@ -180,6 +181,30 @@ const Constants = {
         20: 'TikTok'
     },
 
+    participantStatuses: {
+        // Do no modify these in any case !!
+        0: "",
+        1: "Handoff sent",
+        2: "Reminder sent",
+        3: "Review sent",
+        4: "Completed",
+        5: "Rejected",
+        6: "Withdrawn",
+        7: "Not selected"
+    },
+    ageRanges: [
+        "<13",
+        "13-14",
+        "15-17",
+        "18-20",
+        "21-30",
+        "31-40",
+        "41-50",
+        "51-60",
+        "61-70",
+        "71-75",
+        "75+"
+    ],
 
     getKeyByValue: function (obj, value) {
         return Object.keys(obj).find(key => obj[key] === value);

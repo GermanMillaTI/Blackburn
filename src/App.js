@@ -56,7 +56,7 @@ function App() {
     <div id="mainContainer">
       {userInfo['role'] && <Navbar setUserId={setUserId} showStats={showStats} setShowStats={setShowStats} showLog={showLog} setShowLog={setShowLog} />}
       <Routes>
-        <Route path="/" element={getElement("/registration")} />
+        <Route path="/" element={getElement("/")} />
         <Route path="/login" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
         <Route path="/registration" element={getElement('/registration')} />
         <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />

@@ -3,7 +3,7 @@ import 'firebase/compat/database'
 import 'firebase/compat/auth'
 import { getAuth } from "firebase/auth"
 import { getStorage } from 'firebase/storage';
-import { getDatabase, ref, update, onValue, get, runTransaction, set } from 'firebase/database';
+import { getDatabase, ref, update, onValue, get } from 'firebase/database';
 
 
 const firebaseConfig = {

@@ -9,7 +9,7 @@ import 'survey-core/defaultV2.min.css';
 import { themeObj } from '../themes/registrationTheme';
 import telus from '../telus.png';
 import { useEffect, useState, useCallback } from 'react';
-import { realtimeDb, onValue, ref, get, updateValue, storage } from '../../firebase/config';
+import { realtimeDb, ref, updateValue, storage } from '../../firebase/config';
 import { runTransaction } from 'firebase/database';
 import Constants from '../Constants'
 import { uploadBytesResumable, getDownloadURL, ref as storeRef, deleteObject } from "firebase/storage";
@@ -173,7 +173,6 @@ function Registration() {
                         // Wait for all promises to resolve before calling the callback
                         Promise.all(promises)
                             .then(previews => {
-                                //setIdName((options.files[0]['name']));
                                 options.callback(previews);
                             })
                             .catch(error => {
@@ -224,35 +223,31 @@ function Registration() {
             options.allow = false;
 
 
-            const uploadTask = uploadSignature(sender.data['sdc_signature'], pptId, "sdc");
+            await uploadSignature(sender.data['sdc_signature'], pptId, "sdc");
+            await uploadSignature(sender.data['signature'], pptId, "sla");
 
-            uploadTask.then(() => {
-                const newUploadTask = uploadSignature(sender.data['signature'], pptId, "sla");
+            let senderObj = {};
 
-                newUploadTask.then(() => {
-                    let senderObj = {};
+            Object.keys(sender.data).forEach(element => {
 
-                    Object.keys(sender.data).forEach(element => {
-
-                        if (!Constants.tobeExcluded.includes(element)) {
-                            senderObj[element] = sender.data[element];
-                        }
-
-                    })
-
-                    //Reassignment of Object properties based on Constants
-                    senderObj['registeredAs'] = parseInt(Constants.getKeyByValue(Constants['registeredAs'], sender.data['registeredAs']));
-                    senderObj['gender'] = parseInt(Constants.getKeyByValue(Constants['genders'], sender.data['gender']));
-                    senderObj['res_st'] = parseInt(Constants.getKeyByValue(Constants['usStates'], sender.data['res_st']));
-                    senderObj['source'] = parseInt(Constants.getKeyByValue(Constants['sources'], sender.data['source']));
-                    senderObj['industry'] = parseInt(Constants.getKeyByValue(Constants['industries'], sender.data['industry']));
-
-                    //db record
-                    const firebasePath = `/participants/${pptId}/`;
-                    updateValue(firebasePath, senderObj);
-                });
+                if (!Constants.tobeExcluded.includes(element)) {
+                    senderObj[element] = sender.data[element];
+                }
 
             })
+
+            //Reassignment of Object properties based on Constants
+            senderObj['registeredAs'] = parseInt(Constants.getKeyByValue(Constants['registeredAs'], sender.data['registeredAs']));
+            senderObj['gender'] = parseInt(Constants.getKeyByValue(Constants['genders'], sender.data['gender']));
+            senderObj['res_st'] = parseInt(Constants.getKeyByValue(Constants['usStates'], sender.data['res_st']));
+            senderObj['source'] = parseInt(Constants.getKeyByValue(Constants['sources'], sender.data['source']));
+            senderObj['industry'] = parseInt(Constants.getKeyByValue(Constants['industries'], sender.data['industry']));
+
+            //db record
+            const firebasePath = `/participants/${pptId}/`;
+            updateValue(firebasePath, senderObj);
+
+
 
 
 
