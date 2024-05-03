@@ -64,7 +64,9 @@ function Navbar({ setUserId, showStats, setShowStats, showLog, setShowLog }) {
     return (
         <ThemeProvider theme={theme}>
             <nav id="navbar">
+
                 <img src={telusLogo} style={{ height: '20px', width: 'auto', position: "absolute", left: "0" }} alt='TELUS International Logo' ></img>
+                <span id="navbarTitle" ></span>
                 {admin && <a href="/participants" onClick={(e) => { e.preventDefault(); navigate("/participants"); }}>Participants</a>}
                 <a href="/" onClick={(e) => { e.preventDefault(); handleLogout(); navigate("/"); }}>Logout</a>
             </nav>

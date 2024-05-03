@@ -38,7 +38,7 @@ const Constants = {
         0: "Male",
         1: "Female",
         2: "Non-binary",
-        3: "Prefer not to say'"
+        3: "Prefer not to say"
     },
 
     usStates: {
@@ -179,6 +179,23 @@ const Constants = {
         18: 'Reddit',
         19: 'Retirement Jobs',
         20: 'TikTok'
+    },
+    documentStatuses: {
+        1: "",
+        2: "Pass",
+        3: "Pending",
+        4: "Rejected"
+    },
+    logEventActions: {
+        // Do no modify these in any case !!
+        0: "Participant status",
+        1: "Participant comment",
+        2: "Email sent",
+        3: "document status",
+        4: "session status",
+        5: "session comment",
+        6: "lock session",
+        7: "unlock session"
     },
 
     participantStatuses: {

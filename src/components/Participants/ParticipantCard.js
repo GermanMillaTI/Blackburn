@@ -4,8 +4,8 @@ import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import { useSelector } from 'react-redux';
 import md5 from 'md5';
-import { updateValue } from "../../firebase/config"
-import Tooltip from '@mui/material/Tooltip';
+import { updateValue } from "../../firebase/config";
+import CheckDocuments from '../CheckDocuments';
 
 
 import './ParticipantCard.css';
@@ -17,15 +17,11 @@ import GetFormattedLogDate from '../CommonFunctions/GetFormattedLogDate';
 function ParticipantCard({ participantId, participants }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userId = userInfo['userId'];
-    const [checkDocuments, setCheckDocuments] = useState("");
+    const [showDocs, setShowDocs] = useState(false)
 
 
     const participantInfo = participants[participantId];
 
-
-    function openDocuments(participantId) {
-        setCheckDocuments(participantId);
-    }
 
 
 
@@ -92,8 +88,23 @@ function ParticipantCard({ participantId, participants }) {
         <div className="participant-card-column column-2">
             <div className="participant-attribute-container">
                 <span className="field-label">Identification</span>
-                <button onClick={() => openDocuments(participantId)}>Open</button>
+                <select className="participant-data-selector"
+                    onChange={(e) => {
+                        updateValue("/participants/" + participantId, { document_approval: parseInt(e.currentTarget.value) });
+                        LogEvent({
+                            pid: participantId,
+                            action: 3,
+                            value: "Document status: " + (e.currentTarget.value || "Blank") + "'"
+                        })
+                    }}
+                >
+                    {Object.values(Constants['documentStatuses']).map((s, i) => (
+                        <option key={"documents" + i} value={parseInt(i)} selected={i == parseInt(participantInfo['document_approval'])}>{s}</option>
+                    ))}</select>
+                <button onClick={() => setShowDocs(true)}>Open
+                </button>
             </div>
+            {showDocs && <CheckDocuments setShowDocs={setShowDocs} participantId={participantId} />}
             <div className="participant-attribute-container">
 
                 <span className="field-label">Status</span>

@@ -7,7 +7,7 @@ import Constants from '../Constants';
 import ParticipantFilter from './ParticipantFilter';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import ParticipantCard from './ParticipantCard';
-
+import TurnedInIcon from '@mui/icons-material/TurnedIn';
 
 const defaultFilterStats = {
     genders: Object.assign({}, ...Object.values(Constants['genders']).map(k => ({ [k]: 0 }))),
@@ -24,6 +24,10 @@ function Participants({ }) {
 
     const [shownParticipants, setShownParticipants] = useState([]);
     const [participants, setParticipants] = useState({});
+
+    useEffect(() => {
+        document.getElementById('navbarTitle').innerText = `Filtered participants: ${shownParticipants.length} ${shownParticipants.length > 100 ? "(the list is cropped at 100)" : ""}`;
+    }, [shownParticipants]);
 
 
     useEffect(() => {
@@ -49,14 +53,6 @@ function Participants({ }) {
 
     return <div id="participants">
         <ParticipantFilter participants={participants} setShownParticipants={setShownParticipants} filterStats={filterStats} />
-
-        <span className="filter-note">
-            Filtered participants: {shownParticipants.length}
-            {shownParticipants.length > 100 && (
-                <span> (The list is cropped at 100)</span>
-            )}
-        </span>
-
 
         <div id="participantTable">
             {shownParticipants.map((participantId, index) => {
