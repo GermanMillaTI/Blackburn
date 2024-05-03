@@ -190,7 +190,7 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
             </div>
         </div>
 
-        <div className="filter-container">
+        <div className="filter-container" style={{ borderBottom: ageScroll ? "10px solid #4B286D" : "" }}>
             <span className="filter-container-header">Age range</span>
             <div className="filter-element" id="ageRange" >
                 {Constants['ageRanges'].map((val, i) => {
@@ -201,7 +201,7 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
                     </div>
                 })}
             </div>
-            {ageScroll && <div class="scroll-indicator" onClick={scrollToBottom}><strong><ArrowDropDownIcon sx={{ color: "white" }} /></strong></div>}
+            {ageScroll && <div class="scroll-indicator" onClick={scrollToBottom}><strong><ArrowDropDownIcon sx={{ color: "white", fontSize: "20px", alignSelf: "center" }} /></strong></div>}
 
         </div>
 

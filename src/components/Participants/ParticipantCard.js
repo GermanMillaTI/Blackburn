@@ -5,6 +5,8 @@ import { format } from 'date-fns';
 import { useSelector } from 'react-redux';
 import md5 from 'md5';
 import { updateValue } from "../../firebase/config"
+import Tooltip from '@mui/material/Tooltip';
+
 
 import './ParticipantCard.css';
 import Constants from '../Constants';
@@ -15,9 +17,15 @@ import GetFormattedLogDate from '../CommonFunctions/GetFormattedLogDate';
 function ParticipantCard({ participantId, participants }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userId = userInfo['userId'];
+    const [checkDocuments, setCheckDocuments] = useState("");
+
 
     const participantInfo = participants[participantId];
 
+
+    function openDocuments(participantId) {
+        setCheckDocuments(participantId);
+    }
 
 
 
@@ -84,7 +92,7 @@ function ParticipantCard({ participantId, participants }) {
         <div className="participant-card-column column-2">
             <div className="participant-attribute-container">
                 <span className="field-label">Identification</span>
-
+                <button onClick={() => openDocuments(participantId)}>Open</button>
             </div>
             <div className="participant-attribute-container">
 
