@@ -66,7 +66,16 @@ function ParticipantCard({ participantId, participants }) {
             </div>
             <div className="participant-attribute-container">
                 <span className="field-label">Biometrics</span>
+                <span>
+                    {`${participantInfo['height_ft']}' ${participantInfo['height_in']}''`} / {participantInfo['weight_lbs']}
+                </span>
 
+            </div>
+            <div className="participant-attribute-container">
+                <span className="field-label">Skin tone</span>
+                <span>
+                    {participantInfo['skintone']}
+                </span>
             </div>
 
 

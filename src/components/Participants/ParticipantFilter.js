@@ -1,18 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { useEffect, useReducer } from 'react';
 
 import './ParticipantFilter.css';
 import Constants from '../Constants';
 import GetAgeRange from "../CommonFunctions/GetAgeRange";
 import Card from '@mui/material/Card';
-
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const defaultFilterValues = {
     genders: Object.values(Constants['genders']),
     ageRanges: Constants['ageRanges'],
-    //statuses: Object.values(Constants['participantStatuses']).map(status => status || 'Blank'),
-    statuses: ['Blank', 'Handoff sent', 'Reminder sent', 'Review sent'],
-};
+    statuses: Object.values(Constants['participantStatuses']).map(status => status || 'Blank'),
+    //statuses: ['Blank', 'Handoff sent', 'Reminder sent', 'Review sent'],
+};//
 
 const filterReducer = (state, event) => {
     if (event.target.name == "resetFilter") {
@@ -68,9 +68,15 @@ const filterReducer = (state, event) => {
 }
 
 
+
+
 function ParticipantFilter({ participants, setShownParticipants, filterStats }) {
 
     const [filterData, setFilterData] = useReducer(filterReducer, JSON.parse(JSON.stringify(defaultFilterValues)));
+    const [ageScroll, setAgeScroll] = useState(true);
+
+
+
 
     function filterFunction(participantId) {
         const participantInfo = participants[participantId];
@@ -117,6 +123,25 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
     useEffect(() => {
         setShownParticipants(Object.keys(participants).filter(pid => filterFunction(pid)));
     }, [JSON.stringify(participants), filterData]);
+
+    try {
+        const target = document.querySelector('#ageRange');
+
+        target.addEventListener('scroll', () => {
+
+            const isAtBottom = target.scrollHeight - target.scrollTop - target.clientHeight <= 1;
+            setAgeScroll(!isAtBottom)
+        }, false)
+    } catch (e) {
+        console.log(e)
+    }
+
+    const scrollToBottom = () => {
+        const scrollbar = document.getElementById("ageRange");
+        scrollbar.scrollTop = scrollbar.scrollHeight;
+
+    }
+
 
     return <Card className="filter-main-container">
 
@@ -167,7 +192,7 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
 
         <div className="filter-container">
             <span className="filter-container-header">Age range</span>
-            <div className="filter-element">
+            <div className="filter-element" id="ageRange" >
                 {Constants['ageRanges'].map((val, i) => {
                     return <div key={"filter-age-" + i} className="filter-object">
                         <input id={"filter-" + val} name={val} type="checkbox" alt="ageRanges" onChange={setFilterData} checked={filterData['ageRanges'].includes(val)} />
@@ -176,6 +201,8 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
                     </div>
                 })}
             </div>
+            {ageScroll && <div class="scroll-indicator" onClick={scrollToBottom}><strong><ArrowDropDownIcon sx={{ color: "white" }} /></strong></div>}
+
         </div>
 
 

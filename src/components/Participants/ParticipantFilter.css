@@ -18,7 +18,7 @@
 .filter-container {
     display: inline-flex;
     flex-direction: column;
-    padding: .5em;
+    padding: .45em;
     gap: .3em;
     border-radius: 1em;
     color: #333;
@@ -43,7 +43,24 @@
 .filter-container-header {
     font-weight: bold;
     text-align: center;
+
 }
+
+.scroll-indicator {
+    position: absolute;
+    align-self: center;
+    text-align: center;
+    transform: translateY(200px);
+    background-color: #4B286D;
+    color: white;
+    border-radius: 5px;
+    z-index: 0;
+    width: 25px;
+    height: fit-content;
+    font-size: 12px;
+    cursor: pointer;
+}
+
 
 .filter-object {
     display: flex;

@@ -184,13 +184,13 @@ const Constants = {
     participantStatuses: {
         // Do no modify these in any case !!
         0: "",
-        1: "Handoff sent",
-        2: "Reminder sent",
-        3: "Review sent",
-        4: "Completed",
+        1: "Contacted",
+        2: "Scheduled",
+        3: "Completed",
+        4: "Not Selected",
         5: "Rejected",
-        6: "Withdrawn",
-        7: "Not selected"
+        6: "Duplicate",
+        7: "Withdrawn"
     },
     ageRanges: [
         "<13",
