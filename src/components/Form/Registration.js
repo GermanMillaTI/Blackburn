@@ -17,7 +17,7 @@ import { uploadBytesResumable, getDownloadURL, ref as storeRef, deleteObject } f
 function Registration() {
     const [showtymsg, setShowtymsg] = useState(false);
     let pptId;
-
+    let IdUrl;
     let idName;
     const localeSettings = {
         completeText: "Submit",
@@ -93,7 +93,6 @@ function Registration() {
 
             });
 
-            console.log(pptId)
             document.getElementById("loading").style.display = "block";
 
             if (idName !== undefined) {
@@ -161,6 +160,7 @@ function Registration() {
                                         reject(new Error("Upload failed"));
                                     }
                                     getDownloadURL(storageRef).then(url => {
+                                        IdUrl = url.split(`https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/participants%2F${pptId}%2Fidentification%2F`)[1];
                                         document.getElementById("loading").style.display = "";
                                     })
 
@@ -242,7 +242,7 @@ function Registration() {
             senderObj['res_st'] = parseInt(Constants.getKeyByValue(Constants['usStates'], sender.data['res_st']));
             senderObj['source'] = parseInt(Constants.getKeyByValue(Constants['sources'], sender.data['source']));
             senderObj['industry'] = parseInt(Constants.getKeyByValue(Constants['industries'], sender.data['industry']));
-
+            senderObj['docs'] = { [pptId]: { 1: IdUrl } };
             //db record
             const firebasePath = `/participants/${pptId}/`;
             updateValue(firebasePath, senderObj);

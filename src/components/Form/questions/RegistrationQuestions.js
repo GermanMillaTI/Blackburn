@@ -672,6 +672,7 @@ export const surveyJson = {
                     type: "radiogroup",
                     choices: ["Yes", "No"],
                     isRequired: true,
+                    defaultValue: "No"
                 }, {
                     type: "radiogroup",
                     name: "ethnicity",

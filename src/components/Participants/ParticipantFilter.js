@@ -11,8 +11,9 @@ const defaultFilterValues = {
     genders: Object.values(Constants['genders']),
     ageRanges: Constants['ageRanges'],
     statuses: Object.values(Constants['participantStatuses']).map(status => status || 'Blank'),
-    //statuses: ['Blank', 'Handoff sent', 'Reminder sent', 'Review sent'],
+    skintones: Constants['skintones']
 };//
+
 
 const filterReducer = (state, event) => {
     if (event.target.name == "resetFilter") {
@@ -27,6 +28,10 @@ const filterReducer = (state, event) => {
         // Use this to 'filter only...'
         let value = event.target.name;
         let arrayName = event.target.getAttribute('alt');
+
+        //since the skintones are numbers, they need to be parsed to numbers
+        if (arrayName === "skintones") value = parseInt(value);
+
         newState[arrayName] = [value];
         return newState;
     } else if (event.target.type == "checkbox") {
@@ -38,19 +43,6 @@ const filterReducer = (state, event) => {
         } else if (!checked && state[filterType].includes(filterValue)) {
             const index = newState[filterType].indexOf(filterValue);
             newState[filterType].splice(index, 1);
-        }
-    }
-
-    if (event.target.type == "text" || event.target.type == "number") {
-        let filterName = event.target.name;
-        let filterValue = event.target.value.toLowerCase();
-
-        if (['email', 'ipAddress'].includes(filterName)) filterValue = filterValue.trim();
-
-        if (filterValue == "") {
-            if (newState[filterName]) delete newState[filterName];
-        } else {
-            newState[filterName] = filterValue;
         }
     }
 
@@ -76,8 +68,6 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
     const [ageScroll, setAgeScroll] = useState(true);
 
 
-
-
     function filterFunction(participantId) {
         const participantInfo = participants[participantId];
         if (filterData['participantId'] && !participantId.includes(filterData['participantId'])) return false;
@@ -95,11 +85,15 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
         if (!filterData['genders'].includes(gender)) return false;
 
         const ageRange = GetAgeRange(participantInfo)['ageRange'];
+
         if (!filterData['ageRanges'].includes(ageRange)) return false;
 
 
         const status = participantInfo['status'] ? Constants['participantStatuses'][participantInfo['status']] : 'Blank';
         if (!filterData['statuses'].includes(status)) return false;
+
+        const skintone = participantInfo['skintone'];
+        if (!filterData['skintones'].includes(skintone)) return false;
 
         // Check date of registration
         let dateOfRegistration;
@@ -124,6 +118,7 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
         setShownParticipants(Object.keys(participants).filter(pid => filterFunction(pid)));
     }, [JSON.stringify(participants), filterData]);
 
+
     try {
         const target = document.querySelector('#ageRange');
 
@@ -141,7 +136,6 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
         scrollbar.scrollTop = scrollbar.scrollHeight;
 
     }
-
 
     return <Card className="filter-main-container">
 
@@ -202,6 +196,20 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
                 })}
             </div>
             {ageScroll && <div class="scroll-indicator" onClick={scrollToBottom}><strong><ArrowDropDownIcon sx={{ color: "white", fontSize: "20px", alignSelf: "center" }} /></strong></div>}
+
+        </div>
+
+        <div className="filter-container" >
+            <span className="filter-container-header">Skin tones</span>
+            <div className="filter-element" id="skintones" >
+                {Constants['skintones'].map((val, i) => {
+                    return <div key={"filter-skintone-" + i} className="filter-object">
+                        <input id={"filter-skintones-" + val} name={val} type="checkbox" alt="skintones" onChange={setFilterData} checked={filterData['skintones'].includes(val)} />
+                        <label htmlFor={"filter-skintone-" + val}>{val + " (" + filterStats['skintones'][val] + ")"}</label>
+                        <button name={val} alt="skintones" className="filter-this-button" onClick={setFilterData}>!</button>
+                    </div>
+                })}
+            </div>
 
         </div>
 

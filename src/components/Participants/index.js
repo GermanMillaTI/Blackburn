@@ -7,14 +7,15 @@ import Constants from '../Constants';
 import ParticipantFilter from './ParticipantFilter';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import ParticipantCard from './ParticipantCard';
-import TurnedInIcon from '@mui/icons-material/TurnedIn';
 
 const defaultFilterStats = {
     genders: Object.assign({}, ...Object.values(Constants['genders']).map(k => ({ [k]: 0 }))),
     ageRanges: Object.assign({}, ...Constants['ageRanges'].map(k => ({ [k]: 0 }))),
     statuses: Object.assign({}, ...Object.values(Constants['participantStatuses']).map(k => ({ [k || 'Blank']: 0 }))),
+    skintones: Object.assign({}, ...Constants['skintones'].map(k => ({ [k]: 0 }))),
 
 };
+
 
 
 function Participants({ }) {
@@ -53,18 +54,18 @@ function Participants({ }) {
 
     return <div id="participants">
         <ParticipantFilter participants={participants} setShownParticipants={setShownParticipants} filterStats={filterStats} />
-
         <div id="participantTable">
             {shownParticipants.map((participantId, index) => {
                 const participantInfo = participants[participantId];
                 const gender = Constants['genders'][participantInfo['gender']];
                 const ageRange = GetAgeRange(participantInfo)['ageRange'];
                 const status = participantInfo['status'] ? Constants['participantStatuses'][participantInfo['status']] : 'Blank';
-
+                const skintone = participantInfo['skintone'];
 
                 filterStats['genders'][gender]++;
                 filterStats['ageRanges'][ageRange]++;
                 filterStats['statuses'][status]++;
+                filterStats['skintones'][skintone]++;
 
                 if (index >= 100) return null;
 

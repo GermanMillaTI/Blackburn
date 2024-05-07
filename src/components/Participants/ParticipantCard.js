@@ -13,6 +13,7 @@ import Constants from '../Constants';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import LogEvent from '../CommonFunctions/LogEvent';
 import GetFormattedLogDate from '../CommonFunctions/GetFormattedLogDate';
+import { ref } from 'firebase/storage';
 
 function ParticipantCard({ participantId, participants }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
@@ -101,8 +102,20 @@ function ParticipantCard({ participantId, participants }) {
                     {Object.values(Constants['documentStatuses']).map((s, i) => (
                         <option key={"documents" + i} value={parseInt(i)} selected={i == parseInt(participantInfo['document_approval'])}>{s}</option>
                     ))}</select>
-                <button onClick={() => setShowDocs(true)}>Open
+                <button className={"doc-button" + (participantInfo['docs']['pending'] ? " pending-doc" : "")}
+                    onClick={
+                        () => {
+                            setShowDocs(true);
+                            updateValue(`/participants/${participantId}/docs`, { pending: false })
+                        }
+                    }>
+                    Open
+                    ({Object.keys(participantInfo['docs'][participantId]).length})
                 </button>
+                <a className="mark-unchecked fas fa-bookmark" onClick={(e) => {
+                    e.preventDefault();
+                    updateValue(`/participants/${participantId}/docs`, { pending: true })
+                }}></a>
             </div>
             {showDocs && <CheckDocuments setShowDocs={setShowDocs} participantId={participantId} />}
             <div className="participant-attribute-container">
