@@ -58,6 +58,9 @@ function Participants({ }) {
         <div id="participantTable">
             {shownParticipants.map((participantId, index) => {
                 const participantInfo = participants[participantId];
+
+                if (!participantInfo) return null; //prevents attempting to render after deleting ppts
+
                 const gender = Constants['genders'][participantInfo['gender']];
                 const ageRange = GetAgeRange(participantInfo)['ageRange'];
                 const status = participantInfo['status'] ? Constants['participantStatuses'][participantInfo['status']] : 'Blank';

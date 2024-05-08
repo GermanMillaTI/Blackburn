@@ -242,7 +242,7 @@ function Registration() {
             senderObj['res_st'] = parseInt(Constants.getKeyByValue(Constants['usStates'], sender.data['res_st']));
             senderObj['source'] = parseInt(Constants.getKeyByValue(Constants['sources'], sender.data['source']));
             senderObj['industry'] = parseInt(Constants.getKeyByValue(Constants['industries'], sender.data['industry']));
-            senderObj['docs'] = { [pptId]: { 1: IdUrl } };
+            senderObj['docs'] = { [pptId]: { 1: IdUrl }, pending: true };
             //db record
             const firebasePath = `/participants/${pptId}/`;
             updateValue(firebasePath, senderObj);

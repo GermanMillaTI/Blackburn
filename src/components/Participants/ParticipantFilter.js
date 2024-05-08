@@ -113,8 +113,9 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
     }
 
     useEffect(() => {
-        setShownParticipants(Object.keys(participants).filter(pid => filterFunction(pid)));
-    }, [JSON.stringify(participants), filterData]);
+        const filteredParticipants = Object.keys(participants).filter(pid => filterFunction(pid))
+        setShownParticipants(filteredParticipants);
+    }, [participants, filterData]);
 
 
     try {
