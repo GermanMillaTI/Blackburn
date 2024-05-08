@@ -28,6 +28,7 @@
 
 .filter-element::-webkit-scrollbar {
     display: none;
+    border-radius: 0.5em;
 }
 
 
@@ -51,11 +52,11 @@
     position: absolute;
     align-self: center;
     text-align: center;
-    transform: translateY(207px);
+    transform: translateY(201px);
     background-color: transparent;
     color: white;
     border-radius: 5px;
-    z-index: 0;
+    z-index: 1;
     width: 25px;
     height: fit-content;
     font-size: 12px;

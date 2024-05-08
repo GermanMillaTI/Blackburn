@@ -4,6 +4,7 @@ import { useEffect, useReducer } from 'react';
 import './ParticipantFilter.css';
 import Constants from '../Constants';
 import GetAgeRange from "../CommonFunctions/GetAgeRange";
+import GetSkinTone from "../CommonFunctions/GetSkinTone";
 import Card from '@mui/material/Card';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
@@ -28,9 +29,6 @@ const filterReducer = (state, event) => {
         // Use this to 'filter only...'
         let value = event.target.name;
         let arrayName = event.target.getAttribute('alt');
-
-        //since the skintones are numbers, they need to be parsed to numbers
-        if (arrayName === "skintones") value = parseInt(value);
 
         newState[arrayName] = [value];
         return newState;
@@ -92,7 +90,7 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
         const status = participantInfo['status'] ? Constants['participantStatuses'][participantInfo['status']] : 'Blank';
         if (!filterData['statuses'].includes(status)) return false;
 
-        const skintone = participantInfo['skintone'];
+        const skintone = GetSkinTone(participantInfo)['skinRange'];
         if (!filterData['skintones'].includes(skintone)) return false;
 
         // Check date of registration
@@ -176,26 +174,26 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
                 {Object.keys(Constants['genders']).map((genderId, i) => {
                     const val = Constants['genders'][genderId];
                     return <div key={"filter-gender-" + i} className="filter-object">
-                        <input id={"filter-" + val} name={val} type="checkbox" alt="genders" onChange={setFilterData} checked={filterData['genders'].includes(val)} />
-                        <label htmlFor={"filter-" + val}>{val + " (" + filterStats['genders'][val] + ")"}</label>
+                        <input id={"filter-gender-" + val} name={val} type="checkbox" alt="genders" onChange={setFilterData} checked={filterData['genders'].includes(val)} />
+                        <label htmlFor={"filter-gender-" + val}>{val + " (" + filterStats['genders'][val] + ")"}</label>
                         <button name={val} alt="genders" className="filter-this-button" onClick={setFilterData}>!</button>
                     </div>
                 })}
             </div>
         </div>
 
-        <div className="filter-container" style={{ borderBottom: ageScroll ? "10px solid #4B286D" : "" }}>
+        <div className="filter-container" >
             <span className="filter-container-header">Age range</span>
-            <div className="filter-element" id="ageRange" >
+            <div className="filter-element" style={{ borderTop: !ageScroll ? "8px solid #4B286D" : "", borderBottom: ageScroll ? "8px solid #4B286D" : "", borderRadius: "5px" }} id="ageRange" >
                 {Constants['ageRanges'].map((val, i) => {
                     return <div key={"filter-age-" + i} className="filter-object">
-                        <input id={"filter-" + val} name={val} type="checkbox" alt="ageRanges" onChange={setFilterData} checked={filterData['ageRanges'].includes(val)} />
-                        <label htmlFor={"filter-" + val}>{val + " (" + filterStats['ageRanges'][val] + ")"}</label>
+                        <input id={"filter-age-" + val} name={val} type="checkbox" alt="ageRanges" onChange={setFilterData} checked={filterData['ageRanges'].includes(val)} />
+                        <label htmlFor={"filter-age-" + val}>{val + " (" + filterStats['ageRanges'][val] + ")"}</label>
                         <button name={val} alt="ageRanges" className="filter-this-button" onClick={setFilterData}>!</button>
                     </div>
                 })}
             </div>
-            {ageScroll && <div class="scroll-indicator" onClick={scrollToBottom}><strong><ArrowDropDownIcon sx={{ color: "white", fontSize: "20px", alignSelf: "center" }} /></strong></div>}
+            {ageScroll && <div className="scroll-indicator" onClick={scrollToBottom}><strong><ArrowDropDownIcon sx={{ color: "white", fontSize: "20px", alignSelf: "center" }} /></strong></div>}
 
         </div>
 
@@ -203,8 +201,9 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
             <span className="filter-container-header">Skin tones</span>
             <div className="filter-element" id="skintones" >
                 {Constants['skintones'].map((val, i) => {
+                    val = val.toString();
                     return <div key={"filter-skintone-" + i} className="filter-object">
-                        <input id={"filter-skintones-" + val} name={val} type="checkbox" alt="skintones" onChange={setFilterData} checked={filterData['skintones'].includes(val)} />
+                        <input id={"filter-skintone-" + val} name={val} type="checkbox" alt="skintones" onChange={setFilterData} checked={filterData['skintones'].includes(val)} />
                         <label htmlFor={"filter-skintone-" + val}>{val + " (" + filterStats['skintones'][val] + ")"}</label>
                         <button name={val} alt="skintones" className="filter-this-button" onClick={setFilterData}>!</button>
                     </div>

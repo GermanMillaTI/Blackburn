@@ -223,7 +223,11 @@ const Constants = {
         "75+"
     ],
     skintones: [
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+        "1-2",
+        "3-4",
+        "5-6",
+        "7-8",
+        "9-10"
     ],
 
     getKeyByValue: function (obj, value) {

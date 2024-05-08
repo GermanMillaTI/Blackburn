@@ -58,8 +58,8 @@
 }
 
 #participants .participant-card .column-2 {
-    width: 24em;
-    min-width: 24em;
+    width: 23.5em;
+    min-width: 23.5em;
 }
 
 #participants .participant-card .column-3 {
@@ -129,7 +129,7 @@
 }
 
 #participants .participant-card .min-width-selector {
-    min-width: 14.5em;
+    min-width: 13em;
 }
 
 #participants .participant-card .participant-attribute-header {

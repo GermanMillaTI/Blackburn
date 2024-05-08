@@ -6,6 +6,7 @@ import { ref, onValue, off } from 'firebase/database';
 import Constants from '../Constants';
 import ParticipantFilter from './ParticipantFilter';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
+import GetSkinTone from '../CommonFunctions/GetSkinTone';
 import ParticipantCard from './ParticipantCard';
 
 const defaultFilterStats = {
@@ -60,7 +61,7 @@ function Participants({ }) {
                 const gender = Constants['genders'][participantInfo['gender']];
                 const ageRange = GetAgeRange(participantInfo)['ageRange'];
                 const status = participantInfo['status'] ? Constants['participantStatuses'][participantInfo['status']] : 'Blank';
-                const skintone = participantInfo['skintone'];
+                const skintone = GetSkinTone(participantInfo)['skinRange'];
 
                 filterStats['genders'][gender]++;
                 filterStats['ageRanges'][ageRange]++;
