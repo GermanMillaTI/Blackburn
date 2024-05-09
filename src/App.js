@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateUserInfo } from './Redux/Features';
 import Navbar from './components/Navbar';
 import Participants from './components/Participants';
+import FilesView from './components/FilesView';
 
 function App() {
   const [userId, setUserId] = useState('');
@@ -46,6 +47,8 @@ function App() {
         return <Registration />;
       case "/participants":
         return <Participants />;
+      case "/files":
+        return <FilesView />;
       default:
         return null;
     }
@@ -60,6 +63,7 @@ function App() {
         <Route path="/login" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
         <Route path="/registration" element={getElement('/registration')} />
         <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
+        <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
       </Routes>
     </div>
   );

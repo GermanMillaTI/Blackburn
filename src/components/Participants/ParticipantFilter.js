@@ -70,10 +70,10 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
         const participantInfo = participants[participantId];
         if (filterData['participantId'] && !participantId.includes(filterData['participantId'])) return false;
 
-        const firstName = participantInfo['fname'].toLowerCase();
+        const firstName = participantInfo['firstName'].toLowerCase();
         if (filterData['firstName'] && !firstName.includes(filterData['firstName'].trim())) return false;
 
-        const lastName = participantInfo['lname'].toLowerCase();
+        const lastName = participantInfo['lastName'].toLowerCase();
         if (filterData['lastName'] && !lastName.includes(filterData['lastName'].trim())) return false;
 
         const email = participantInfo['email'].toLowerCase();

@@ -9,7 +9,7 @@ const Constants = {
         "agreementConfirmation",
         "sdc_fname",
         "sdc_lname",
-        "sdc_signature",
+        "sdcSignature",
         "grd_sdc_fname",
         "grd_sdc_lname",
         "noAvailabilityReason",

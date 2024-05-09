@@ -31,37 +31,67 @@ function ParticipantCard({ participantId, participants }) {
 
     return <div className="participant-card">
         <div className="participant-card-column column-1">
+            {participantInfo['registeredAs'] === 1 &&
+                <span className="registered-by-parent">Registered by parent or guardian</span>
+            }
 
             <div className="participant-attribute-container">
                 <span className="field-label"># {participantId}</span>
                 <span>
-                    {participantInfo['fname'] + " " + participantInfo['lname']}
+                    {participantInfo['firstName'] + " " + participantInfo['lastName']}
                 </span>
             </div>
 
-            <div className="participant-attribute-container">
-                <span className="field-label">E-mail</span>
-                <span>
-                    {participantInfo['email']}
-                    <a className="copy-email-link fas fa-copy"
-                        title="Copy email"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            const email = participantInfo['email'];
-                            navigator.clipboard.writeText(email);
 
-                            Swal.fire({
-                                toast: true,
-                                icon: 'success',
-                                title: 'Copied: ' + email,
-                                position: 'bottom',
-                                width: 'unset',
-                                showConfirmButton: false,
-                                timer: 2000
-                            })
-                        }} target="_blank" />
-                </span>
-            </div>
+            {participantInfo['registeredAs'] === 0
+                && <>
+                    <div className="participant-attribute-container">
+                        <span className="field-label">Phone</span><span className={participantInfo['phone_counter'] > 1 ? "highlighted-span" : ""}>
+                            {participantInfo['phone'].toString().replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3")}
+                            <div className="copy-email-link fas fa-copy"
+                                title="Copy phone number"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    let phone = "+" + participantInfo['phone'];
+                                    navigator.clipboard.writeText(phone);
+
+                                    Swal.fire({
+                                        toast: true,
+                                        icon: 'success',
+                                        title: 'Copied: ' + phone,
+                                        position: 'bottom',
+                                        width: 'unset',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    })
+                                }} target="_blank" />
+                        </span>
+                    </div>
+                    <div className="participant-attribute-container">
+                        <span className="field-label">E-mail</span>
+                        <span>
+                            {participantInfo['email']}
+                            <div className="copy-email-link fas fa-copy"
+                                title="Copy email"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    const email = participantInfo['email'];
+                                    navigator.clipboard.writeText(email);
+
+                                    Swal.fire({
+                                        toast: true,
+                                        icon: 'success',
+                                        title: 'Copied: ' + email,
+                                        position: 'bottom',
+                                        width: 'unset',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    })
+                                }} target="_blank" />
+                        </span>
+                    </div></>
+            }
+
 
             <div className="participant-attribute-container">
                 <span className="field-label">Metadata</span>
@@ -72,16 +102,76 @@ function ParticipantCard({ participantId, participants }) {
             <div className="participant-attribute-container">
                 <span className="field-label">Biometrics</span>
                 <span>
-                    {`${participantInfo['height_ft']}' ${participantInfo['height_in']}''`} / {participantInfo['weight_lbs']}
+                    {`${participantInfo['heightFt']}' ${participantInfo['heightIn']}''`} / {participantInfo['weightLbs']}
                 </span>
 
             </div>
             <div className="participant-attribute-container">
+
                 <span className="field-label">Skin tone</span>
                 <span>
                     {participantInfo['skintone']}
                 </span>
             </div>
+
+            {
+                participantInfo['registeredAs'] === 1 && <>
+                    <hr />
+
+                    <div className="participant-attribute-container">
+                        <span className="field-label">Parent Name</span>
+                        <span>
+                            {`${participantInfo['guardianFirstName']} ${participantInfo['guardianLastName']}`}
+                        </span>
+                    </div>
+                    <div className="participant-attribute-container">
+                        <span className="field-label">Phone</span><span className={participantInfo['phone_counter'] > 1 ? "highlighted-span" : ""}>
+                            {participantInfo['phone'].toString().replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3")}
+                            <div className="copy-email-link fas fa-copy"
+                                title="Copy phone number"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    let phone = "+" + participantInfo['phone'];
+                                    navigator.clipboard.writeText(phone);
+
+                                    Swal.fire({
+                                        toast: true,
+                                        icon: 'success',
+                                        title: 'Copied: ' + phone,
+                                        position: 'bottom',
+                                        width: 'unset',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    })
+                                }} target="_blank" />
+                        </span>
+                    </div>
+                    <div className="participant-attribute-container">
+                        <span className="field-label">E-mail</span>
+                        <span>
+                            {participantInfo['email']}
+                            <a className="copy-email-link fas fa-copy"
+                                title="Copy email"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    const email = participantInfo['email'];
+                                    navigator.clipboard.writeText(email);
+
+                                    Swal.fire({
+                                        toast: true,
+                                        icon: 'success',
+                                        title: 'Copied: ' + email,
+                                        position: 'bottom',
+                                        width: 'unset',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    })
+                                }} target="_blank" />
+                        </span>
+                    </div>
+                </>
+            }
+
 
 
         </div>

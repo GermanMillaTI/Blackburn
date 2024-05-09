@@ -223,7 +223,7 @@ function Registration() {
             options.allow = false;
 
 
-            await uploadSignature(sender.data['sdc_signature'], pptId, "sdc");
+            await uploadSignature(sender.data['sdcSignature'], pptId, "sdc");
             await uploadSignature(sender.data['signature'], pptId, "sla");
 
             let senderObj = {};
@@ -231,15 +231,19 @@ function Registration() {
             Object.keys(sender.data).forEach(element => {
 
                 if (!Constants.tobeExcluded.includes(element)) {
+
                     senderObj[element] = sender.data[element];
                 }
 
             })
 
+            //deleting no's 
+            if (senderObj['interestedInRecruiting'] === "No") delete senderObj['interestedInRecruiting'];
+
             //Reassignment of Object properties based on Constants
             senderObj['registeredAs'] = parseInt(Constants.getKeyByValue(Constants['registeredAs'], sender.data['registeredAs']));
             senderObj['gender'] = parseInt(Constants.getKeyByValue(Constants['genders'], sender.data['gender']));
-            senderObj['res_st'] = parseInt(Constants.getKeyByValue(Constants['usStates'], sender.data['res_st']));
+            senderObj['res_st'] = parseInt(Constants.getKeyByValue(Constants['usStates'], sender.data['residenceState']));
             senderObj['source'] = parseInt(Constants.getKeyByValue(Constants['sources'], sender.data['source']));
             senderObj['industry'] = parseInt(Constants.getKeyByValue(Constants['industries'], sender.data['industry']));
             senderObj['docs'] = { [pptId]: { 1: IdUrl }, pending: true };

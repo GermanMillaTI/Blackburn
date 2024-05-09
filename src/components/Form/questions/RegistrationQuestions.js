@@ -86,14 +86,14 @@ export const surveyJson = {
 
                     },
                     {
-                        name: "grd_fname",
+                        name: "guardianFirstName",
                         title: "First name:",
                         type: "text",
                         isRequired: true,
                         visibleIf: "{registeredAs} != 'I am registering as a participant over the age of 18'"
                     },
                     {
-                        name: "grd_lname",
+                        name: "guardianLastName",
                         title: "Last name:",
                         type: "text",
                         isRequired: true,
@@ -112,7 +112,7 @@ export const surveyJson = {
                         visibleIf: "{registeredAs} != 'I am registering as a participant over the age of 18'"
                     },
                     {
-                        name: "grd_phone",
+                        name: "phone",
                         type: "text",
                         title: "Phone number:",
                         inputMask: "phone",
@@ -132,13 +132,13 @@ export const surveyJson = {
                     },
 
                     {
-                        name: "fname",
+                        name: "firstName",
                         title: "First name:",
                         type: "text",
                         isRequired: true
                     },
                     {
-                        name: "lname",
+                        name: "lastName",
                         title: "Last name:",
                         type: "text",
                         isRequired: true,
@@ -190,7 +190,7 @@ export const surveyJson = {
                         ],
                         isRequired: true
                     }, {
-                        name: "res_st",
+                        name: "residenceState",
                         title: "State of residence:",
                         type: "dropdown",
                         choices: [
@@ -250,7 +250,7 @@ export const surveyJson = {
                         visibleIf: "{country} = 'United States'",
                         startWithNewLine: false,
                     }, {
-                        name: "countryOfResidence_other",
+                        name: "countryOther",
                         title: "Country of residence / other:",
                         type: "text",
                         isRequired: true,
@@ -259,7 +259,7 @@ export const surveyJson = {
                         visibleIf: "{country} = 'Other'"
 
                     }, {
-                        name: "city_of_residence",
+                        name: "residenceCity",
                         title: "City of residence:",
                         type: "text",
                         isRequired: true,
@@ -603,7 +603,7 @@ export const surveyJson = {
                     title: "First name:",
                     type: "text",
                     isRequired: true,
-                    defaultValueExpression: "{fname}",
+                    defaultValueExpression: "{firstName}",
                     visibleIf: "{registeredAs} = 'I am registering as a participant over the age of 18'",
                     readOnly: true
                 }, {
@@ -612,7 +612,7 @@ export const surveyJson = {
                     type: "text",
                     isRequired: true,
                     visibleIf: "{registeredAs} = 'I am registering as a participant over the age of 18'",
-                    defaultValueExpression: "{lname}",
+                    defaultValueExpression: "{lastName}",
                     readOnly: true,
                     startWithNewLine: false,
                 }, {
@@ -620,7 +620,7 @@ export const surveyJson = {
                     title: "First name:",
                     type: "text",
                     isRequired: true,
-                    defaultValueExpression: "{grd_fname}",
+                    defaultValueExpression: "{guardianFirstName}",
                     visibleIf: "{registeredAs} = 'I am a parent or guardian registering a child under 18'",
                     readOnly: true
                 }, {
@@ -629,7 +629,7 @@ export const surveyJson = {
                     type: "text",
                     isRequired: true,
                     startWithNewLine: false,
-                    defaultValueExpression: "{grd_lname}",
+                    defaultValueExpression: "{guardianLastName}",
                     visibleIf: "{registeredAs} = 'I am a parent or guardian registering a child under 18'",
                     readOnly: true
                 }, {
@@ -782,7 +782,7 @@ export const surveyJson = {
                     imageWidth: 75,
                     imageFit: "fill",
                 }, {
-                    name: "weight_lbs",
+                    name: "weightLbs",
                     title: "Your weight (lbs):",
                     description: "In pounds",
                     type: "text",
@@ -790,7 +790,7 @@ export const surveyJson = {
                     min: 1,
                     isRequired: true,
                 }, {
-                    name: "height_ft",
+                    name: "heightFt",
                     title: "Your height (feet):",
                     description: "between 1-8 feet",
                     type: "text",
@@ -800,7 +800,7 @@ export const surveyJson = {
                     isRequired: true,
                     startWithNewLine: false,
                 }, {
-                    name: "height_in",
+                    name: "heightIn",
                     title: "Your height (inches):",
                     description: "between 0-11 inches",
                     type: "text",
@@ -810,7 +810,7 @@ export const surveyJson = {
                     isRequired: true,
                     startWithNewLine: false,
                 }, {
-                    name: "hairtype",
+                    name: "hairType",
                     title: "Hair type:",
                     type: "dropdown",
                     description: "Select one of the available options",
@@ -852,7 +852,7 @@ export const surveyJson = {
                     isRequired: true,
 
                 }, {
-                    name: "facialhair",
+                    name: "facialHair",
                     title: "Facial hair:",
                     type: "dropdown",
                     description: "Select one of the available options",
@@ -1065,7 +1065,7 @@ export const surveyJson = {
                     title: "First name:",
                     type: "text",
                     isRequired: true,
-                    defaultValueExpression: "{fname}",
+                    defaultValueExpression: "{firstName}",
                     visibleIf: "{registeredAs} = 'I am registering as a participant over the age of 18'",
                     readOnly: true
                 },
@@ -1074,7 +1074,7 @@ export const surveyJson = {
                     title: "First name:",
                     type: "text",
                     isRequired: true,
-                    defaultValueExpression: "{grd_fname}",
+                    defaultValueExpression: "{guardianFirstName}",
                     startWithNewLine: false,
                     visibleIf: "{registeredAs} = 'I am a parent or guardian registering a child under 18'",
                     readOnly: true
@@ -1084,7 +1084,7 @@ export const surveyJson = {
                     type: "text",
                     isRequired: true,
                     startWithNewLine: false,
-                    defaultValueExpression: "{lname}",
+                    defaultValueExpression: "{lastName}",
                     readOnly: true,
                     visibleIf: "{registeredAs} = 'I am registering as a participant over the age of 18'"
                 }, {
@@ -1093,7 +1093,7 @@ export const surveyJson = {
                     type: "text",
                     isRequired: true,
                     startWithNewLine: false,
-                    defaultValueExpression: "{grd_lname}",
+                    defaultValueExpression: "{guardianLastName}",
                     visibleIf: "{registeredAs} = 'I am a parent or guardian registering a child under 18'",
                     readOnly: true,
                 }, {
@@ -1109,7 +1109,7 @@ export const surveyJson = {
 
                 }, {
                     type: "signaturepad",
-                    name: "sdc_signature",
+                    name: "sdcSignature",
                     title: "Signature",
                     signatureWidth: 700,
                     signatureHeight: 400,

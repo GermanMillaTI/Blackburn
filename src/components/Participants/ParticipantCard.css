@@ -35,6 +35,8 @@
     flex-direction: row;
     box-shadow: 1px 2px 5px rgba(0, 0, 0, .5);
     border-radius: .3em;
+    margin-left: 0.35em;
+    margin-right: 0.35em;
 }
 
 #participants .participant-card:nth-child(even) {
@@ -50,6 +52,12 @@
     flex-direction: column;
     gap: .4em;
     padding: .5em;
+}
+
+.registered-by-parent {
+    text-align: center;
+    background: #ff5100;
+    color: white;
 }
 
 #participants .participant-card .column-1 {
