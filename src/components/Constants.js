@@ -21,8 +21,33 @@ const Constants = {
         "industries",
         "csadate",
         "grd_signatureFirstName",
-        "grd_signatureLastName"
+        "grd_signatureLastName",
+        "ethnicities"
     ],
+    ethnicities: {
+        0: "Aboriginal Australians/Papuans",
+        1: "African/African-American/Black",
+        2: "Alaskan Native",
+        3: "East Asian",
+        4: "Hispanic/Latin American/Spanish",
+        5: "Native American",
+        6: "Native Hawaiian/Pacific Islander/Indigenous people of Oceania",
+        7: "Middle Eastern/North African",
+        8: "South Asian",
+        9: "Southeast Asian",
+        10: "White - Northern European",
+        11: "White - Southern European",
+        12: "Prefer not to state",
+        13: "Other"
+    },
+    ethnicityGroups: {
+        "Black": [1],
+        "Asian": [3, 8, 9],
+        "Hispanic": [4],
+        "Native American": [2, 5, 6],
+        "White": [7, 10, 11],
+        "Other": [0, 12, 13]
+    },
     savedIfYesOnly: [
         "interestedInRecruiting",
         "isMultipleEthnicities",

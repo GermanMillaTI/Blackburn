@@ -246,6 +246,14 @@ function Registration() {
             senderObj['res_st'] = parseInt(Constants.getKeyByValue(Constants['usStates'], sender.data['residenceState']));
             senderObj['source'] = parseInt(Constants.getKeyByValue(Constants['sources'], sender.data['source']));
             senderObj['industry'] = parseInt(Constants.getKeyByValue(Constants['industries'], sender.data['industry']));
+
+            if (sender.data['isMultipleEthnicities'] === "Yes") {
+                senderObj['ethnicities'] = sender.data['ethnicities'].map((v) => parseInt(Constants.getKeyByValue(Constants['ethnicities'], v)));
+            } else {
+                senderObj['ethnicities'] = parseInt(Constants.getKeyByValue(Constants['ethnicities'], sender.data['ethnicities']));
+            }
+
+
             senderObj['docs'] = { [pptId]: { 1: IdUrl }, pending: true };
             //db record
             const firebasePath = `/participants/${pptId}/`;

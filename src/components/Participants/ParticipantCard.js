@@ -27,6 +27,10 @@ function ParticipantCard({ participantId, participants }) {
 
 
 
+    let ethnicityGroups = participantInfo['ethnicities'].toString().split(',').map(eth => {
+        return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
+    });
+    ethnicityGroups = [...new Set(ethnicityGroups)].sort((a, b) => a > b ? 1 : -1).join(', ');
 
 
     return <div className="participant-card">
@@ -114,6 +118,13 @@ function ParticipantCard({ participantId, participants }) {
                 </span>
             </div>
 
+            <div className={"participant-attribute-container " + (ethnicityGroups.split(',').length > 1 ? 'multiple-ethnicities' : '')}>
+                <span className="field-label">Ethnicity</span>
+                <span>
+                    {ethnicityGroups}
+                </span>
+            </div>
+
             {
                 participantInfo['registeredAs'] === 1 && <>
                     <hr />
@@ -150,7 +161,7 @@ function ParticipantCard({ participantId, participants }) {
                         <span className="field-label">E-mail</span>
                         <span>
                             {participantInfo['email']}
-                            <a className="copy-email-link fas fa-copy"
+                            <div className="copy-email-link fas fa-copy"
                                 title="Copy email"
                                 onClick={(e) => {
                                     e.preventDefault();
@@ -202,10 +213,10 @@ function ParticipantCard({ participantId, participants }) {
                     Open
                     ({Object.keys(participantInfo['docs'][participantId]).length})
                 </button>
-                <a className="mark-unchecked fas fa-bookmark" onClick={(e) => {
+                <div className="mark-unchecked fas fa-bookmark" onClick={(e) => {
                     e.preventDefault();
                     updateValue(`/participants/${participantId}/docs`, { pending: true })
-                }}></a>
+                }}></div>
             </div>
             {showDocs && <CheckDocuments setShowDocs={setShowDocs} participantId={participantId} />}
             <div className="participant-attribute-container">
