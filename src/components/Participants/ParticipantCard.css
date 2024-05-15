@@ -33,10 +33,11 @@
 #participants .participant-card {
     display: flex;
     flex-direction: row;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, .5);
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .2);
     border-radius: .3em;
     margin-left: 0.35em;
     margin-right: 0.35em;
+    margin-bottom: 0.45em;
 }
 
 #participants .participant-card:nth-child(even) {

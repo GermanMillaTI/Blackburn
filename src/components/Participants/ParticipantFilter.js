@@ -244,9 +244,9 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
             <div className="filter-element" id="multipleEthnicities" >
                 {["Yes", "No"].map((val, i) => {
                     val = val.toString();
-                    return <div key={"filter-multiple-ethnicities-" + i} className="filter-object">
-                        <input id={"filter-multiple-ethnicities-" + val} name={val} type="checkbox" alt="multipleEthnicities" onChange={setFilterData} checked={filterData['multipleEthnicities'].includes(val)} />
-                        <label htmlFor={"filter-multiple-ethnicities-" + val}>{val + " (" + filterStats['multipleEthnicities'][val] + ")"}</label>
+                    return <div key={"filter-multipleEthnicities-" + i} className="filter-object">
+                        <input id={"filter-multipleEthnicities-" + val} name={val} type="checkbox" alt="multipleEthnicities" onChange={setFilterData} checked={filterData['multipleEthnicities'].includes(val)} />
+                        <label htmlFor={"filter-multipleEthnicities-" + val}>{val + " (" + filterStats['multipleEthnicities'][val] + ")"}</label>
                         <button name={val} alt="multipleEthnicities" className="filter-this-button" onClick={setFilterData}>!</button>
                     </div>
                 })}
@@ -259,9 +259,9 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
             <div className="filter-element" id="ethnicityGroups" >
                 {Object.keys(Constants['ethnicityGroups']).map((val, i) => {
                     val = val.toString();
-                    return <div key={"filter-ethnicity-" + i} className="filter-object">
-                        <input id={"filter-ethnicity-" + val} name={val} type="checkbox" alt="skintones" onChange={setFilterData} checked={filterData['ethnicityGroups'].includes(val)} />
-                        <label htmlFor={"filter-ethnicity-" + val}>{val + " (" + filterStats['ethnicityGroups'][val] + ")"}</label>
+                    return <div key={"filter-ethnicityGroups-" + i} className="filter-object">
+                        <input id={"filter-ethnicityGroups-" + val} name={val} type="checkbox" alt="ethnicityGroups" onChange={setFilterData} checked={filterData['ethnicityGroups'].includes(val)} />
+                        <label htmlFor={"filter-ethnicityGroups-" + val}>{val + " (" + filterStats['ethnicityGroups'][val] + ")"}</label>
                         <button name={val} alt="ethnicityGroups" className="filter-this-button" onClick={setFilterData}>!</button>
                     </div>
                 })}

@@ -16,7 +16,7 @@ const Constants = {
         "registeredAs",
         "gender",
         "agreementConfirmation",
-        "res_st",
+        "residenceState",
         "source",
         "industries",
         "csadate",
@@ -24,29 +24,33 @@ const Constants = {
         "grd_signatureLastName",
         "ethnicities"
     ],
+    rejectionReasons: [
+
+    ],
     ethnicities: {
         0: "Aboriginal Australians/Papuans",
-        1: "African/African-American/Black",
+        1: "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African]",
         2: "Alaskan Native",
-        3: "East Asian",
-        4: "Hispanic/Latin American/Spanish",
-        5: "Native American",
-        6: "Native Hawaiian/Pacific Islander/Indigenous people of Oceania",
-        7: "Middle Eastern/North African",
-        8: "South Asian",
-        9: "Southeast Asian",
-        10: "White - Northern European",
-        11: "White - Southern European",
+        3: "Native American [Navite American, Central of South Native American]",
+        4: "East Asian [Chinese, Japanese, Korean, Taiwanese]",
+        5: "Hispanic/Latin American/Spanish [Colombian, Cuban, Dominican, Ecuadorian, Honduran, Mexican or Mexican American, Puerto Rican, Salvadorian, Spanish]",
+        6: "Middle Eastern/North African [Afghan, Algerian, Egyptian, Iranian, Iraqi, Israeli, Lebanese, Moroccan, Syrian, Tunisian]",
+        7: "Native Hawaiian/Pacific Islander/Indigenous people of Oceania [Chamarro, Chuukese, Fijian, Marshallese, Native Hawaiian, Palauan, Samoan, Tahitian, Tongan]",
+        8: "South Asian [Asian Indian, Bangladeshi, Pakistani]",
+        9: "Southeast Asian [Cambodian, Filipino, Hmong, Malaysian, Thai, Singaporean, Vietnamese]",
+        10: "White - Northern European [Dutch, English, Northern French, German, Irish, Norwegian, Northern European (not listed)]",
+        11: "White - Southern European [Italian, Southern French, Spanish, Portuguese, Southern European (not listed)]",
         12: "Prefer not to state",
         13: "Other"
     },
     ethnicityGroups: {
-        "Black": [1],
-        "Asian": [3, 8, 9],
-        "Hispanic": [4],
-        "Native American": [2, 5, 6],
-        "White": [7, 10, 11],
-        "Other": [0, 12, 13]
+        "African/African-American/Black": [1],
+        "Med / Mid East": [6],
+        "Latin / S. Amer": [5],
+        "East Asian": [4],
+        "South Asian": [8],
+        "N. European": [10],
+        "Other": [0, 2, 3, 7, 9, 12, 13]
     },
     savedIfYesOnly: [
         "interestedInRecruiting",
@@ -246,6 +250,17 @@ const Constants = {
         "61-70",
         "71-75",
         "75+"
+    ],
+    listOfAgeRanges: [
+        "13-14",
+        "15-17",
+        "18-20",
+        "21-30",
+        "31-40",
+        "41-50",
+        "51-60",
+        "61-70",
+        "71-75",
     ],
     skintones: [
         "1-2",

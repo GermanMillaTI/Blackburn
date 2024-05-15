@@ -69,6 +69,8 @@ function Navbar({ setUserId, showStats, setShowStats, showLog, setShowLog }) {
                 <span className='projectName'>Blackburn</span>
                 {admin && <a href="/participants" onClick={(e) => { e.preventDefault(); navigate("/participants"); }}>Participants</a>}
                 {admin && <a href="/files" onClick={(e) => { e.preventDefault(); navigate("/files"); }}>Files</a>}
+                {admin && <a href="/stats" onClick={(e) => { e.preventDefault(); setShowStats(true); }}>Stats</a>}
+
                 <a href="/" onClick={(e) => { e.preventDefault(); handleLogout(); navigate("/"); }}>Logout</a>
             </nav>
 

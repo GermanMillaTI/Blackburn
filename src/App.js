@@ -10,6 +10,7 @@ import { updateUserInfo } from './Redux/Features';
 import Navbar from './components/Navbar';
 import Participants from './components/Participants';
 import FilesView from './components/FilesView';
+import Stats from './components/Stats';
 
 function App() {
   const [userId, setUserId] = useState('');
@@ -57,7 +58,12 @@ function App() {
 
   return (
     <div id="mainContainer">
-      {userInfo['role'] && <Navbar setUserId={setUserId} showStats={showStats} setShowStats={setShowStats} showLog={showLog} setShowLog={setShowLog} />}
+      {userInfo['role'] && <Navbar
+        setUserId={setUserId}
+        showStats={showStats}
+        setShowStats={setShowStats}
+        showLog={showLog}
+        setShowLog={setShowLog} />}
       <Routes>
         <Route path="/" element={getElement("/")} />
         <Route path="/login" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
@@ -65,6 +71,7 @@ function App() {
         <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
         <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
       </Routes>
+      {showStats && <Stats setShowStats={setShowStats} />}
     </div>
   );
 }
