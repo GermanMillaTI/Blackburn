@@ -16,8 +16,12 @@ const defaultFilterStats = {
     skintones: Object.assign({}, ...Constants['skintones'].map(k => ({ [k]: 0 }))),
     ethnicityGroups: Object.assign({}, ...Object.keys(Constants['ethnicityGroups']).map(k => ({ [k]: 0 }))),
     multipleEthnicities: Object.assign({}, ...['Yes', 'No'].map(k => ({ [k]: 0 }))),
+    hairLengths: Object.assign({}, ...Object.values(Constants['hairLength']).map(k => ({ [k]: 0 }))),
+    hairTypes: Object.assign({}, ...Object.values(Constants['hairType']).map(k => ({ [k]: 0 }))),
+
 
 };
+
 
 
 
@@ -67,8 +71,10 @@ function Participants({ }) {
                 const ageRange = GetAgeRange(participantInfo)['ageRange'];
                 const status = participantInfo['status'] ? Constants['participantStatuses'][participantInfo['status']] : 'Blank';
                 const skintone = GetSkinTone(participantInfo)['skinRange'];
-                const ethnicities = participantInfo['ethnicities'];
-                let ethnicityGroups = ethnicities.toString().split(',').map(eth => {
+                const hairLength = Constants['hairLength'][participantInfo['hairLength']];
+                const hairType = Constants['hairType'][participantInfo['hairType']];
+                const ethnicities = participantInfo['ethnicities']
+                let ethnicityGroups = ethnicities.toString().split(';').map(eth => {
                     return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
                 });
                 const multipleEthnicities = [...new Set(ethnicityGroups)].length > 1 ? 'Yes' : 'No';
@@ -79,6 +85,8 @@ function Participants({ }) {
                 filterStats['statuses'][status]++;
                 filterStats['skintones'][skintone]++;
                 filterStats['multipleEthnicities'][multipleEthnicities]++;
+                filterStats['hairLengths'][hairLength]++;
+                filterStats['hairTypes'][hairType]++;
 
                 if (index >= 100) return null;
 

@@ -22,7 +22,10 @@ const Constants = {
         "csadate",
         "grd_signatureFirstName",
         "grd_signatureLastName",
-        "ethnicities"
+        "ethnicities",
+        "hairLength",
+        "isMultipleEthnicities",
+        "hairType"
     ],
     rejectionReasons: [
 
@@ -51,6 +54,18 @@ const Constants = {
         "South Asian": [8],
         "N. European": [10],
         "Other": [0, 2, 3, 7, 9, 12, 13]
+    },
+    hairLength: {
+        0: 'Bald',
+        1: 'Short',
+        2: 'Medium',
+        3: 'Long'
+    },
+    hairType: {
+        0: 'Curly',
+        1: 'Coily',
+        2: 'Straight',
+        3: 'Wavy'
     },
     savedIfYesOnly: [
         "interestedInRecruiting",

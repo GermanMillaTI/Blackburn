@@ -239,16 +239,20 @@ function Registration() {
 
             //deleting no's 
             if (senderObj['interestedInRecruiting'] === "No") delete senderObj['interestedInRecruiting'];
+            if (senderObj['tattoos'][0] === 'none') delete senderObj['tattoos'];
+            if (senderObj['piercings'][0] === 'none') delete senderObj['piercings'];
 
             //Reassignment of Object properties based on Constants
             senderObj['registeredAs'] = parseInt(Constants.getKeyByValue(Constants['registeredAs'], sender.data['registeredAs']));
             senderObj['gender'] = parseInt(Constants.getKeyByValue(Constants['genders'], sender.data['gender']));
-            senderObj['res_st'] = parseInt(Constants.getKeyByValue(Constants['usStates'], sender.data['residenceState']));
+            senderObj['residenceState'] = parseInt(Constants.getKeyByValue(Constants['usStates'], sender.data['residenceState']));
             senderObj['source'] = parseInt(Constants.getKeyByValue(Constants['sources'], sender.data['source']));
             senderObj['industry'] = parseInt(Constants.getKeyByValue(Constants['industries'], sender.data['industry']));
+            senderObj['hairLength'] = parseInt(Constants.getKeyByValue(Constants['hairLength'], sender.data['hairLength']));
+            senderObj['hairType'] = parseInt(Constants.getKeyByValue(Constants['hairType'], sender.data['hairType']));
 
             if (sender.data['isMultipleEthnicities'] === "Yes") {
-                senderObj['ethnicities'] = sender.data['ethnicities'].map((v) => parseInt(Constants.getKeyByValue(Constants['ethnicities'], v)));
+                senderObj['ethnicities'] = sender.data['ethnicities'].map((v) => parseInt(Constants.getKeyByValue(Constants['ethnicities'], v))).join(';');
             } else {
                 senderObj['ethnicities'] = parseInt(Constants.getKeyByValue(Constants['ethnicities'], sender.data['ethnicities']));
             }

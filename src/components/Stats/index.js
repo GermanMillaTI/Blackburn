@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { realtimeDb } from '../../firebase/config';
 import { ref, onValue, off } from 'firebase/database';
 import Constants from '../Constants';
+import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import './index.css';
 
 const filterReducer = (state, event) => {
@@ -31,11 +32,18 @@ function Stats({ setShowStats }) {
     });
 
     function getDefaultNumbers() {
-        let temp = {};
+        let temp = Object.assign({}, ...Object.values(Constants['ethnicities']).map(k => ({
+            [k]: Object.assign({}, ...Constants['listOfAgeRanges'].map(k => ({
+                [k]: Object.assign({}, ...Object.values(Constants['genders']).map(k => ({
+                    [k]: Object.assign({}, ...Object.values(Constants['participantStatuses']).map(k => ({ [k || "Blank"]: 0 })))
+                })))
+            })))
+        })))
 
         return (temp);
     }
 
+    console.log(stats)
     useEffect(() => {
 
         const path = '/participants';
@@ -45,6 +53,15 @@ function Stats({ setShowStats }) {
 
             setDatabase(res.val() || {});
         });
+
+        let tempStats = getDefaultNumbers();
+
+        Object.values(database).map(participant => {
+            let gender = participant['gender']
+            let ageRange = GetAgeRange(participant)['ageRange'];
+            let ethnicities = participant['ethnicities']
+        })
+
 
         return () => {
             off(pptRef, "value", listener);

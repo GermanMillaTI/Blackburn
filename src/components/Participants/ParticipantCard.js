@@ -27,7 +27,7 @@ function ParticipantCard({ participantId, participants }) {
 
 
 
-    let ethnicityGroups = participantInfo['ethnicities'].toString().split(',').map(eth => {
+    let ethnicityGroups = participantInfo['ethnicities'].toString().split(';').map(eth => {
         return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
     });
     ethnicityGroups = [...new Set(ethnicityGroups)].sort((a, b) => a > b ? 1 : -1).join(', ');
@@ -118,7 +118,7 @@ function ParticipantCard({ participantId, participants }) {
                 </span>
             </div>
 
-            <div className={"participant-attribute-container " + (ethnicityGroups.split(',').length > 1 ? 'multiple-ethnicities' : '')}>
+            <div className={"participant-attribute-container " + (ethnicityGroups.split(';').length > 1 ? 'multiple-ethnicities' : '')}>
                 <span className="field-label">Ethnicity</span>
                 <span>
                     {ethnicityGroups}
