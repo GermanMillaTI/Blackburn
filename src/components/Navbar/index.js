@@ -39,7 +39,7 @@ const customButtonStyle = {
     textTransform: 'none',
 };
 
-function Navbar({ setUserId, showStats, setShowStats, showLog, setShowLog }) {
+function Navbar({ setUserId, showStats, setShowStats, showLog, setShowLog, showBins, setShowBins }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userRole = userInfo['role'];
     const admin = ['admin'].includes(userRole);
@@ -67,9 +67,10 @@ function Navbar({ setUserId, showStats, setShowStats, showLog, setShowLog }) {
                 <img src={telusLogo} style={{ height: '20px', width: 'auto', position: "absolute", left: "0" }} alt='TELUS International Logo' ></img>
                 <span id="navbarTitle" className='notifier'></span>
                 <span className='projectName'>Blackburn</span>
+                {["german.milla01@telusinternational.com"].includes(auth.currentUser.email) && <a href="/files" onClick={(e) => { e.preventDefault(); navigate("/files"); }}>Files</a>}
                 {admin && <a href="/participants" onClick={(e) => { e.preventDefault(); navigate("/participants"); }}>Participants</a>}
-                {admin && <a href="/files" onClick={(e) => { e.preventDefault(); navigate("/files"); }}>Files</a>}
                 {admin && <a href="/stats" onClick={(e) => { e.preventDefault(); setShowStats(true); }}>Stats</a>}
+                {admin && <a href="/demo-bins" onClick={(e) => { e.preventDefault(); setShowBins(true); }}>Demo bins</a>}
 
                 <a href="/" onClick={(e) => { e.preventDefault(); handleLogout(); navigate("/"); }}>Logout</a>
             </nav>

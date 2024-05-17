@@ -11,10 +11,12 @@ import Navbar from './components/Navbar';
 import Participants from './components/Participants';
 import FilesView from './components/FilesView';
 import Stats from './components/Stats';
+import Bins from './components/Stats/Bins';
 
 function App() {
   const [userId, setUserId] = useState('');
   const [showStats, setShowStats] = useState(false);
+  const [showBins, setShowBins] = useState(false);
   const [showLog, setShowLog] = useState(false);
 
 
@@ -62,6 +64,8 @@ function App() {
         setUserId={setUserId}
         showStats={showStats}
         setShowStats={setShowStats}
+        showBins={showBins}
+        setShowBins={setShowBins}
         showLog={showLog}
         setShowLog={setShowLog} />}
       <Routes>
@@ -72,6 +76,7 @@ function App() {
         <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
       </Routes>
       {showStats && <Stats setShowStats={setShowStats} />}
+      {showBins && <Bins setShowBins={setShowBins} />}
     </div>
   );
 }

@@ -29,7 +29,7 @@ function FilesView() {
 
     useEffect(() => {
         let filesLength = Object.keys(files.participants).length || 0;
-        if (filesLength > 0) document.getElementById('navbarTitle').innerText = `Participants: ${Object.keys(files.participants).length}`;
+        if (filesLength > 0) document.getElementById('navbarTitle').innerText = `Participants in files: ${Object.keys(files.participants).length}`;
     }, [files]);
 
 
@@ -69,7 +69,7 @@ function FilesView() {
     }, [files]);
 
     return <div>
-        <table id="schedulerExternalTable" className="scheduler-external-table">
+        {files && <table id="schedulerExternalTable" className="scheduler-external-table">
             <thead>
                 <tr>
                     <th>Participant ID</th>
@@ -78,19 +78,20 @@ function FilesView() {
 
             </thead>
             <tbody>
-                {files && Object.keys(files['participants']).map((id, i) => {
+                {Object.keys(files['participants']).map((id, i) => {
                     return <tr key={i}>
                         <td>{id}</td>
                         {
                             Object.keys(files['participants'][id]).map((item, j) => {
 
-                                return <tr><td>{item}</td></tr>
+                                return <tr key={item}><td>{item}</td></tr>
                             })
                         }
                     </tr>
                 })}
             </tbody>
         </table>
+        }
 
     </div>
 };

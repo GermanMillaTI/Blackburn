@@ -254,7 +254,7 @@ function Registration() {
             if (sender.data['isMultipleEthnicities'] === "Yes") {
                 senderObj['ethnicities'] = sender.data['ethnicities'].map((v) => parseInt(Constants.getKeyByValue(Constants['ethnicities'], v))).join(';');
             } else {
-                senderObj['ethnicities'] = parseInt(Constants.getKeyByValue(Constants['ethnicities'], sender.data['ethnicities']));
+                senderObj['ethnicities'] = Constants.getKeyByValue(Constants['ethnicities'], sender.data['ethnicities']).toString();
             }
 
 

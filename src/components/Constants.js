@@ -53,8 +53,44 @@ const Constants = {
         "East Asian": [4],
         "South Asian": [8],
         "N. European": [10],
-        "Other": [0, 2, 3, 7, 9, 12, 13]
+        "Other": [0, 2, 3, 7, 9, 12, 13],
+        "Total": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
     },
+    ethDbMap: {
+        "Aboriginal Australians/Papuans": "Other",
+        "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African]": "AfrAfrAmBlack",
+        "Alaskan Native": "Other",
+        "Native American [Navite American, Central of South Native American]": "Other",
+        "East Asian [Chinese, Japanese, Korean, Taiwanese]": "EastAsian",
+        "Hispanic/Latin American/Spanish [Colombian, Cuban, Dominican, Ecuadorian, Honduran, Mexican or Mexican American, Puerto Rican, Salvadorian, Spanish]": "LatinSAmer",
+        "Middle Eastern/North African [Afghan, Algerian, Egyptian, Iranian, Iraqi, Israeli, Lebanese, Moroccan, Syrian, Tunisian]": "MedMidEast",
+        "Native Hawaiian/Pacific Islander/Indigenous people of Oceania [Chamarro, Chuukese, Fijian, Marshallese, Native Hawaiian, Palauan, Samoan, Tahitian, Tongan]": "Other",
+        "South Asian [Asian Indian, Bangladeshi, Pakistani]": "SouthAsian",
+        "Southeast Asian [Cambodian, Filipino, Hmong, Malaysian, Thai, Singaporean, Vietnamese]": "SoutheastAsian",
+        "White - Northern European [Dutch, English, Northern French, German, Irish, Norwegian, Northern European (not listed)]": "NEuropean",
+        "White - Southern European [Italian, Southern French, Spanish, Portuguese, Southern European (not listed)]": "Other",
+        "Prefer not to state": "Other",
+        "Other": "Other"
+    },
+    ethDbMap2: {
+        "African/African-American/Black": "AfrAfrAmBlack",
+        "Med / Mid East": "MedMidEast",
+        "Latin / S. Amer": "LatinSAmer",
+        "East Asian": "EastAsian",
+        "South Asian": "SouthAsian",
+        "N. European": "NEuropean",
+        "Other": "Other"
+    },
+    demoBinStatuses: [
+        'Open',
+        'Closed'
+    ],
+    demoBinStatusDictionary: {
+        0: 'Open',
+        1: 'Closed',
+        2: 'Closed'
+    },
+
     hairLength: {
         0: 'Bald',
         1: 'Short',

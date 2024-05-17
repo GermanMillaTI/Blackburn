@@ -264,7 +264,7 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
         <div className="filter-container" >
             <span className="filter-container-header">Ethnicity Group</span>
             <div className="filter-element" id="ethnicityGroups" >
-                {Object.keys(Constants['ethnicityGroups']).map((val, i) => {
+                {Object.keys(Constants['ethnicityGroups']).filter(el => el !== "Total").map((val, i) => {
                     val = val.toString();
                     return <div key={"filter-ethnicityGroups-" + i} className="filter-object">
                         <input id={"filter-ethnicityGroups-" + val} name={val} type="checkbox" alt="ethnicityGroups" onChange={setFilterData} checked={filterData['ethnicityGroups'].includes(val)} />
