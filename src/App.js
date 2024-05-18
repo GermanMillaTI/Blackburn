@@ -18,6 +18,7 @@ function App() {
   const [showStats, setShowStats] = useState(false);
   const [showBins, setShowBins] = useState(false);
   const [showLog, setShowLog] = useState(false);
+  const [filterDataFromStats, setFilterDataFromStats] = useState(false);
 
 
   const dispatch = useDispatch();
@@ -49,7 +50,8 @@ function App() {
       case "/registration":
         return <Registration />;
       case "/participants":
-        return <Participants />;
+        return <Participants filterDataFromStats={filterDataFromStats}
+          setFilterDataFromStats={setFilterDataFromStats} />;
       case "/files":
         return <FilesView />;
       default:
@@ -75,7 +77,7 @@ function App() {
         <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
         <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
       </Routes>
-      {showStats && <Stats setShowStats={setShowStats} />}
+      {showStats && <Stats setShowStats={setShowStats} setFilterDataFromStats={setFilterDataFromStats} />}
       {showBins && <Bins setShowBins={setShowBins} />}
     </div>
   );

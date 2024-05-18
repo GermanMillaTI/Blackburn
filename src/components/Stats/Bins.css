@@ -69,12 +69,13 @@
 
 .demo-bin-1 {
     user-select: none;
-    background: rgba(250, 164, 4, 0.747) !important;
+    background: #FACA69 !important;
 }
 
 .demo-bin-2 {
     user-select: none;
-    background: rgba(253, 55, 55, 0.555) !important;
+    background: #C12335 !important;
+    color: white
 }
 
 .table-of-stats td span.demo-status {

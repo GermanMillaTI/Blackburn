@@ -7,11 +7,11 @@
     width: fit-content;
     padding-bottom: 0.5em;
     background-color: white;
-    margin-top: 0.5em;
+    margin-top: 0.50em;
     margin-right: 5px;
     margin-left: 5px;
     margin-bottom: 0.35em;
-    height: 240px;
+    height: 280px;
 }
 
 
@@ -52,7 +52,7 @@
     position: absolute;
     align-self: center;
     text-align: center;
-    transform: translateY(201px);
+    transform: translateY(242px);
     background-color: transparent;
     color: white;
     border-radius: 5px;

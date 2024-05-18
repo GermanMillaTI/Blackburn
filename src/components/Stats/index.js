@@ -24,7 +24,7 @@ const filterReducer = (state, event) => {
     return newState;
 }
 
-function Stats({ setShowStats }) {
+function Stats({ setShowStats, setFilterDataFromStats }) {
     const navigate = useNavigate();
     const [database, setDatabase] = useState({});
     const [demos, setDemos] = useState({});
@@ -48,15 +48,17 @@ function Stats({ setShowStats }) {
     }
 
     function selectDemoBin(statuses, ethnicities, ageRange, gender) {
-        // setFilterDataFromStats({
-        //     fromStats: true,
-        //     ethnicities: ethnicities,
-        //     multipleEthnicities: ['Yes', 'No'],
-        //     genders: [gender],
-        //     ageRanges: ageRange,
-        //     statuses: statuses,
-        //     skintones: Constants['skintones']
-        // });
+        setFilterDataFromStats({
+            fromStats: true,
+            ethnicityGroups: [Constants.getKeyByValue(Constants['ethDbMap2'], Constants['ethDbMap'][ethnicities[0]])], //filter the group of the first item only
+            multipleEthnicities: ['Yes', 'No'],
+            genders: [gender],
+            ageRanges: ageRange,
+            statuses: statuses,
+            skintones: Constants['skintones'],
+            hairLengths: Object.values(Constants['hairLength']),
+            hairTypes: Object.values(Constants['hairType'])
+        });
 
         navigate('participants');
         setShowStats(false);

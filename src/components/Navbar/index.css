@@ -4,7 +4,7 @@
     justify-content: flex-end;
     padding: .25em;
     gap: 1em;
-    background: white;
+    background: #333;
     overflow: hidden;
     height: 1.9em;
     min-height: 1.85em;
@@ -20,24 +20,24 @@
     top: 0.05em;
     left: 21em;
     font-weight: bold;
-    background-color: #0A66C2;
-    color: white;
+    background-color: #66CC00;
+    color: #333;
     border-radius: 5px;
     line-height: 1;
     padding-left: 0.75em;
     padding-right: 0.75em;
     padding-bottom: 0.30em;
     padding-top: 0.2em;
-    border: 2px solid #378FE9;
+    border: 2px solid #66CC00;
     z-index: 2;
 }
 
 .projectName {
     position: absolute;
     top: 0.15em;
-    left: 13.5em;
+    left: 14em;
     font-weight: bold;
-    color: rgb(75, 40, 109);
+    color: white;
     border-radius: 7px;
     line-height: 1;
     padding-left: 0.75em;
@@ -51,7 +51,7 @@
     padding: 0 .5em;
     border: none;
     background: transparent;
-    color: var(--link-text-1);
+    color: white;
     font-weight: bold;
     font-size: .9em;
     outline: none;
@@ -67,7 +67,7 @@
 }
 
 #navbar a:hover {
-    color: var(--link-hover-text-1);
+    color: #66CC00;
 }
 
 #navbar .selected {

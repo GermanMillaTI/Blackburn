@@ -25,7 +25,7 @@ const defaultFilterStats = {
 
 
 
-function Participants({ }) {
+function Participants({ filterDataFromStats, setFilterDataFromStats }) {
 
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userRole = userInfo['role'];
@@ -60,7 +60,12 @@ function Participants({ }) {
     let filterStats = JSON.parse(JSON.stringify(defaultFilterStats));
 
     return <div id="participants">
-        <ParticipantFilter participants={participants} setShownParticipants={setShownParticipants} filterStats={filterStats} />
+        <ParticipantFilter
+            participants={participants}
+            setShownParticipants={setShownParticipants}
+            filterStats={filterStats}
+            filterDataFromStats={filterDataFromStats}
+            setFilterDataFromStats={setFilterDataFromStats} />
         <div id="participantTable">
             {shownParticipants.map((participantId, index) => {
                 const participantInfo = participants[participantId];

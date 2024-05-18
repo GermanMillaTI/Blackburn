@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useEffect, useReducer } from 'react';
-
 import './ParticipantFilter.css';
 import Constants from '../Constants';
 import GetAgeRange from "../CommonFunctions/GetAgeRange";
 import GetSkinTone from "../CommonFunctions/GetSkinTone";
+import alltypes from "../CommonFunctions/PropTypes";
 import Card from '@mui/material/Card';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
@@ -20,7 +20,13 @@ const defaultFilterValues = {
 }
 
 
+
+
 const filterReducer = (state, event) => {
+
+    // If the filter is called from stats
+    if (event.fromStats) return event;
+
     if (event.target.name == "resetFilter") {
         return JSON.parse(JSON.stringify(defaultFilterValues));
     }
@@ -63,11 +69,21 @@ const filterReducer = (state, event) => {
 
 
 
-
-function ParticipantFilter({ participants, setShownParticipants, filterStats }) {
+function ParticipantFilter({ participants, setShownParticipants, filterStats, filterDataFromStats, setFilterDataFromStats }) {
 
     const [filterData, setFilterData] = useReducer(filterReducer, JSON.parse(JSON.stringify(defaultFilterValues)));
     const [ageScroll, setAgeScroll] = useState(true);
+
+    //proptype validation
+    ParticipantFilter.propTypes = alltypes.ParticipantComponent;
+
+    useEffect(() => {
+        if (filterDataFromStats) {
+            setFilterData(filterDataFromStats);
+            setFilterDataFromStats(false);
+        }
+    }, [filterDataFromStats, setFilterDataFromStats])
+
 
 
     function filterFunction(participantId) {
@@ -154,6 +170,7 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
         scrollbar.scrollTop = scrollbar.scrollHeight;
 
     }
+
 
     return <Card className="filter-main-container">
 
@@ -247,8 +264,9 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
         </div>
 
         <div className="filter-container" >
-            <span className="filter-container-header">Multiple Ethnicities?</span>
+
             <div className="filter-element" id="multipleEthnicities" >
+                <span className="filter-container-header">Multiple Ethnicities?</span>
                 {["Yes", "No"].map((val, i) => {
                     val = val.toString();
                     return <div key={"filter-multipleEthnicities-" + i} className="filter-object">
@@ -258,12 +276,8 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
                     </div>
                 })}
             </div>
-
-        </div>
-
-        <div className="filter-container" >
-            <span className="filter-container-header">Ethnicity Group</span>
-            <div className="filter-element" id="ethnicityGroups" >
+            <div className="filter-element gap" id="ethnicityGroups" >
+                <span className="filter-container-header">Ethnic Group</span>
                 {Object.keys(Constants['ethnicityGroups']).filter(el => el !== "Total").map((val, i) => {
                     val = val.toString();
                     return <div key={"filter-ethnicityGroups-" + i} className="filter-object">
@@ -277,9 +291,9 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
         </div>
 
         <div className="filter-container">
-            <span className="filter-container-header">Hair Length</span>
-            <div className="filter-element">
 
+            <div className="filter-element">
+                <span className="filter-container-header">Hair Length</span>
 
                 {Object.keys(Constants['hairLength']).map((hairLengthId, i) => {
                     const val = Constants['hairLength'][hairLengthId];
@@ -290,12 +304,8 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
                     </div>
                 })}
             </div>
-        </div>
-
-        <div className="filter-container">
-            <span className="filter-container-header">Hair Types</span>
-            <div className="filter-element">
-
+            <div className="filter-element gap">
+                <span className="filter-container-header">Hair Types</span>
 
                 {Object.keys(Constants['hairType']).map((hairTypeId, i) => {
                     const val = Constants['hairType'][hairTypeId];
@@ -307,12 +317,9 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats }) 
                 })}
             </div>
         </div>
-
-
-
-
-
     </Card>
+
+
 };
 export default ParticipantFilter;
 

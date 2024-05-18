@@ -41,7 +41,7 @@
 }
 
 #participants .participant-card:nth-child(even) {
-    background-color: aliceblue;
+    background-color: #F7F7F8;
 }
 
 #participants .participant-card:nth-child(odd) {
@@ -57,7 +57,7 @@
 
 .registered-by-parent {
     text-align: center;
-    background: #ff5100;
+    background: #4B286D;
     color: white;
 }
 

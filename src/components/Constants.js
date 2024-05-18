@@ -48,13 +48,13 @@ const Constants = {
     },
     ethnicityGroups: {
         "African/African-American/Black": [1],
-        "Med / Mid East": [6],
+        "Med / Mid East": [6, 11],
         "Latin / S. Amer": [5],
         "East Asian": [4],
         "South Asian": [8],
         "N. European": [10],
         "Other": [0, 2, 3, 7, 9, 12, 13],
-        "Total": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+        "Total": Array.from({ length: 14 }, (v, i) => i)
     },
     ethDbMap: {
         "Aboriginal Australians/Papuans": "Other",
