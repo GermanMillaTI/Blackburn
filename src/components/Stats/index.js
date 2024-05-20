@@ -5,6 +5,9 @@ import { ref, onValue, off, get } from 'firebase/database';
 import Constants from '../Constants';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { isStatsActive } from '../../Redux/Features';
+
 import './index.css';
 import './Bins.css';
 
@@ -24,7 +27,7 @@ const filterReducer = (state, event) => {
     return newState;
 }
 
-function Stats({ setShowStats, setFilterDataFromStats }) {
+function Stats({ setFilterDataFromStats }) {
     const navigate = useNavigate();
     const [database, setDatabase] = useState({});
     const [demos, setDemos] = useState({});
@@ -34,6 +37,7 @@ function Stats({ setShowStats, setFilterDataFromStats }) {
         statuses2: ["Contacted", "Scheduled", "Completed"],
         skinTones: Constants['skinTone']
     });
+    const dispatch = useDispatch();
 
     function getDefaultNumbers() {
         let temp = Object.assign({}, ...Object.values(Constants['ethnicities']).map(k => ({
@@ -61,7 +65,7 @@ function Stats({ setShowStats, setFilterDataFromStats }) {
         });
 
         navigate('participants');
-        setShowStats(false);
+        dispatch(isStatsActive(false));
     }
 
     useEffect(() => {
@@ -109,15 +113,15 @@ function Stats({ setShowStats, setFilterDataFromStats }) {
     }, [database, demos])
 
     useEffect(() => {
-        const handleEsc = (event) => { if (event.keyCode === 27) setShowStats(""); };
+        const handleEsc = (event) => { if (event.keyCode === 27) dispatch(isStatsActive(false)); };
         window.addEventListener('keydown', handleEsc);
         return () => { window.removeEventListener('keydown', handleEsc) };
-    }, [setShowStats]);
+    }, []);
 
     if (Object.values(demos).length === 0) return;
 
     return ReactDOM.createPortal((
-        <div className="modal-stats-backdrop" onClick={(e) => { if (e.target.className == "modal-stats-backdrop") setShowStats("") }}>
+        <div className="modal-stats-backdrop" onClick={(e) => { if (e.target.className == "modal-stats-backdrop") dispatch(isStatsActive(false)); }}>
             <div className='modal-stats-main-container'>
                 <div className="modal-stats-header">
                     Participant stats

@@ -7,7 +7,7 @@ import appInfo from '../../../package.json';
 import Swal from 'sweetalert2';
 import { realtimeDb } from '../../firebase/config';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateUserInfo } from '../../Redux/Features';
+import { updateUserInfo, isStatsActive, isDemoStatsActive } from '../../Redux/Features';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import telusLogo from './telusLogo.png';
 
@@ -39,7 +39,7 @@ const customButtonStyle = {
     textTransform: 'none',
 };
 
-function Navbar({ setUserId, showStats, setShowStats, showLog, setShowLog, showBins, setShowBins }) {
+function Navbar({ setUserId }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userRole = userInfo['role'];
     const admin = ['admin'].includes(userRole);
@@ -69,8 +69,8 @@ function Navbar({ setUserId, showStats, setShowStats, showLog, setShowLog, showB
                 <span className='projectName'>Blackburn</span>
                 {["german.milla01@telusinternational.com"].includes(auth.currentUser.email) && <a href="/files" onClick={(e) => { e.preventDefault(); navigate("/files"); }}>Files</a>}
                 {admin && <a href="/participants" onClick={(e) => { e.preventDefault(); navigate("/participants"); }}>Participants</a>}
-                {admin && <a href="/stats" onClick={(e) => { e.preventDefault(); setShowStats(true); }}>Stats</a>}
-                {admin && <a href="/demo-bins" onClick={(e) => { e.preventDefault(); setShowBins(true); }}>Demo bins</a>}
+                {admin && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(isStatsActive(true)); }}>Stats</a>}
+                {admin && <a href="/demo-bins" onClick={(e) => { e.preventDefault(); dispatch(isDemoStatsActive(true)); }}>Demo bins</a>}
 
                 <a href="/" onClick={(e) => { e.preventDefault(); handleLogout(); navigate("/"); }}>Logout</a>
             </nav>

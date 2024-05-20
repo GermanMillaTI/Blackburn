@@ -5,6 +5,8 @@ import { ref, onValue, off, get } from 'firebase/database';
 import Constants from '../Constants';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { isDemoStatsActive } from '../../Redux/Features';
 import './Bins.css';
 
 const filterReducer = (state, event) => {
@@ -23,8 +25,9 @@ const filterReducer = (state, event) => {
     return newState;
 }
 
-function Bins({ setShowBins }) {
+function Bins({ }) {
     const [demos, setDemos] = useState({});
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const demoRef = ref(realtimeDb, '/demo_bins');
@@ -39,16 +42,18 @@ function Bins({ setShowBins }) {
     }, []);
 
 
+
+
     useEffect(() => {
-        const handleEsc = (event) => { if (event.keyCode === 27) setShowBins(""); };
+        const handleEsc = (event) => { if (event.keyCode === 27) dispatch(isDemoStatsActive(false)); };
         window.addEventListener('keydown', handleEsc);
         return () => { window.removeEventListener('keydown', handleEsc) };
-    }, [setShowBins]);
+    }, []);
 
     if (Object.values(demos).length === 0) return;
 
     return ReactDOM.createPortal((
-        <div className="modal-stats-backdrop" onClick={(e) => { if (e.target.className == "modal-stats-backdrop") setShowBins("") }}>
+        <div className="modal-stats-backdrop" onClick={(e) => { if (e.target.className == "modal-stats-backdrop") dispatch(isDemoStatsActive(false)) }}>
             <div className='modal-stats-main-container'>
                 <div className="modal-stats-header">
                     Demo Bins

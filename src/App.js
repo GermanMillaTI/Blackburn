@@ -15,14 +15,15 @@ import Bins from './components/Stats/Bins';
 
 function App() {
   const [userId, setUserId] = useState('');
-  const [showStats, setShowStats] = useState(false);
-  const [showBins, setShowBins] = useState(false);
   const [showLog, setShowLog] = useState(false);
   const [filterDataFromStats, setFilterDataFromStats] = useState(false);
 
 
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.userInfo.value || {});
+  const isStatsActive = useSelector((state) => state.userInfo.activeStats);
+  const isDemoStatsActive = useSelector((state) => state.userInfo.activeDemoStats);
+  const isLogActive = useSelector((state) => state.userInfo.isLogActive);
 
   useEffect(() => {
 
@@ -38,6 +39,8 @@ function App() {
 
     }
   }, [userId, dispatch])
+
+
 
 
   function getElement(path) {
@@ -64,12 +67,7 @@ function App() {
     <div id="mainContainer">
       {userInfo['role'] && <Navbar
         setUserId={setUserId}
-        showStats={showStats}
-        setShowStats={setShowStats}
-        showBins={showBins}
-        setShowBins={setShowBins}
-        showLog={showLog}
-        setShowLog={setShowLog} />}
+      />}
       <Routes>
         <Route path="/" element={getElement("/")} />
         <Route path="/login" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
@@ -77,8 +75,8 @@ function App() {
         <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
         <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
       </Routes>
-      {showStats && <Stats setShowStats={setShowStats} setFilterDataFromStats={setFilterDataFromStats} />}
-      {showBins && <Bins setShowBins={setShowBins} />}
+      {isStatsActive && <Stats setFilterDataFromStats={setFilterDataFromStats} />}
+      {isDemoStatsActive && <Bins />}
     </div>
   );
 }
