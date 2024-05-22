@@ -36,7 +36,7 @@ const Constants = {
     ],
     ethnicities: {
         0: "Aboriginal Australians/Papuans",
-        1: "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African]",
+        1: "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African, Kenyan, Senegalese, Ivorian]",
         2: "Alaskan Native",
         3: "Native American [Navite American, Central of South Native American]",
         4: "East Asian [Chinese, Japanese, Korean, Taiwanese]",
@@ -62,7 +62,7 @@ const Constants = {
     },
     ethDbMap: {
         "Aboriginal Australians/Papuans": "Other",
-        "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African]": "AfrAfrAmBlack",
+        "African/African-American/Black [African-American, Barbadian, Caribbean, Ethiopian, Ghanian, Haitian, Jamaican, Liberian, Nigerian, Somali, South African, Kenyan, Senegalese, Ivorian]": "AfrAfrAmBlack",
         "Alaskan Native": "Other",
         "Native American [Navite American, Central of South Native American]": "Other",
         "East Asian [Chinese, Japanese, Korean, Taiwanese]": "EastAsian",
@@ -106,6 +106,18 @@ const Constants = {
         1: 'Coily',
         2: 'Straight',
         3: 'Wavy'
+    },
+    noAvailabilityReason: {
+        0: 'I am generally not interested in going to an onsite study.',
+        1: "I am hesitant to join a study when I don't know what it is about but I would like to have more information.",
+        2: 'I am not interested in participating in this study.',
+        3: 'I am worried about sharing personal information.',
+        4: 'I do not have time at the moment.',
+        5: 'I do not want to answer this question.',
+        6: 'Something else - please provide more information in the feedback if you want.',
+        7: 'The compensation is generally not enough for me.',
+        8: 'The compensation is not enough for me to go to Los Angeles. I would go if the place would be nearer.',
+        9: 'The place is too far for me.'
     },
     healthConditions: {
         0: "Are experiencing altered or distorted thinking",

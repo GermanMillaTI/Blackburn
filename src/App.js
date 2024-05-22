@@ -12,6 +12,7 @@ import Participants from './components/Participants';
 import FilesView from './components/FilesView';
 import Stats from './components/Stats';
 import Bins from './components/Stats/Bins';
+import ICF from './components/Form/ICF';
 
 function App() {
   const [userId, setUserId] = useState('');
@@ -23,7 +24,7 @@ function App() {
   const userInfo = useSelector((state) => state.userInfo.value || {});
   const isStatsActive = useSelector((state) => state.userInfo.activeStats);
   const isDemoStatsActive = useSelector((state) => state.userInfo.activeDemoStats);
-  const isLogActive = useSelector((state) => state.userInfo.isLogActive);
+  const isLogActive = useSelector((state) => state.userInfo.activeLog);
 
   useEffect(() => {
 
@@ -72,6 +73,7 @@ function App() {
         <Route path="/" element={getElement("/")} />
         <Route path="/login" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
         <Route path="/registration" element={getElement('/registration')} />
+        <Route path="/icf/:participantId" element={<ICF />} />
         <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
         <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
       </Routes>

@@ -10,7 +10,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const defaultFilterValues = {
     genders: Object.values(Constants['genders']),
-    ageRanges: Constants['ageRanges'],
+    ageRanges: Constants['ageRanges'].filter(ageRange => ageRange != "<13"),
     statuses: Object.values(Constants['participantStatuses']).map(status => status || 'Blank'),
     skintones: Constants['skintones'],
     multipleEthnicities: ['Yes', 'No'],

@@ -31,7 +31,7 @@ function Registration() {
 
     };
 
-
+    const navigate = useNavigate();
 
     inputmask(SurveyCore);
     surveyLocalization.locales["en"] = localeSettings;
@@ -256,7 +256,7 @@ function Registration() {
             senderObj['hairColor'] = parseInt(Constants.getKeyByValue(Constants['hairColor'], sender.data['hairColor']));
             senderObj['docs'] = { [pptId]: { 1: IdUrl }, pending: true };
 
-            //multiple selection question
+            //multiple selection questions
             if (sender.data['isMultipleEthnicities'] === "Yes") {
                 senderObj['ethnicities'] = sender.data['ethnicities'].map((v) => parseInt(Constants.getKeyByValue(Constants['ethnicities'], v))).join(';');
             } else {
@@ -293,15 +293,31 @@ function Registration() {
                 senderObj['tattoos'] = Constants.getKeyByValue(Constants['piercings'], sender.data['tattoos'][0]).toString();
             }
 
+            if (sender.data['availability'] === "No") {
+                if (sender.data['noAvailabilityReason'].length > 1) {
+                    senderObj['noAvailabilityReason'] = sender.data['noAvailabilityReason'].map((v) => parseInt(Constants.getKeyByValue(Constants['noAvailabilityReason'], v))).join(';');
+                } else {
+                    senderObj['noAvailabilityReason'] = Constants.getKeyByValue(Constants['noAvailabilityReason'], sender.data['noAvailabilityReason'][0]).toString();
+                }
+            }
+
             //rejection validations
             if (Validator.rejectionValidator(senderObj)) {
                 senderObj['status'] = 5;
                 senderObj['comment'] = `${senderObj['date']} SYSTEM: automatically rejected by validator`
             }
+            //re-enabling the form completion for redirection
+            options.allow = true;
+            sender.getAllQuestions().forEach(function (question) {
+                question.readOnly = true;
+            })
 
             //db record
             const firebasePath = `/participants/${pptId}/`;
             updateValue(firebasePath, senderObj);
+
+            //displays thank you page
+            setShowtymsg(true);
         }
 
         survey.onCompleting.add(completeFunction);
@@ -324,7 +340,8 @@ function Registration() {
                 <img className="telus-logo" src={telus} style={{ width: "300px", maxWidth: "100%" }} alt="TELUS Logo" />
 
                 <h4>Thank you for your registration.</h4><br />
-                <p>We will review your registration and contact you with any further steps.</p>            </div>}
+                <p>We will review your registration and contact you with any further steps.</p>
+            </div>}
             <img className="telus-logo" src={telus} style={{ width: "300px", maxWidth: "100%" }} alt="" />
             <Survey model={survey}></Survey>
         </div>

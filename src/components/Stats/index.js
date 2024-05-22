@@ -61,7 +61,8 @@ function Stats({ setFilterDataFromStats }) {
             skintones: Constants['skintones'],
             hairLengths: Object.values(Constants['hairLength']),
             hairTypes: Object.values(Constants['hairType']),
-            hairColors: Object.values(Constants['hairColor'])
+            hairColors: Object.values(Constants['hairColor']),
+            facialHairs: Object.values(Constants['facialHair'])
         });
 
         navigate('participants');
