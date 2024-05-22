@@ -16,7 +16,10 @@ const defaultFilterValues = {
     multipleEthnicities: ['Yes', 'No'],
     ethnicityGroups: Object.keys(Constants['ethnicityGroups']).filter(group => group != 'Other'),
     hairLengths: Object.values(Constants['hairLength']),
-    hairTypes: Object.values(Constants['hairType'])
+    hairTypes: Object.values(Constants['hairType']),
+    hairColors: Object.values(Constants['hairColor']),
+    facialHairs: Object.values(Constants['facialHair'])
+
 }
 
 
@@ -99,6 +102,7 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
         const email = participantInfo['email'].toLowerCase();
         if (filterData['email'] && !email.includes(filterData['email'].trim())) return false;
 
+
         const gender = Constants['genders'][participantInfo['gender']];
         if (!filterData['genders'].includes(gender)) return false;
 
@@ -127,6 +131,12 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
 
         const hairType = Constants['hairType'][participantInfo['hairType']];
         if (!filterData['hairTypes'].includes(hairType)) return false;
+
+        const hairColor = Constants['hairColor'][participantInfo['hairColor']];
+        if (!filterData['hairColors'].includes(hairColor)) return false;
+
+        const facialHair = Constants['facialHair'][participantInfo['facialHair']];
+        if (!filterData['facialHairs'].includes(facialHair)) return false;
 
         // Check date of registration
         let dateOfRegistration;
@@ -316,6 +326,36 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
                     </div>
                 })}
             </div>
+        </div>
+        <div className="filter-container">
+            <div className="filter-element">
+                <span className="filter-container-header">Hair Color</span>
+
+                {Object.keys(Constants['hairColor']).map((hairColorid, i) => {
+                    const val = Constants['hairColor'][hairColorid];
+                    return <div key={"filter-hairColor-" + i} className="filter-object">
+                        <input id={"filter-hairColor-" + val} name={val} type="checkbox" alt="hairColors" onChange={setFilterData} checked={filterData['hairColors'].includes(val)} />
+                        <label htmlFor={"filter-hairColor-" + val}>{val + " (" + filterStats['hairColors'][val] + ")"}</label>
+                        <button name={val} alt="hairColors" className="filter-this-button" onClick={setFilterData}>!</button>
+                    </div>
+                })}
+            </div>
+
+        </div>
+        <div className="filter-container">
+            <div className="filter-element">
+                <span className="filter-container-header">Facial Hair</span>
+
+                {Object.keys(Constants['facialHair']).map((facialId, i) => {
+                    const val = Constants['facialHair'][facialId];
+                    return <div key={"filter-facialHair-" + i} className="filter-object">
+                        <input id={"filter-facialHair-" + val} name={val} type="checkbox" alt="facialHairs" onChange={setFilterData} checked={filterData['facialHairs'].includes(val)} />
+                        <label htmlFor={"filter-facialHair-" + val}>{val + " (" + filterStats['facialHairs'][val] + ")"}</label>
+                        <button name={val} alt="facialHairs" className="filter-this-button" onClick={setFilterData}>!</button>
+                    </div>
+                })}
+            </div>
+
         </div>
     </Card>
 

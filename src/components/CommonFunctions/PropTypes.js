@@ -11,23 +11,27 @@ const alltypes = {
                 docs: PropTypes.object.isRequired,
                 email: PropTypes.string.isRequired,
                 ethnicities: PropTypes.string.isRequired,
-                facialHair: PropTypes.number.isRequired, //pending
+                facialHair: PropTypes.number.isRequired,
                 firstName: PropTypes.string.isRequired,
                 gender: PropTypes.number.isRequired,
-                hairColor: PropTypes.number.isRequired, //pending
+                hairColor: PropTypes.number.isRequired,
                 hairLength: PropTypes.number.isRequired,
                 hairType: PropTypes.number.isRequired,
-                healthConditions: PropTypes.array.isRequired, //pending
+                healthConditions: PropTypes.string.isRequired,
                 heightFt: PropTypes.number.isRequired,
                 heightIn: PropTypes.number.isRequired,
                 industry: PropTypes.number.isRequired,
                 interestedInRecruiting: PropTypes.bool,
                 lastName: PropTypes.string.isRequired,
-                otherCompanies: PropTypes.string.isRequired, //pending
+                otherCompanies: PropTypes.string.isRequired,
                 phone: PropTypes.string.isRequired,
+                piercings: PropTypes.string.isRequired,
                 registeredAs: PropTypes.number.isRequired,
                 residenceCity: PropTypes.string.isRequired,
                 residenceState: PropTypes.number.isRequired,
+                skintone: PropTypes.number.isRequired,
+                source: PropTypes.number.isRequired,
+                tattoos: PropTypes.string.isRequired,
             })).isRequired,
         setShownParticipants: PropTypes.func.isRequired
     }

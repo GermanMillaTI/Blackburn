@@ -35,7 +35,6 @@ function Stats({ setFilterDataFromStats }) {
     const [filterData, setFilterData] = useReducer(filterReducer, {
         statuses: ["Blank", "Not Selected"],
         statuses2: ["Contacted", "Scheduled", "Completed"],
-        skinTones: Constants['skinTone']
     });
     const dispatch = useDispatch();
 
@@ -61,7 +60,8 @@ function Stats({ setFilterDataFromStats }) {
             statuses: statuses,
             skintones: Constants['skintones'],
             hairLengths: Object.values(Constants['hairLength']),
-            hairTypes: Object.values(Constants['hairType'])
+            hairTypes: Object.values(Constants['hairType']),
+            hairColors: Object.values(Constants['hairColor'])
         });
 
         navigate('participants');

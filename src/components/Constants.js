@@ -25,10 +25,14 @@ const Constants = {
         "ethnicities",
         "hairLength",
         "isMultipleEthnicities",
-        "hairType"
-    ],
-    rejectionReasons: [
-
+        "hairType",
+        "facialHair",
+        "hairColor",
+        "otherCompanies",
+        "earConditions",
+        "healthConditions",
+        "piercings",
+        "tattoos"
     ],
     ethnicities: {
         0: "Aboriginal Australians/Papuans",
@@ -103,12 +107,41 @@ const Constants = {
         2: 'Straight',
         3: 'Wavy'
     },
-    savedIfYesOnly: [
-        "interestedInRecruiting",
-        "isMultipleEthnicities",
-        "isPregnant",
-        "onsiteAvailability"
+    healthConditions: {
+        0: "Are experiencing altered or distorted thinking",
+        1: "Are experiencing or have recently experienced dizziness, lightheadedness, or vertigo",
+        2: "Are prone to motion sickness",
+        3: "Currently taking photosensitizing medications or have any known photosensitizing medical conditions",
+        4: "Diabetes",
+        5: "Diagnosis of photo-induced seizures or epilepsy",
+        6: "Have been advised by a healthcare provider not to wear a head-mounted display or AR/VR devices or have previously experienced negative effects when using such devices.",
+        7: "Hearing loss",
+        8: "Heart condition",
+        9: "High blood pressure",
+        10: "Known neurological disorder",
+        11: "Medical eye condition (other than prescriptive lenses or LASIK surgery)",
+        12: "Migraines/Headaches or earaches",
+        13: "Need assistance climbing a flight of stairs",
+        14: "Need assistance walking",
+        15: "Need assistance standing or have difficulty remaining standing for 10-20 minutes (for example, you feel unsteady on your feet)",
+        16: "Previously had a seizure, or have an epileptic condition",
+        17: "Sensitivity to enclosed spaces",
+        18: "none"
+
+    },
+    rejectedHealthConditions: [
+        0, 1, 2, 3, 5, 6, 10, 12, 13, 14, 15, 16
     ],
+    earConditions: {
+        0: "Swimmer’s ear/Bony growths",
+        1: "Excessive Hair",
+        2: "Impacted Wax/Cerumen",
+        3: "Unremovable piercings",
+        4: "Fluids/Drainage",
+        5: "Possible infections",
+        6: "Visible blood",
+        7: "none"
+    },
     registeredAs: {
         0: 'I am registering as a participant over the age of 18',
         1: 'I am a parent or guardian registering a child under 18'
@@ -120,7 +153,34 @@ const Constants = {
         2: "Non-binary",
         3: "Prefer not to say"
     },
-
+    facialHair: {
+        0: 'Full beard',
+        1: 'Stubble',
+        2: 'Mustache',
+        3: 'Goatee',
+        4: 'None'
+    },
+    hairColor: {
+        0: 'Black',
+        1: 'Blonde',
+        2: 'Brown',
+        3: 'Grey',
+        4: 'Red',
+        5: 'White',
+        6: 'Colorful'
+    }, piercings: {
+        0: 'Face, neck or head',
+        1: 'Arms',
+        2: 'Upper body or torso',
+        3: 'Legs',
+        4: 'none'
+    }, tattoos: {
+        0: 'Face, neck or head',
+        1: 'Arms',
+        2: 'Upper body or torso',
+        3: 'Legs',
+        4: 'none'
+    },
     usStates: {
         // Do no modify these in any case !!
         0: '',
@@ -208,7 +268,8 @@ const Constants = {
         14: 'Nuance',
         15: 'Samsung',
         16: 'Sony',
-        17: 'Yahoo'
+        17: 'Yahoo',
+        18: 'none'
     },
     industries: {
         0: 'Aerospace',

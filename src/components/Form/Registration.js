@@ -12,7 +12,9 @@ import { useEffect, useState, useCallback } from 'react';
 import { realtimeDb, ref, updateValue, storage } from '../../firebase/config';
 import { runTransaction } from 'firebase/database';
 import Constants from '../Constants'
+import Validator from '../CommonFunctions/Validator';
 import { uploadBytesResumable, getDownloadURL, ref as storeRef, deleteObject } from "firebase/storage";
+import "./index.css"
 
 function Registration() {
     const [showtymsg, setShowtymsg] = useState(false);
@@ -239,8 +241,8 @@ function Registration() {
 
             //deleting no's 
             if (senderObj['interestedInRecruiting'] === "No") delete senderObj['interestedInRecruiting'];
-            if (senderObj['tattoos'][0] === 'none') delete senderObj['tattoos'];
-            if (senderObj['piercings'][0] === 'none') delete senderObj['piercings'];
+            //if (senderObj['tattoos'][0] === 'none') delete senderObj['tattoos'];
+            //if (senderObj['piercings'][0] === 'none') delete senderObj['piercings'];
 
             //Reassignment of Object properties based on Constants
             senderObj['registeredAs'] = parseInt(Constants.getKeyByValue(Constants['registeredAs'], sender.data['registeredAs']));
@@ -250,23 +252,56 @@ function Registration() {
             senderObj['industry'] = parseInt(Constants.getKeyByValue(Constants['industries'], sender.data['industry']));
             senderObj['hairLength'] = parseInt(Constants.getKeyByValue(Constants['hairLength'], sender.data['hairLength']));
             senderObj['hairType'] = parseInt(Constants.getKeyByValue(Constants['hairType'], sender.data['hairType']));
+            senderObj['facialHair'] = parseInt(Constants.getKeyByValue(Constants['facialHair'], sender.data['facialHair']));
+            senderObj['hairColor'] = parseInt(Constants.getKeyByValue(Constants['hairColor'], sender.data['hairColor']));
+            senderObj['docs'] = { [pptId]: { 1: IdUrl }, pending: true };
 
+            //multiple selection question
             if (sender.data['isMultipleEthnicities'] === "Yes") {
                 senderObj['ethnicities'] = sender.data['ethnicities'].map((v) => parseInt(Constants.getKeyByValue(Constants['ethnicities'], v))).join(';');
             } else {
                 senderObj['ethnicities'] = Constants.getKeyByValue(Constants['ethnicities'], sender.data['ethnicities']).toString();
             }
 
+            if (sender.data['healthConditions'].length > 1) {
+                senderObj['healthConditions'] = sender.data['healthConditions'].map((v) => parseInt(Constants.getKeyByValue(Constants['healthConditions'], v))).join(';');
+            } else {
+                senderObj['healthConditions'] = Constants.getKeyByValue(Constants['healthConditions'], sender.data['healthConditions'][0]).toString();
+            }
 
-            senderObj['docs'] = { [pptId]: { 1: IdUrl }, pending: true };
+            if (sender.data['earConditions'].length > 1) {
+                senderObj['earConditions'] = sender.data['earConditions'].map((v) => parseInt(Constants.getKeyByValue(Constants['earConditions'], v))).join(';');
+            } else {
+                senderObj['earConditions'] = Constants.getKeyByValue(Constants['earConditions'], sender.data['earConditions'][0]).toString();
+            }
+
+            if (sender.data['otherCompanies'].length > 1) {
+                senderObj['otherCompanies'] = sender.data['otherCompanies'].map((v) => parseInt(Constants.getKeyByValue(Constants['otherCompanies'], v))).join(';');
+            } else {
+                senderObj['otherCompanies'] = Constants.getKeyByValue(Constants['otherCompanies'], sender.data['otherCompanies'][0]).toString();
+            }
+
+            if (sender.data['piercings'].length > 1) {
+                senderObj['piercings'] = sender.data['piercings'].map((v) => parseInt(Constants.getKeyByValue(Constants['piercings'], v))).join(';');
+            } else {
+                senderObj['piercings'] = Constants.getKeyByValue(Constants['piercings'], sender.data['piercings'][0]).toString();
+            }
+
+            if (sender.data['tattoos'].length > 1) {
+                senderObj['tattoos'] = sender.data['tattoos'].map((v) => parseInt(Constants.getKeyByValue(Constants['tattoos'], v))).join(';');
+            } else {
+                senderObj['tattoos'] = Constants.getKeyByValue(Constants['piercings'], sender.data['tattoos'][0]).toString();
+            }
+
+            //rejection validations
+            if (Validator.rejectionValidator(senderObj)) {
+                senderObj['status'] = 5;
+                senderObj['comment'] = `${senderObj['date']} SYSTEM: automatically rejected by validator`
+            }
+
             //db record
             const firebasePath = `/participants/${pptId}/`;
             updateValue(firebasePath, senderObj);
-
-
-
-
-
         }
 
         survey.onCompleting.add(completeFunction);
@@ -283,7 +318,7 @@ function Registration() {
     }, [survey.onCompleting, survey.onUploadFiles, survey.onClearFiles]);
 
     return (
-        <div>
+        <div className='form-container'>
             <div id='loading'></div>
             {showtymsg && <div id="ThankyouPage">
                 <img className="telus-logo" src={telus} style={{ width: "300px", maxWidth: "100%" }} alt="TELUS Logo" />

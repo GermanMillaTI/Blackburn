@@ -908,23 +908,57 @@ export const surveyJson = {
                     name: "healthConditions",
                     title: "Have you experienced or do you have any of the following conditions? Select all that apply:",
                     choices: [
+                        "Are experiencing altered or distorted thinking",
+                        "Are experiencing or have recently experienced dizziness, lightheadedness, or vertigo",
+                        "Are prone to motion sickness",
                         "Currently taking photosensitizing medications or have any known photosensitizing medical conditions",
                         "Diabetes",
                         "Diagnosis of photo-induced seizures or epilepsy",
+                        "Have been advised by a healthcare provider not to wear a head-mounted display or AR/VR devices or have previously experienced negative effects when using such devices.",
                         "Hearing loss",
                         "Heart condition",
                         "High blood pressure",
                         "Known neurological disorder",
                         "Medical eye condition (other than prescriptive lenses or LASIK surgery)",
-                        "Migraines/Headaches",
+                        "Migraines/Headaches or earaches",
                         "Need assistance climbing a flight of stairs",
+                        "Need assistance walking",
                         "Need assistance standing or have difficulty remaining standing for 10-20 minutes (for example, you feel unsteady on your feet)",
-                        "Seizures"
-                    ]
-                    ,
+                        "Previously had a seizure, or have an epileptic condition",
+                        "Sensitivity to enclosed spaces"
+                    ],
                     showNoneItem: true,
                     noneText: "None of the above",
                     isRequired: true,
+                }, {
+                    type: "checkbox",
+                    name: "earConditions",
+                    title: "Are you experiencing any of the following ear conditions? Select all that apply:",
+                    choices: [
+                        "Swimmer’s ear/Bony growths",
+                        "Excessive Hair",
+                        "Impacted Wax/Cerumen",
+                        "Unremovable piercings",
+                        "Fluids/Drainage",
+                        "Possible infections",
+                        "Visible blood"
+                    ],
+                    showNoneItem: true,
+                    noneText: "None of the above",
+                    isRequired: true,
+                }, {
+                    name: "hasProsthetics",
+                    title: "Do you have any prosthetics?",
+                    type: "radiogroup",
+                    choices: ["Yes", "No"],
+                    isRequired: true,
+                }, {
+                    name: "prostheticType",
+                    title: "What type of prosthetic is it?",
+                    type: "text",
+                    isRequired: true,
+                    placeholder: "(e. g. Limb, eye, joint, etc.)",
+                    visibleIf: "{hasProsthetics} =  'Yes'"
                 }, {
                     type: "html",
                     html: `<span style="color:red">Please, kindly read and sign the Consent Form for Sensitive Category Data Processing below, if you wish to participate in this project (please scroll to view the entire document):</span>`
