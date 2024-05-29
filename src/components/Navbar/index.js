@@ -69,6 +69,7 @@ function Navbar({ setUserId }) {
                 <span className='projectName'>Blackburn</span>
                 {["german.milla01@telusinternational.com"].includes(auth.currentUser.email) && <a href="/files" onClick={(e) => { e.preventDefault(); navigate("/files"); }}>Files</a>}
                 {admin && <a href="/participants" onClick={(e) => { e.preventDefault(); navigate("/participants"); }}>Participants</a>}
+                {admin && <a href="/scheduler" onClick={(e) => { e.preventDefault(); navigate("/scheduler"); }}>Scheduler</a>}
                 {admin && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(isStatsActive(true)); }}>Stats</a>}
                 {admin && <a href="/demo-bins" onClick={(e) => { e.preventDefault(); dispatch(isDemoStatsActive(true)); }}>Demo bins</a>}
 

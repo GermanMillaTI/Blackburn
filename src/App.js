@@ -13,11 +13,15 @@ import FilesView from './components/FilesView';
 import Stats from './components/Stats';
 import Bins from './components/Stats/Bins';
 import ICF from './components/Form/ICF';
+import Scheduler from './components/Scheduler';
+import UpdateSession from './components/Scheduler/UpdateSession';
 
 function App() {
   const [userId, setUserId] = useState('');
   const [showLog, setShowLog] = useState(false);
+
   const [filterDataFromStats, setFilterDataFromStats] = useState(false);
+
 
 
   const dispatch = useDispatch();
@@ -49,13 +53,17 @@ function App() {
     switch (path) {
       case "/":
         return <span>Blank...</span>;
+      case "/scheduler":
+        return <Scheduler />
       case "/login":
         return <LoginPage setUserId={setUserId} />;
       case "/registration":
         return <Registration />;
       case "/participants":
-        return <Participants filterDataFromStats={filterDataFromStats}
-          setFilterDataFromStats={setFilterDataFromStats} />;
+        return <Participants
+          filterDataFromStats={filterDataFromStats}
+          setFilterDataFromStats={setFilterDataFromStats}
+        />;
       case "/files":
         return <FilesView />;
       default:
@@ -73,12 +81,14 @@ function App() {
         <Route path="/" element={getElement("/")} />
         <Route path="/login" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
         <Route path="/registration" element={getElement('/registration')} />
+        <Route path='/scheduler' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/scheduler") : getElement("/login")} />
         <Route path="/icf/:participantId" element={<ICF />} />
         <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
         <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
       </Routes>
       {isStatsActive && <Stats setFilterDataFromStats={setFilterDataFromStats} />}
       {isDemoStatsActive && <Bins />}
+
     </div>
   );
 }

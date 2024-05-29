@@ -49,7 +49,7 @@ export const icfQuestions = {
                             + `</h4>`
                     },
                     {
-                        name: "email",
+                        name: "icfEmail",
                         type: "text",
                         title: "Email address:",
                         validators: [
@@ -71,7 +71,7 @@ export const icfQuestions = {
                 elements: [{
                     type: "html",
                     html: `<h4 style="text-align: center;">`
-                        + `Confidentiality (1/3)`
+                        + `Consent Form (1/3)`
                         + `</h4>`
                 }, {
                     type: "html",
@@ -146,7 +146,7 @@ export const icfQuestions = {
                 elements: [{
                     type: "html",
                     html: `<h4 style="text-align: center;">`
-                        + `Confidentiality (2/3)`
+                        + `Consent Form (2/3)`
                         + `</h4>`
                 }, {
                     type: "html",
@@ -222,7 +222,7 @@ export const icfQuestions = {
                 elements: [{
                     type: "html",
                     html: `<h4 style="text-align: center;">`
-                        + `Confidentiality (3/3)`
+                        + `Consent Form (3/3)`
                         + `</h4>`
                 }, {
                     type: "html",

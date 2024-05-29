@@ -1,7 +1,7 @@
 import { auth, updateValue } from '../../firebase/config';
 
 export default async (input) => {
-    let { participantId, threadId, action, value, userId } = input;
+    let { participantId, timeslot, action, value, userId } = input;
     if (!userId) userId = auth.currentUser.uid;
 
     const dateBasis = new Date();

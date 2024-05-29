@@ -80,11 +80,9 @@ function Registration() {
         const uploadTask = uploadBytesResumable(storageRef, imageBlob);
 
         return uploadTask;
-
     }
 
     useEffect(() => {
-
         //current issue: IdName doesn't work unless I assign the variable without useState
         //also, If the files get replaced, it deletes the previous file from firebase storage, but if you do it again, it won't delete them anymore
         const uploadFunction = async (sender, options) => {
@@ -183,12 +181,7 @@ function Registration() {
                     }
                 };
                 fileReader.readAsDataURL(file);
-
-
-
             });
-
-
 
         }
 

@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import md5 from 'md5';
 import { updateValue } from "../../firebase/config";
 import CheckDocuments from '../CheckDocuments';
+import ICFModal from '../ICFModal';
 
 
 import './ParticipantCard.css';
@@ -18,7 +19,8 @@ import { ref } from 'firebase/storage';
 function ParticipantCard({ participantId, participants }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userId = userInfo['userId'];
-    const [showDocs, setShowDocs] = useState(false)
+    const [showDocs, setShowDocs] = useState(false);
+    const [showICFs, setShowICFs] = useState(false);
 
 
     const participantInfo = participants[participantId];
@@ -56,7 +58,7 @@ function ParticipantCard({ participantId, participants }) {
                                 title="Copy phone number"
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    let phone = "+" + participantInfo['phone'];
+                                    let phone = participantInfo['phone'];
                                     navigator.clipboard.writeText(phone);
 
                                     Swal.fire({
@@ -123,6 +125,22 @@ function ParticipantCard({ participantId, participants }) {
                 <span>
                     {ethnicityGroups}
                 </span>
+
+
+            </div>
+            <div className="participant-attribute-container">
+                <span className="field-label">Signatures</span>
+
+                {participantInfo['icfs'] ? <>
+                    <button className='doc-button icf-doc' onClick={
+                        () => {
+                            setShowICFs(true);
+
+                        }
+                    }>Open CSA / SCDP</button>
+                </> : <><button className='doc-button missing-doc'>Send ICF</button></>
+                }
+
             </div>
 
             {
@@ -157,6 +175,7 @@ function ParticipantCard({ participantId, participants }) {
                                 }} target="_blank" />
                         </span>
                     </div>
+
                     <div className="participant-attribute-container">
                         <span className="field-label">E-mail</span>
                         <span>
@@ -179,7 +198,9 @@ function ParticipantCard({ participantId, participants }) {
                                     })
                                 }} target="_blank" />
                         </span>
+
                     </div>
+
                 </>
             }
 
@@ -194,7 +215,7 @@ function ParticipantCard({ participantId, participants }) {
                     onChange={(e) => {
                         updateValue("/participants/" + participantId, { document_approval: parseInt(e.currentTarget.value) });
                         LogEvent({
-                            pid: participantId,
+                            participantId: participantId,
                             action: 3,
                             value: "Document status: " + (e.currentTarget.value || "Blank") + "'"
                         })
@@ -219,6 +240,7 @@ function ParticipantCard({ participantId, participants }) {
                 }}></div>
             </div>
             {showDocs && <CheckDocuments setShowDocs={setShowDocs} participantId={participantId} />}
+            {showICFs && <ICFModal setShowICFs={setShowICFs} participantId={participantId} />}
             <div className="participant-attribute-container">
 
                 <span className="field-label">Status</span>

@@ -57,6 +57,19 @@ const filterReducer = (state, event) => {
         }
     }
 
+    if (event.target.type == "text" || event.target.type == "number") {
+        let filterName = event.target.name;
+        let filterValue = event.target.value.toLowerCase();
+
+        if (['email', 'phone'].includes(filterName)) filterValue = filterValue.trim();
+
+        if (filterValue == "") {
+            if (newState[filterName]) delete newState[filterName];
+        } else {
+            newState[filterName] = filterValue;
+        }
+    }
+
     if (event.target.type == "date") {
         let filterName = event.target.name;
         let filterValue = event.target.value;
@@ -101,6 +114,9 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
 
         const email = participantInfo['email'].toLowerCase();
         if (filterData['email'] && !email.includes(filterData['email'].trim())) return false;
+
+        const phone = participantInfo['phone'].toLowerCase();
+        if (filterData['phone'] && !phone.includes(filterData['phone'].trim())) return false;
 
 
         const gender = Constants['genders'][participantInfo['gender']];
@@ -199,7 +215,9 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
             <div className="filter-element">
                 <input name="email" type="text" placeholder="E-mail" className="main-input" autoComplete="off" onChange={setFilterData} value={filterData['email'] || ""} />
             </div>
-
+            <div className="filter-element">
+                <input name="phone" type="text" placeholder="Phone number" className="main-input" autoComplete="off" onChange={setFilterData} value={filterData['phone'] || ""} />
+            </div>
 
             <div className="filter-element gap">
                 <span>Date of registration</span>

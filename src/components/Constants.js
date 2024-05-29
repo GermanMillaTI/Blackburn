@@ -32,7 +32,25 @@ const Constants = {
         "earConditions",
         "healthConditions",
         "piercings",
-        "tattoos"
+        "tattoos",
+        "referenceId",
+        "icfEmail",
+        "externalIcfAgreement",
+        "externalIcfSignatureFirstName",
+        "externalIcfSignatureLastName",
+        "externalIcfDate",
+        "faceHandsIcfAgreement",
+        "faceHandsIcfsignatureFirstName",
+        "faceHandsIcfsignatureLastName",
+        "faceHandsIcfDate",
+        "fullBodyIcfAgreement",
+        "FullBodyIcfsignatureFirstName",
+        "FullBodyIcfsignatureLastName",
+        "FullBodyIcfDate",
+        "externalIcfSignature",
+        "faceHandsIcfsignature",
+        "FullBodyIcfsignature"
+
     ],
     ethnicities: {
         0: "Aboriginal Australians/Papuans",
@@ -348,7 +366,10 @@ const Constants = {
         4: "session status",
         5: "session comment",
         6: "lock session",
-        7: "unlock session"
+        7: "unlock session",
+        8: "Book session",
+        9: "Cancel session",
+        10: "Update session"
     },
 
     participantStatuses: {
@@ -393,6 +414,23 @@ const Constants = {
         "7-8",
         "9-10"
     ],
+
+    icfNames: {
+        "icfExternal": "HRTF Modeling Scan",
+        "icfFaceHands": "Head, Face and Hands",
+        "icfFullBody": "Full Body Light Stage"
+    },
+
+    sessionStatuses: {
+        0: "Scheduled",
+        1: "Checked In",
+        2: "Completed",
+        3: "Rescheduled",
+        4: "NoShow",
+        5: "Withdrawn",
+        6: "Failed - Comp.",
+        7: "Failed - No Comp."
+    },
 
     getKeyByValue: function (obj, value) {
         return Object.keys(obj).find(key => obj[key] === value);

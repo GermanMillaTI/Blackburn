@@ -48,7 +48,6 @@ function CheckDocuments({ setShowDocs, participantId }) {
                                     const docUrl = `https://firebasestorage.googleapis.com/v0/b/blackburn-la.appspot.com/o/participants%2F${participantId}%2Fidentification%2F${upload[docKey]}`
 
                                     if (docUrl.includes(".jpg") || docUrl.includes(".jpeg") || docUrl.includes(".JPG") || docUrl.includes(".png") || docUrl.includes(".PNG")) {
-                                        console.log(docUrl)
                                         return (
                                             <TransformWrapper defaultScale={1}>
                                                 <TransformComponent style={{ display: "block", marginLeft: "auto", marginRight: "auto" }}>
