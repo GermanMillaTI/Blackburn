@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { realtimeDb, getFileUrl } from '../../firebase/config';
+import { realtimeDb } from '../../firebase/config';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import md5 from 'md5';
 import { updateValue } from "../../firebase/config";
 import CheckDocuments from '../CheckDocuments';
 import ICFModal from '../ICFModal';
+import { ref, onValue, off } from 'firebase/database';
+import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
+import { setShowUpdateSession } from '../../Redux/Features';
 
 
 import './ParticipantCard.css';
@@ -14,25 +17,83 @@ import Constants from '../Constants';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import LogEvent from '../CommonFunctions/LogEvent';
 import GetFormattedLogDate from '../CommonFunctions/GetFormattedLogDate';
-import { ref } from 'firebase/storage';
 
-function ParticipantCard({ participantId, participants }) {
+function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userId = userInfo['userId'];
     const [showDocs, setShowDocs] = useState(false);
     const [showICFs, setShowICFs] = useState(false);
+    const [timeslots, setTimeslots] = useState({});
 
+    const dispatch = useDispatch();
 
     const participantInfo = participants[participantId];
+    useEffect(() => {
+
+        const path = '/timeslots';
+        const pptRef = ref(realtimeDb, path);
+
+        const listener = onValue(pptRef, (res) => {
+
+            setTimeslots(res.val() || {});
+        });
 
 
+        return () => {
+            off(pptRef, "value", listener);
 
+        }
+
+    }, [])
 
 
     let ethnicityGroups = participantInfo['ethnicities'].toString().split(';').map(eth => {
         return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
     });
     ethnicityGroups = [...new Set(ethnicityGroups)].sort((a, b) => a > b ? 1 : -1).join(', ');
+
+    const getIcfUrl = () => {
+        return `https://blackburn-la.web.app/icf/${participantId}?email=${participantInfo['email']}`
+    }
+
+    const sendMail = async (emailType) => {
+
+        const swalAnswer = await Swal.fire({
+            title: "Are you sure?",
+            showCancelButton: true,
+            confirmButtonText: 'Yes, send ' + emailType
+        })
+        if (swalAnswer.isConfirmed) {
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzBFsfBSx-k5MqCQFz_hv7IH6UJTGGfesQKPsnFg8t8mOpQ_el-KCgfRIowyolDqqxy/exec';
+            fetch(scriptURL, {
+                method: 'POST',
+                muteHttpExceptions: true,
+                body: JSON.stringify({
+                    "participantId": participantId,
+                    "emailType": emailType,
+                    "firstName": participantInfo['firstName'],
+                    "lastName": participantInfo['lastName'],
+                    "email": participantInfo['email'],
+                    "icfUrl": emailType == 'ICF Request' ? getIcfUrl() : emailType == "Handoff" ? "https://blackburn-appointments.web.app/#" + md5('p_' + participantId) + '&' + participantId : "",
+                    "sessionDate": "",
+                    "userId": userId
+                })
+            })
+            let tempObject = {};
+
+            if (emailType == 'ICF Request' && participantInfo['status'] != 1) {
+                tempObject['status'] = 1;
+                LogEvent({ participantId: participantId, action: 2, value: `Sent ${emailType} email` });
+            }
+
+
+            if (Object.keys(tempObject).length > 0) updateValue("/participants/" + participantId, tempObject);
+
+
+        }
+    }
+
 
 
     return <div className="participant-card">
@@ -119,6 +180,13 @@ function ParticipantCard({ participantId, participants }) {
                     {participantInfo['skintone']}
                 </span>
             </div>
+            <div className="participant-attribute-container">
+
+                <span className="field-label">Hair Length / Color / Type </span>
+                <span>
+                    {Constants['hairLength'][participantInfo['hairLength']]} / {Constants['hairColor'][participantInfo['hairColor']]} / {Constants['hairType'][participantInfo['hairType']]}
+                </span>
+            </div>
 
             <div className={"participant-attribute-container " + (ethnicityGroups.split(';').length > 1 ? 'multiple-ethnicities' : '')}>
                 <span className="field-label">Ethnicity</span>
@@ -131,14 +199,15 @@ function ParticipantCard({ participantId, participants }) {
             <div className="participant-attribute-container">
                 <span className="field-label">Signatures</span>
 
+
                 {participantInfo['icfs'] ? <>
                     <button className='doc-button icf-doc' onClick={
                         () => {
                             setShowICFs(true);
 
                         }
-                    }>Open CSA / SCDP</button>
-                </> : <><button className='doc-button missing-doc'>Send ICF</button></>
+                    }>Open ICFs</button>
+                </> : <><button className='doc-button missing-doc' onClick={() => { sendMail("ICF Request") }}>Request ICF</button></>
                 }
 
             </div>
@@ -282,7 +351,62 @@ function ParticipantCard({ participantId, participants }) {
                     }}
                 />
             </div>
+
+            {participantInfo['icfs'] && !["Rejected", "Withdrawn", "Completed", "Not Selected", "Duplicate"].includes(Constants['participantStatuses'][participantInfo['status']]) &&
+                participantInfo['document_approval'] == 1 &&
+                <div className="participant-attribute-container">
+                    <span className="field-label">Communication</span>
+                    <button className="email-button icf-reminder-button" onClick={() => sendMail("Handoff")}>Send Handoff email</button>
+                    <a className="copy-booking-link fas fa-copy" onClick={(e) => {
+                        e.preventDefault();
+
+                        let url = "https://blackburn-appointments.web.app/#" + md5('p_' + participantId) + "&" + participantId
+                        navigator.clipboard.writeText(url);
+
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            title: 'Copied',
+                            html: url,
+                            position: 'bottom',
+                            width: 'unset',
+                            showConfirmButton: false,
+                            timer: 2000
+                        })
+                    }} target="_blank" />
+                </div>
+            }
         </div>
+
+        <div className={"participant-card-column" + " column-4"}>
+            <span className="participant-attribute-header">Sessions {participantInfo['external_id'] ? " (" + participantInfo['external_id'] + ")" : ""}</span>
+            {Object.keys(timeslots || {}).map(timeslotId => {
+                const session = timeslots[timeslotId];
+                const station = parseInt(timeslotId.substring(14)) > 100 ? 'Backup' : timeslotId.substring(14);
+                if (participantId !== session['participant_id']) return null;
+                return (
+                    <button
+                        key={"session" + timeslotId}
+                        className="session-button"
+                        onClick={
+                            () => {
+                                dispatch(setShowUpdateSession(timeslotId));
+                                //setTimeslotforLog(timeslotId);
+                            }
+                        }
+                    >
+                        {TimeSlotFormat(timeslotId) + " (" + station + ")" + ": " + Constants['sessionStatuses'][session['status']]}
+                    </button>
+                )
+            })}
+
+            {
+                !["Rejected", "Withdrawn", "Completed", "Not Selected", "Duplicate"].includes(Constants['participantStatuses'][participantInfo['status']]) &&
+                <button className="book-session-button" onClick={() => setShowBookSession2(participantId)}>Schedule session</button>
+            }
+        </div>
+
+
 
 
     </div >

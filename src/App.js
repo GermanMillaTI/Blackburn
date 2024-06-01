@@ -19,6 +19,8 @@ import UpdateSession from './components/Scheduler/UpdateSession';
 function App() {
   const [userId, setUserId] = useState('');
   const [showLog, setShowLog] = useState(false);
+  const [updateSession, setUpdateSession] = useState("");
+  const [timeslotforLog, setTimeslotforLog] = useState("");
 
   const [filterDataFromStats, setFilterDataFromStats] = useState(false);
 
@@ -54,7 +56,7 @@ function App() {
       case "/":
         return <span>Blank...</span>;
       case "/scheduler":
-        return <Scheduler />
+        return <Scheduler updateSession={updateSession} setUpdateSession={setUpdateSession} />
       case "/login":
         return <LoginPage setUserId={setUserId} />;
       case "/registration":
@@ -63,6 +65,11 @@ function App() {
         return <Participants
           filterDataFromStats={filterDataFromStats}
           setFilterDataFromStats={setFilterDataFromStats}
+          setUpdateSession={setUpdateSession}
+          timeslotforLog={timeslotforLog}
+          setTimeslotforLog={setTimeslotforLog}
+          updateSession={updateSession}
+
         />;
       case "/files":
         return <FilesView />;
@@ -88,6 +95,7 @@ function App() {
       </Routes>
       {isStatsActive && <Stats setFilterDataFromStats={setFilterDataFromStats} />}
       {isDemoStatsActive && <Bins />}
+
 
     </div>
   );

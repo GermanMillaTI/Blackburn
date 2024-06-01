@@ -39,7 +39,7 @@ const filterReducer = (state, event) => {
 
 
 
-function Scheduler({ setUpdateSession }) {
+function Scheduler({ setUpdateSession, updateSession }) {
     const [days, setDays] = useState([]);
     const [csvData, setCsvData] = useState([[]]);
     const [database, setDatabase] = useState({});
@@ -191,6 +191,7 @@ function Scheduler({ setUpdateSession }) {
                                     index={index}
                                     array={array}
                                     setUpdateSession={setUpdateSession}
+                                    updateSession={updateSession}
                                     highlightedTimeslots={highlightedTimeslots}
                                 />
                             })}

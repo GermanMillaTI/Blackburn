@@ -372,6 +372,14 @@ const Constants = {
         10: "Update session"
     },
 
+    emailTypes: {
+        // Do no modify these in any case !!
+        0: "ICF Request",
+        1: "ICF Reminder",
+        2: "Schedule Request",
+        3: "Confirmation"
+    },
+
     participantStatuses: {
         // Do no modify these in any case !!
         0: "",

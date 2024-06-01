@@ -5,19 +5,23 @@ import { format } from 'date-fns';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { updateValue } from "../../firebase/config";
 import UpdateSession from './UpdateSession';
-
+import { useSelector, useDispatch } from 'react-redux';
 import './index.css';
 import BookSession from './BookSession';
 import LogEvent from '../CommonFunctions/LogEvent';
 import SessionInfo from "../Tooltips/SessionInfo"
 import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
 import Constants from '../Constants';
+import { setShowUpdateSession } from '../../Redux/Features';
+
 
 function SchedulerRow({ database, sessionId, index, array }) {
     const [showBookSession, setShowBookSession] = useState(false);
     const [selectedSessionId, setSelectedSessionId] = useState("");
     const [justBookedSession, setJustBookedSession] = useState("");
-    const [updateSession, setUpdateSession] = useState("");
+    const showUpdateSession = useSelector((state) => state.userInfo.showUpdateSession);
+    const dispatch = useDispatch();
+
 
     const participantId = database['timeslots'][sessionId]['participant_id'];
     const participantInfo = database['participants'][participantId] || {};
@@ -75,15 +79,15 @@ function SchedulerRow({ database, sessionId, index, array }) {
             if (result.isConfirmed) {
                 updateValue("/timeslots/" + sessionId, { remind: false });
 
-                const scriptURL = 'https://script.google.com/macros/s/AKfycbxluZsxLy2fK3iN4nzQ2K7OWO2bH_ATXmmJmHJDAShTfIKvcAQ_dFCBp5qB4q7To_D2bQ/exec';
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbzBFsfBSx-k5MqCQFz_hv7IH6UJTGGfesQKPsnFg8t8mOpQ_el-KCgfRIowyolDqqxy/exec';
                 fetch(scriptURL, {
                     method: 'POST',
                     muteHttpExceptions: true,
                     body: JSON.stringify({
-                        "pid": pid,
-                        "email_kind": "Reminder",
-                        "first_name": participantInfo['first_name'],
-                        "last_name": participantInfo['last_name'],
+                        "participantId": pid,
+                        "emailType": "Reminder",
+                        "firstName": participantInfo['firstName'],
+                        "lastName": participantInfo['lastName'],
                         "email": participantInfo['email'],
                         "appointment": sessionId
                     })
@@ -164,15 +168,15 @@ function SchedulerRow({ database, sessionId, index, array }) {
                 {database['timeslots'][sessionId]['status'] === "" && !database['timeslots'][sessionId]['locked'] && <button className="update-timeslot-button lock-button" onClick={() => { lockSession(sessionId) }}>Lock</button>}
                 {database['timeslots'][sessionId]['status'] === "" && database['timeslots'][sessionId]['locked'] === true && <button className="update-timeslot-button unlock-button" onClick={() => { unlockSession(sessionId) }}>Unlock</button>}
                 {database['timeslots'][sessionId]['status'] === 0 && database['timeslots'][sessionId]['remind'] == true && <button className="update-timeslot-button remind-button" onClick={() => sendReminder(sessionId)}>Remind</button>}
-                {database['timeslots'][sessionId]['status'] !== "" && <button className="update-timeslot-button update-button" onClick={() => setUpdateSession(sessionId)}>Update</button>}
+                {database['timeslots'][sessionId]['status'] !== "" && <button className="update-timeslot-button update-button" onClick={() => dispatch(setShowUpdateSession(sessionId))}>Update</button>}
                 {database['timeslots'][sessionId]['status'] !== "" && <button className="update-timeslot-button cancel-button" onClick={() => cancelSession(sessionId)}>Cancel</button>}
             </div>
         </td>
         {showBookSession && <BookSession database={database} setShowBookSession={setShowBookSession} selectedSessionId={selectedSessionId} setJustBookedSession={setJustBookedSession} />}
-        {updateSession && <UpdateSession
+        {showUpdateSession && <UpdateSession
             database={database}
-            updateSession={updateSession}
-            setUpdateSession={setUpdateSession}
+            showUpdateSession={showUpdateSession}
+
         />}
     </tr>
     )

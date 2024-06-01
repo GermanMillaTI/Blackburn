@@ -8,6 +8,8 @@ import ParticipantFilter from './ParticipantFilter';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import GetSkinTone from '../CommonFunctions/GetSkinTone';
 import ParticipantCard from './ParticipantCard';
+import UpdateSession from '../Scheduler/UpdateSession';
+
 
 const defaultFilterStats = {
     genders: Object.assign({}, ...Object.values(Constants['genders']).map(k => ({ [k]: 0 }))),
@@ -25,13 +27,14 @@ const defaultFilterStats = {
 
 
 
-function Participants({ filterDataFromStats, setFilterDataFromStats }) {
+function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataFromStats, setUpdateSession }) {
 
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userRole = userInfo['role'];
-
     const [shownParticipants, setShownParticipants] = useState([]);
     const [participants, setParticipants] = useState({});
+    const showUpdateSession = useSelector((state) => state.userInfo.showUpdateSession);
+
 
     useEffect(() => {
         document.getElementById('navbarTitle').innerText = `Filtered participants: ${shownParticipants.length} ${shownParticipants.length > 100 ? "(the list is cropped at 100)" : ""}`;
@@ -45,7 +48,6 @@ function Participants({ filterDataFromStats, setFilterDataFromStats }) {
         const pptRef = ref(realtimeDb, path);
 
         const listener = onValue(pptRef, (res) => {
-
             setParticipants(res.val() || {});
         });
 
@@ -65,7 +67,8 @@ function Participants({ filterDataFromStats, setFilterDataFromStats }) {
             setShownParticipants={setShownParticipants}
             filterStats={filterStats}
             filterDataFromStats={filterDataFromStats}
-            setFilterDataFromStats={setFilterDataFromStats} />
+            setFilterDataFromStats={setFilterDataFromStats}
+        />
         <div id="participantTable">
             {shownParticipants.map((participantId, index) => {
                 const participantInfo = participants[participantId];
@@ -99,10 +102,15 @@ function Participants({ filterDataFromStats, setFilterDataFromStats }) {
 
                 if (index >= 100) return null;
 
-                return <ParticipantCard key={"participant-card-" + participantId} participantId={participantId} participants={participants} />
+                return <ParticipantCard
+                    key={"participant-card-" + participantId}
+                    participantId={participantId}
+                    participants={participants}
+                />
             })
             }
         </div>
+        {showUpdateSession && <UpdateSession showUpdateSession={showUpdateSession} />}
     </div>
 };
 
