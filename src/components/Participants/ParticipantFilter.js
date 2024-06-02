@@ -7,6 +7,7 @@ import GetSkinTone from "../CommonFunctions/GetSkinTone";
 import alltypes from "../CommonFunctions/PropTypes";
 import Card from '@mui/material/Card';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import GetBMIRange from "../CommonFunctions/GetBMIRange";
 
 const defaultFilterValues = {
     genders: Object.values(Constants['genders']),
@@ -18,7 +19,8 @@ const defaultFilterValues = {
     hairLengths: Object.values(Constants['hairLength']),
     hairTypes: Object.values(Constants['hairType']),
     hairColors: Object.values(Constants['hairColor']),
-    facialHairs: Object.values(Constants['facialHair'])
+    facialHairs: Object.values(Constants['facialHair']),
+    bmiRanges: Constants['bmiRanges']
 
 }
 
@@ -123,8 +125,10 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
         if (!filterData['genders'].includes(gender)) return false;
 
         const ageRange = GetAgeRange(participantInfo)['ageRange'];
-
         if (!filterData['ageRanges'].includes(ageRange)) return false;
+
+        const bmiRange = GetBMIRange(participantInfo)['bmiRange'];
+        if (!filterData['bmiRanges'].includes(bmiRange)) return false;
 
         const ethnicities = participantInfo['ethnicities'];
         const ethnicityGroups = ethnicities.toString().split(';').map(eth => {
@@ -275,8 +279,17 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
             {ageScroll && <div className="scroll-indicator" onClick={scrollToBottom}><strong><ArrowDropDownIcon sx={{ color: "white", fontSize: "20px", alignSelf: "center" }} /></strong></div>}
 
         </div>
-
         <div className="filter-container" >
+            <span className="filter-container-header">BMI range</span>
+            <div className="filter-element">
+                {Constants['bmiRanges'].map((val, i) => {
+                    return <div key={"filter-bmi-" + i} className="filter-object">
+                        <input id={"filter-bmi-" + val} name={val} type="checkbox" alt="bmiRanges" onChange={setFilterData} checked={filterData['bmiRanges'].includes(val)} />
+                        <label htmlFor={"filter-bmi-" + val}>{val + " (" + filterStats['bmiRanges'][val] + ")"}</label>
+                        <button name={val} alt="bmiRanges" className="filter-this-button" onClick={setFilterData}>!</button>
+                    </div>
+                })}
+            </div>
             <span className="filter-container-header">Skin tones</span>
             <div className="filter-element" id="skintones" >
                 {Constants['skintones'].map((val, i) => {
@@ -288,7 +301,6 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
                     </div>
                 })}
             </div>
-
         </div>
 
         <div className="filter-container" >

@@ -104,13 +104,13 @@
 }
 
 #participants .participant-card .column-1 {
-    width: 30em;
+    width: 32em;
     min-width: 30em;
 }
 
 #participants .participant-card .column-2 {
-    width: 23.5em;
-    min-width: 23.5em;
+    width: 25.5em;
+    min-width: 25.5em;
 }
 
 #participants .participant-card .column-3 {
@@ -158,8 +158,8 @@
 }
 
 #participants .participant-card .column-1 .field-label {
-    width: 8em;
-    min-width: 5em;
+    width: 11em;
+    min-width: 11em;
 }
 
 #participants .participant-card .column-2 .field-label {
@@ -198,7 +198,7 @@
 
 #participants .participant-card .participant-comment {
     font-size: 1em;
-    width: 100%;
+    width: 90%;
     padding: .3em;
     resize: vertical;
     min-height: 2em;

@@ -11,7 +11,7 @@
     margin-right: 5px;
     margin-left: 5px;
     margin-bottom: 0.35em;
-    height: 280px;
+    height: 300px;
 }
 
 
@@ -52,7 +52,7 @@
     position: absolute;
     align-self: center;
     text-align: center;
-    transform: translateY(242px);
+    transform: translateY(262px);
     background-color: transparent;
     color: white;
     border-radius: 5px;

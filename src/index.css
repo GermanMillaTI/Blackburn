@@ -42,6 +42,11 @@ p {
   color: var(--font-color);
 }
 
+a:hover {
+  cursor: pointer;
+}
+
+
 .no-wrap {
   white-space: nowrap;
 }

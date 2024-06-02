@@ -15,6 +15,7 @@ import { setShowUpdateSession } from '../../Redux/Features';
 import './ParticipantCard.css';
 import Constants from '../Constants';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
+import BMICalculator from '../CommonFunctions/BMICalculator';
 import LogEvent from '../CommonFunctions/LogEvent';
 import GetFormattedLogDate from '../CommonFunctions/GetFormattedLogDate';
 
@@ -167,9 +168,9 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
                 </span>
             </div>
             <div className="participant-attribute-container">
-                <span className="field-label">Biometrics</span>
+                <span className="field-label">Height / Weight (BMI)</span>
                 <span>
-                    {`${participantInfo['heightFt']}' ${participantInfo['heightIn']}''`} / {participantInfo['weightLbs']}
+                    {`${participantInfo['heightFt']}' ${participantInfo['heightIn']}'' / ${participantInfo['weightLbs']} ${BMICalculator(participantInfo['heightFt'], participantInfo['heightIn'], participantInfo['weightLbs'])}`}
                 </span>
 
             </div>
@@ -180,6 +181,7 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
                     {participantInfo['skintone']}
                 </span>
             </div>
+
             <div className="participant-attribute-container">
 
                 <span className="field-label">Hair Length / Color / Type </span>

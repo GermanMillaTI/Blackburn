@@ -9,6 +9,8 @@ import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import GetSkinTone from '../CommonFunctions/GetSkinTone';
 import ParticipantCard from './ParticipantCard';
 import UpdateSession from '../Scheduler/UpdateSession';
+import GetBMIRange from '../CommonFunctions/GetBMIRange';
+
 
 
 const defaultFilterStats = {
@@ -22,6 +24,7 @@ const defaultFilterStats = {
     hairLengths: Object.assign({}, ...Object.values(Constants['hairLength']).map(k => ({ [k]: 0 }))),
     hairTypes: Object.assign({}, ...Object.values(Constants['hairType']).map(k => ({ [k]: 0 }))),
     hairColors: Object.assign({}, ...Object.values(Constants['hairColor']).map(k => ({ [k]: 0 }))),
+    bmiRanges: Object.assign({}, ...Constants['bmiRanges'].map(k => ({ [k]: 0 }))),
 };
 
 
@@ -77,6 +80,7 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
 
                 const gender = Constants['genders'][participantInfo['gender']];
                 const ageRange = GetAgeRange(participantInfo)['ageRange'];
+                const bmiRange = GetBMIRange(participantInfo)['bmiRange'];
                 const status = participantInfo['status'] ? Constants['participantStatuses'][participantInfo['status']] : 'Blank';
                 const skintone = GetSkinTone(participantInfo)['skinRange'];
                 const facialHair = Constants['facialHair'][participantInfo['facialHair']];
@@ -92,6 +96,7 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
                 ethnicityGroups.forEach(ethnicityGroup => filterStats['ethnicityGroups'][ethnicityGroup]++);
                 filterStats['genders'][gender]++;
                 filterStats['ageRanges'][ageRange]++;
+                filterStats['bmiRanges'][bmiRange]++;
                 filterStats['statuses'][status]++;
                 filterStats['skintones'][skintone]++;
                 filterStats['multipleEthnicities'][multipleEthnicities]++;
