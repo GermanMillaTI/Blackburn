@@ -68,6 +68,22 @@ const Constants = {
         12: "Prefer not to state",
         13: "Other"
     },
+    ethnicitiesDisplay: {
+        0: "Aboriginal Australians/Papuans",
+        1: "African/African-American/Black",
+        2: "Alaskan Native",
+        3: "Native American",
+        4: "East Asian",
+        5: "Hispanic/Latin American/Spanish",
+        6: "Middle Eastern/North African",
+        7: "Native Hawaiian/Pacific Islander/Indigenous people of Oceania",
+        8: "South Asian",
+        9: "Southeast Asian",
+        10: "White - Northern European",
+        11: "White - Southern European",
+        12: "Prefer not to state",
+        13: "Other"
+    },
     ethnicityGroups: {
         "African/African-American/Black": [1],
         "Med / Mid East": [6, 11],
@@ -369,7 +385,10 @@ const Constants = {
         7: "unlock session",
         8: "Book session",
         9: "Cancel session",
-        10: "Update session"
+        10: "Update session",
+        11: "Bonus addition",
+        12: "Bonus removal",
+        13: "Update demographics"
     },
 
     emailTypes: {
@@ -446,6 +465,19 @@ const Constants = {
         6: "Failed - Comp.",
         7: "Failed - No Comp."
     },
+
+    bonuses: {
+        b1: "Bonus",
+        b2: "Bonus",
+        b3: "Bonus",
+    },
+
+    bonusList: [
+        "0",
+        "25",
+        "50",
+        "75"
+    ],
 
     getKeyByValue: function (obj, value) {
         return Object.keys(obj).find(key => obj[key] === value);

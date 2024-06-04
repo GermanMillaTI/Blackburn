@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { realtimeDb } from '../../firebase/config';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
+import { renderToString } from 'react-dom/server';
 import { useSelector, useDispatch } from 'react-redux';
 import md5 from 'md5';
 import { updateValue } from "../../firebase/config";
@@ -9,7 +10,7 @@ import CheckDocuments from '../CheckDocuments';
 import ICFModal from '../ICFModal';
 import { ref, onValue, off } from 'firebase/database';
 import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
-import { setShowUpdateSession } from '../../Redux/Features';
+import { setShowUpdateSession, setShowBookSession2 } from '../../Redux/Features';
 
 
 import './ParticipantCard.css';
@@ -19,7 +20,7 @@ import BMICalculator from '../CommonFunctions/BMICalculator';
 import LogEvent from '../CommonFunctions/LogEvent';
 import GetFormattedLogDate from '../CommonFunctions/GetFormattedLogDate';
 
-function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
+function ParticipantCard({ participantId, participants }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userId = userInfo['userId'];
     const [showDocs, setShowDocs] = useState(false);
@@ -52,6 +53,12 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
         return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
     });
     ethnicityGroups = [...new Set(ethnicityGroups)].sort((a, b) => a > b ? 1 : -1).join(', ');
+
+    let ethnicities = participantInfo['ethnicities'].toString().split(';').map(eth => {
+        return Constants['ethnicitiesDisplay'][eth]
+    })
+
+    ethnicities = ethnicities.join(";")
 
     const getIcfUrl = () => {
         return `https://blackburn-la.web.app/icf/${participantId}?email=${participantInfo['email']}`
@@ -93,6 +100,48 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
 
 
         }
+    }
+
+    function updateEthnicity() {
+        const HTMLContent = () => {
+
+            return <>
+                {Object.values(Constants['ethnicitiesDisplay']).map((val, i) => {
+                    return <div key={"popup-filter-eth" + i} className="update-ethnicity-row">
+                        <input id={"popup-filter-" + val} name={val} type="checkbox" checked={ethnicities.includes(val) ? true : false} />
+                        <label htmlFor={"popup-filter-" + val}>{val}</label>
+                    </div>
+                })}
+            </>
+        }
+
+        Swal.fire({
+            title: "Updating ethnicities",
+            width: 500,
+            confirmButtonText: "Save",
+            showCancelButton: true,
+            html: renderToString(<HTMLContent />)
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let checkboxes = document.querySelectorAll("[id^='popup-filter-']");
+                let list = "";
+                checkboxes.forEach(x => list += (x.checked ? Constants.getKeyByValue(Constants['ethnicitiesDisplay'], x.name) + ";" : ""));
+
+                list = list.trim();
+                list = list.substring(0, list.length - 1);
+
+                if (list) {
+                    updateValue("/participants/" + participantId, { ethnicities: list });
+
+                    LogEvent({
+                        participantId: participantId,
+                        action: 13,
+                        value: "Updated Ethnicities"
+                    })
+                }
+
+            }
+        })
     }
 
 
@@ -190,14 +239,22 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
                 </span>
             </div>
 
-            <div className={"participant-attribute-container " + (ethnicityGroups.split(';').length > 1 ? 'multiple-ethnicities' : '')}>
-                <span className="field-label">Ethnicity</span>
+            <div className={"participant-attribute-container " + (ethnicities.split(';').length > 1 ? 'multiple-ethnicities' : '')}>
+                <span className="field-label">Ethnicities</span>
                 <span>
-                    {ethnicityGroups}
+                    {ethnicities.split(";").join(", ")}
+                    {participantInfo['status'] != 3 && <a className='copy-email-link fas fa-edit'
+                        title='Update Ethnicities'
+                        onClick={(e) => {
+                            e.preventDefault();
+                            updateEthnicity();
+                        }} target='_blank'></a>
+                    }
                 </span>
 
 
             </div>
+
             <div className="participant-attribute-container">
                 <span className="field-label">Signatures</span>
 
@@ -404,11 +461,13 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
 
             {
                 !["Rejected", "Withdrawn", "Completed", "Not Selected", "Duplicate"].includes(Constants['participantStatuses'][participantInfo['status']]) &&
-                <button className="book-session-button" onClick={() => setShowBookSession2(participantId)}>Schedule session</button>
+                <button className="book-session-button" onClick={
+                    () => {
+                        dispatch(setShowBookSession2(participantId))
+                    }
+                }>Schedule session</button>
             }
         </div>
-
-
 
 
     </div >

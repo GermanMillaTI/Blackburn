@@ -10,7 +10,7 @@ import GetSkinTone from '../CommonFunctions/GetSkinTone';
 import ParticipantCard from './ParticipantCard';
 import UpdateSession from '../Scheduler/UpdateSession';
 import GetBMIRange from '../CommonFunctions/GetBMIRange';
-
+import BookSession2 from '../Scheduler/BookSession2';
 
 
 const defaultFilterStats = {
@@ -37,6 +37,7 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
     const [shownParticipants, setShownParticipants] = useState([]);
     const [participants, setParticipants] = useState({});
     const showUpdateSession = useSelector((state) => state.userInfo.showUpdateSession);
+    const showBookSession2 = useSelector((state) => state.userInfo.showBookSession2);
 
 
     useEffect(() => {
@@ -116,6 +117,7 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
             }
         </div>
         {showUpdateSession && <UpdateSession showUpdateSession={showUpdateSession} />}
+        {showBookSession2 && <BookSession2 showBookSession2={showBookSession2} />}
     </div>
 };
 

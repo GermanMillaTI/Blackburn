@@ -104,7 +104,7 @@
 }
 
 #participants .participant-card .column-1 {
-    width: 32em;
+    width: 37em;
     min-width: 30em;
 }
 
@@ -114,13 +114,13 @@
 }
 
 #participants .participant-card .column-3 {
-    width: 16em;
+    width: 18em;
     min-width: 16em;
-    max-width: 16em;
+    max-width: 18em;
 }
 
 #participants .participant-card .column-4 {
-    width: 20em;
+    width: 22em;
     min-width: 12em;
     background: rgba(0, 0, 0, 0.1);
     margin: .5em;
@@ -158,7 +158,7 @@
 }
 
 #participants .participant-card .column-1 .field-label {
-    width: 11em;
+    width: 13em;
     min-width: 11em;
 }
 
