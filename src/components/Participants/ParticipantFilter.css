@@ -11,7 +11,7 @@
     margin-right: 5px;
     margin-left: 5px;
     margin-bottom: 0.35em;
-    height: 300px;
+    height: 275px;
 }
 
 
@@ -23,11 +23,11 @@
     gap: .3em;
     border-radius: 0.5em;
     color: #333;
-
+    overflow-y: auto;
+    height: 250px;
 }
 
 .filter-element::-webkit-scrollbar {
-    display: none;
     border-radius: 0.5em;
 }
 
@@ -75,7 +75,6 @@
     display: inline-flex;
     gap: .3em;
     flex-direction: column;
-    overflow-y: auto;
     -ms-overflow-style: none;
     /* IE and Edge */
     scrollbar-width: none;
@@ -159,4 +158,20 @@
     background: rgba(255, 0, 0, 0.5);
     color: white;
     font-weight: bold;
+}
+
+::-webkit-scrollbar {
+    width: 3px;
+    height: 15px;
+}
+
+::-webkit-scrollbar-track {
+    background: #cccaca;
+}
+
+
+
+::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 5px;
 }

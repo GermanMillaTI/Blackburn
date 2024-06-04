@@ -30,12 +30,13 @@ const defaultFilterStats = {
 
 
 
-function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataFromStats, setUpdateSession }) {
+function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataFromStats }) {
 
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userRole = userInfo['role'];
     const [shownParticipants, setShownParticipants] = useState([]);
     const [participants, setParticipants] = useState({});
+    const [sessions, setSessions] = useState({});
     const showUpdateSession = useSelector((state) => state.userInfo.showUpdateSession);
     const showBookSession2 = useSelector((state) => state.userInfo.showBookSession2);
 
@@ -51,12 +52,20 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
         const path = '/participants';
         const pptRef = ref(realtimeDb, path);
 
+        const sessionsPath = '/timeslots';
+        const sessionsRef = ref(realtimeDb, sessionsPath);
+
+        const sessionsListener = onValue(sessionsRef, (res) => {
+            setSessions(res.val() || {});
+        });
+
         const listener = onValue(pptRef, (res) => {
             setParticipants(res.val() || {});
         });
 
         return () => {
             off(pptRef, "value", listener);
+            off(sessionsRef, "value", sessionsListener);
 
         }
 
@@ -72,6 +81,7 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
             filterStats={filterStats}
             filterDataFromStats={filterDataFromStats}
             setFilterDataFromStats={setFilterDataFromStats}
+            sessions={sessions}
         />
         <div id="participantTable">
             {shownParticipants.map((participantId, index) => {

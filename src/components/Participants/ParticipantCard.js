@@ -11,8 +11,7 @@ import ICFModal from '../ICFModal';
 import { ref, onValue, off } from 'firebase/database';
 import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
 import { setShowUpdateSession, setShowBookSession2 } from '../../Redux/Features';
-
-
+import FormatTime from '../CommonFunctions/FormatTime';
 import './ParticipantCard.css';
 import Constants from '../Constants';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
@@ -415,7 +414,7 @@ function ParticipantCard({ participantId, participants }) {
                 participantInfo['document_approval'] == 1 &&
                 <div className="participant-attribute-container">
                     <span className="field-label">Communication</span>
-                    <button className="email-button icf-reminder-button" onClick={() => sendMail("Handoff")}>Send Handoff email</button>
+                    <button className="email-button handoff-button" onClick={() => sendMail("Handoff")}>Send Handoff email</button>
                     <a className="copy-booking-link fas fa-copy" onClick={(e) => {
                         e.preventDefault();
 
@@ -468,6 +467,44 @@ function ParticipantCard({ participantId, participants }) {
                 }>Schedule session</button>
             }
         </div>
+
+        {
+            participantInfo['history'] &&
+            <div className={"participant-card-column" + " column-5"}>
+                <span className="participant-attribute-header">Email history</span>
+                {participantInfo['history'] && Object.keys(participantInfo['history']).map((t) => {
+                    let emailTitle = participantInfo['history'][t]['title'];
+                    let appointmentTime = "";
+                    if (emailTitle.startsWith('Handoff')) {
+                        emailTitle = emailTitle.replace("(", "($ ");
+                    }
+                    else if (emailTitle.startsWith('Confirmation') && emailTitle.length > 15) {
+                        appointmentTime = emailTitle.substring(13, 17) + "-" +
+                            emailTitle.substring(17, 19) + "-" +
+                            emailTitle.substring(19, 21) + " " +
+                            FormatTime(emailTitle.substring(22, 24) + ":" + emailTitle.substring(24, 26)) +
+                            " (" + (parseInt(emailTitle.substring(27)) > 100 ? 'Backup' : emailTitle.substring(27)) + ")";
+                        emailTitle = 'Confirmation';
+                    } else if (emailTitle.startsWith('Reminder') && emailTitle.length > 15) {
+                        appointmentTime = emailTitle.substring(9, 13) + "-" +
+                            emailTitle.substring(13, 15) + "-" +
+                            emailTitle.substring(15, 17) + " " +
+                            FormatTime(emailTitle.substring(18, 20) + ":" + emailTitle.substring(20, 22)) +
+                            " (" + (parseInt(emailTitle.substring(23)) > 100 ? 'Backup' : emailTitle.substring(23)) + ")";
+                        emailTitle = 'Reminder';
+                    }
+                    return <div key={participantId + t} className="participant-attribute-container">
+                        <span className="field-label">{t.substring(0, 16).replaceAll('_', ' ')}</span>
+                        <span className="email-history-content">
+                            <span>{emailTitle}</span>
+                            {appointmentTime && <span>{appointmentTime}</span>}
+                        </span>
+                    </div>
+                })}
+
+            </div>
+        }
+
 
 
     </div >

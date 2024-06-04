@@ -87,10 +87,9 @@ const filterReducer = (state, event) => {
 
 
 
-function ParticipantFilter({ participants, setShownParticipants, filterStats, filterDataFromStats, setFilterDataFromStats }) {
+function ParticipantFilter({ participants, sessions, setShownParticipants, filterStats, filterDataFromStats, setFilterDataFromStats }) {
 
     const [filterData, setFilterData] = useReducer(filterReducer, JSON.parse(JSON.stringify(defaultFilterValues)));
-    const [ageScroll, setAgeScroll] = useState(true);
 
     //proptype validation
     ParticipantFilter.propTypes = alltypes.ParticipantComponent;
@@ -174,6 +173,27 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
             if (dateOfRegistration > dateTo) return false;
         }
 
+        let sessionDateFrom = filterData['dateOfSessionsFrom'];
+        let sessionDateTo = filterData['dateOfSessionsTo'];
+        if (sessionDateFrom) {
+            sessionDateFrom = new Date(sessionDateFrom);
+            let sessionFromList = Object.keys(sessions).find(session => {
+                let tempDate = new Date(session.substring(0, 4) + "-" + session.substring(4, 6) + "-" + session.substring(6, 8))
+                return tempDate >= sessionDateFrom && sessions[session]['participant_id'] == participantId
+            })
+            if (typeof sessionFromList == "undefined") return false
+        }
+
+        if (sessionDateTo) {
+            sessionDateTo = new Date(sessionDateTo);
+            let sessionToList = Object.keys(sessions).find(session => {
+                let tempDate = new Date(session.substring(0, 4) + "-" + session.substring(4, 6) + "-" + session.substring(6, 8))
+
+                return tempDate <= sessionDateTo && sessions[session]['participant_id'] == participantId
+            })
+            if (typeof sessionToList == "undefined") return false
+        }
+
         return true;
     }
 
@@ -181,25 +201,6 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
         const filteredParticipants = Object.keys(participants).filter(pid => filterFunction(pid))
         setShownParticipants(filteredParticipants);
     }, [participants, filterData]);
-
-
-    try {
-        const target = document.querySelector('#ageRange');
-
-        target.addEventListener('scroll', () => {
-
-            const isAtBottom = target.scrollHeight - target.scrollTop - target.clientHeight <= 1;
-            setAgeScroll(!isAtBottom)
-        }, false)
-    } catch (e) {
-        console.log(e)
-    }
-
-    const scrollToBottom = () => {
-        const scrollbar = document.getElementById("ageRange");
-        scrollbar.scrollTop = scrollbar.scrollHeight;
-
-    }
 
 
     return <Card className="filter-main-container">
@@ -230,6 +231,14 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
             <div className="filter-element">
                 <input name="dateOfRegistrationTo" type="date" onChange={setFilterData} min="2024-03-01" max="2024-12-31" value={filterData['dateOfRegistrationTo'] || ""} />
             </div>
+            <div className="filter-element gap">
+                <span>Date of session(s)</span>
+                <input name="dateOfSessionsFrom" type="date" onChange={setFilterData} min="2024-03-01" max="2024-12-31" value={filterData['dateOfSessionsFrom'] || ""} />
+            </div>
+            <div className="filter-element">
+                <input name="dateOfSessionsTo" type="date" onChange={setFilterData} min="2024-03-01" max="2024-12-31" value={filterData['dateOfSessionsTo'] || ""} />
+            </div>
+
             <div className="filter-element">
                 <button name="resetFilter" className="reset-filter-button" onClick={setFilterData}>Reset filter</button>
             </div>
@@ -267,7 +276,7 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
 
         <div className="filter-container" >
             <span className="filter-container-header">Age range</span>
-            <div className="filter-element" style={{ borderTop: !ageScroll ? "8px solid #4B286D" : "", borderBottom: ageScroll ? "8px solid #4B286D" : "", borderRadius: "5px" }} id="ageRange" >
+            <div className="filter-element" id="ageRange" >
                 {Constants['ageRanges'].map((val, i) => {
                     return <div key={"filter-age-" + i} className="filter-object">
                         <input id={"filter-age-" + val} name={val} type="checkbox" alt="ageRanges" onChange={setFilterData} checked={filterData['ageRanges'].includes(val)} />
@@ -276,8 +285,6 @@ function ParticipantFilter({ participants, setShownParticipants, filterStats, fi
                     </div>
                 })}
             </div>
-            {ageScroll && <div className="scroll-indicator" onClick={scrollToBottom}><strong><ArrowDropDownIcon sx={{ color: "white", fontSize: "20px", alignSelf: "center" }} /></strong></div>}
-
         </div>
         <div className="filter-container" >
             <span className="filter-container-header">BMI range</span>
