@@ -104,7 +104,7 @@ const Constants = {
         "Middle Eastern/North African [Afghan, Algerian, Egyptian, Iranian, Iraqi, Israeli, Lebanese, Moroccan, Syrian, Tunisian]": "MedMidEast",
         "Native Hawaiian/Pacific Islander/Indigenous people of Oceania [Chamarro, Chuukese, Fijian, Marshallese, Native Hawaiian, Palauan, Samoan, Tahitian, Tongan]": "Other",
         "South Asian [Asian Indian, Bangladeshi, Pakistani]": "SouthAsian",
-        "Southeast Asian [Cambodian, Filipino, Hmong, Malaysian, Thai, Singaporean, Vietnamese]": "SoutheastAsian",
+        "Southeast Asian [Cambodian, Filipino, Hmong, Malaysian, Thai, Singaporean, Vietnamese]": "Other",
         "White - Northern European [Dutch, English, Northern French, German, Irish, Norwegian, Northern European (not listed)]": "NEuropean",
         "White - Southern European [Italian, Southern French, Spanish, Portuguese, Southern European (not listed)]": "Other",
         "Prefer not to state": "Other",
@@ -478,6 +478,11 @@ const Constants = {
         "50",
         "75"
     ],
+    makeup: {
+        0: "",
+        1: "Make Up",
+        2: "No Make Up"
+    },
 
     getKeyByValue: function (obj, value) {
         return Object.keys(obj).find(key => obj[key] === value);

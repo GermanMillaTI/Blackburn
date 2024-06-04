@@ -240,9 +240,9 @@ function ParticipantCard({ participantId, participants }) {
             </div>
 
             <div className={"participant-attribute-container " + (ethnicities.split(';').length > 1 ? 'multiple-ethnicities' : '')}>
-                <span className="field-label">Ethnicities</span>
+                <span className="field-label">Ethnic Group(s)</span>
                 <span>
-                    {ethnicities.split(";").join(", ")}
+                    {ethnicityGroups}
                     {participantInfo['status'] != 3 && <a className='copy-email-link fas fa-edit'
                         title='Update Ethnicities'
                         onClick={(e) => {

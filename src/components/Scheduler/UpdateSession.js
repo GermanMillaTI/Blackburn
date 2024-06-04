@@ -16,6 +16,7 @@ import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import GetSkinTone from '../CommonFunctions/GetSkinTone';
 import { object } from 'prop-types';
+import GetBMIRange from '../CommonFunctions/GetBMIRange';
 
 export default ({ showUpdateSession, showLog, setShowLog }) => {
     const userInfo = useSelector((state) => state.userInfo.value || {});
@@ -26,6 +27,8 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
     const [participantId, setParticipantId] = useState('');
     const [participantInfo, setParticipantInfo] = useState({});
     const [ethnicities, setEthnicities] = useState([]);
+    const [tattoos, setTattoos] = useState([]);
+    const [piercings, setPiercings] = useState([]);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -64,6 +67,35 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
 
         }
     }, [participantId]);
+
+    useEffect(() => {
+        if (Object.keys(participantInfo).length === 0) return;
+        let tempArray = participantInfo['tattoos'].toString().split(';').map(eth => {
+            return Constants['tattoos'][eth]
+        })
+
+        let tempPiercings = participantInfo['piercings'].toString().split(';').map(eth => {
+            return Constants['piercings'][eth]
+        })
+
+        tempArray = tempArray.join(";");
+        tempPiercings = tempPiercings.join(";")
+        setTattoos(tempArray);
+        setPiercings(tempPiercings);
+
+    }, [participantInfo])
+
+
+    useEffect(() => {
+        if (Object.keys(participantInfo).length === 0) return;
+        let tempArray = participantInfo['ethnicities'].toString().split(';').map(eth => {
+            return Constants['ethnicitiesDisplay'][eth]
+        })
+
+        tempArray = tempArray.join(";")
+        setEthnicities(tempArray)
+
+    }, [participantInfo])
 
     function cancelSession(sessionId) {
         Swal.fire({
@@ -105,18 +137,6 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
         })
     }
 
-    useEffect(() => {
-        if (Object.keys(participantInfo).length === 0) return;
-        let tempArray = participantInfo['ethnicities'].toString().split(';').map(eth => {
-            return Constants['ethnicitiesDisplay'][eth]
-        })
-
-        console.log(tempArray)
-
-        tempArray = tempArray.join(";")
-        setEthnicities(tempArray)
-
-    }, [participantInfo])
 
 
 
@@ -125,10 +145,13 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
         const HTMLContent = () => {
 
             return <>
-                {Object.values(Constants['ethnicitiesDisplay']).map((val, i) => {
+                {Object.values(Constants['ethnicitiesDisplay']).sort().map((val, i) => {
                     return <div key={"popup-filter-eth" + i} className="update-ethnicity-row">
                         <input id={"popup-filter-" + val} name={val} type="checkbox" checked={ethnicities.includes(val) ? true : false} />
-                        <label htmlFor={"popup-filter-" + val}>{val}</label>
+                        <label htmlFor={"popup-filter-" + val}>{val} <strong>{`
+                        (${Constants.getKeyByValue(Constants['ethDbMap2'],
+                            Constants['ethDbMap'][Constants['ethnicities'][Constants.getKeyByValue(Constants['ethnicitiesDisplay'], val)]])})`}</strong>
+                        </label>
                     </div>
                 })}
             </>
@@ -136,7 +159,7 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
 
         Swal.fire({
             title: "Updating ethnicities",
-            width: 500,
+            width: 600,
             confirmButtonText: "Save",
             showCancelButton: true,
             html: renderToString(<HTMLContent />)
@@ -163,15 +186,101 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
         })
     }
 
+    function updateTattoos() {
+        const HTMLContent = () => {
+
+            return <>
+                {Object.values(Constants['tattoos']).sort().map((val, i) => {
+                    return <div key={"popup-filter-eth" + i} className="update-ethnicity-row">
+                        <input id={"popup-filter-" + val} name={val} type="checkbox" checked={tattoos.includes(val) ? true : false} />
+                        <label htmlFor={"popup-filter-" + val}>{val}
+                        </label>
+                    </div>
+                })}
+            </>
+        }
+
+        Swal.fire({
+            title: "Updating Tattoos List",
+            width: 600,
+            confirmButtonText: "Save",
+            showCancelButton: true,
+            html: renderToString(<HTMLContent />)
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let checkboxes = document.querySelectorAll("[id^='popup-filter-']");
+                let list = "";
+                checkboxes.forEach(x => list += (x.checked ? Constants.getKeyByValue(Constants['tattoos'], x.name) + ";" : ""));
+
+                list = list.trim();
+                list = list.substring(0, list.length - 1);
+
+                if (list) {
+                    updateValue("/participants/" + participantId, { tattoos: list });
+
+                    LogEvent({
+                        participantId: participantId,
+                        action: 13,
+                        value: "Updated Tattoos"
+                    })
+                }
+
+            }
+        })
+    }
+
+    function updatePiercings() {
+        const HTMLContent = () => {
+
+            return <>
+                {Object.values(Constants['piercings']).sort().map((val, i) => {
+                    return <div key={"popup-filter-eth" + i} className="update-ethnicity-row">
+                        <input id={"popup-filter-" + val} name={val} type="checkbox" checked={piercings.includes(val) ? true : false} />
+                        <label htmlFor={"popup-filter-" + val}>{val}
+                        </label>
+                    </div>
+                })}
+            </>
+        }
+
+        Swal.fire({
+            title: "Updating Piercings List",
+            width: 600,
+            confirmButtonText: "Save",
+            showCancelButton: true,
+            html: renderToString(<HTMLContent />)
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let checkboxes = document.querySelectorAll("[id^='popup-filter-']");
+                let list = "";
+                checkboxes.forEach(x => list += (x.checked ? Constants.getKeyByValue(Constants['piercings'], x.name) + ";" : ""));
+
+                list = list.trim();
+                list = list.substring(0, list.length - 1);
+
+                if (list) {
+                    updateValue("/participants/" + participantId, { piercings: list });
+
+                    LogEvent({
+                        participantId: participantId,
+                        action: 13,
+                        value: "Updated Piercings"
+                    })
+                }
+
+            }
+        })
+    }
+
 
     function updateSkinColor() {
-        let skintone = participantInfo['skinTone'];
+        let skintone = participantInfo['skintone'];
 
         const HTMLContent = () => {
             return <select id="newSkinTone" defaultValue={skintone} >
                 {
-                    Object.keys(Constants['skinTone']).map((i) => {
-                        return <option value={Constants['skinTone'][i]}>{Constants['skinTone'][i]}</option>
+                    Array.from({ length: 12 }, (v, i) => i + 1).map((i) => {
+                        return <option value={i}>{i}</option>
                     })
                 }
             </select>
@@ -180,11 +289,12 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
         const saveSkinColor = () => {
             skintone = document.getElementById("newSkinTone").value
 
-            updateValue("/participants/" + participantId, { skinTone: skintone });
+            updateValue("/participants/" + participantId, { skintone: parseInt(skintone) });
 
             LogEvent({
-                pid: participantId,
-                action: "Participant skin tone: '" + skintone + "'"
+                participantId: participantId,
+                value: skintone,
+                action: 13
             })
         }
 
@@ -201,76 +311,38 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
         });
     }
 
-    function updateHairLength() {
-
-        let hairlength = participantInfo['hairLength'];
-
-        const HTMLContent = () => {
-            return <select id="newHairLength" defaultValue={hairlength} >
-                {
-                    Object.keys(Constants['skinTone']).map((i) => {
-                        return <option value={Constants['hairlength'][i]}>{Constants['hairlength'][i]}</option>
-                    })
-                }
-            </select>
-        }
-
-        const saveHairLength = () => {
-            hairlength = document.getElementById("newHairLength").value
-
-            updateValue("/participants/" + participantId, { haiLength: hairlength });
-
-            LogEvent({
-                pid: participantId,
-                action: "Participant skin tone: '" + hairlength + "'"
-            })
-        }
-
-
-        Swal.fire({
-            title: "Updating Hair Length",
-            confirmButtonText: "Save",
-            showCancelButton: true,
-            html: renderToString(<HTMLContent />)
-        }).then((result) => {
-            if (result.isConfirmed) {
-                saveHairLength();
-            }
-        });
-    }
-
-
 
 
     function updateHeight() {
-        let height = participantInfo['height_cm'];
+        let heightFt = participantInfo['heightFt'];
+        let heightIn = participantInfo['heightIn'];
 
         const HTMLContent = () => {
-            return <input type="number" id="newHeight" defaultValue={height} />
+            return <div style={{ display: "flex" }}>
+                <label htmlFor='newHeightFt'>Feet: </label>
+                <input type="number" id="newHeightFt" style={{ marginRight: "1em", width: "50px" }} defaultValue={heightFt} />
+                <label htmlFor='newHeightIn'>Inches: </label>
+                <input type="number" id="newHeightIn" style={{ marginRight: "1em", width: "50px" }} defaultValue={heightIn} />
+            </div>
         }
 
         const saveHeight = () => {
-            height = document.getElementById("newHeight").value;
+            heightFt = document.getElementById("newHeightFt").value;
+            heightIn = document.getElementById("newHeightIn").value;
 
-            const inches = height / 2.54;
-            const feet = Math.floor(inches / 12);
-            const remainingInches = inches % 12;
-
-
-
-            updateValue("/participants/" + participantId, { height_cm: height });
-            updateValue("/participants/" + participantId, { height_ft: parseFloat(feet) });
-            updateValue("/participants/" + participantId, { height_in: parseFloat(remainingInches) });
+            updateValue("/participants/" + participantId, { heightFt: parseFloat(heightFt) });
+            updateValue("/participants/" + participantId, { heightIn: parseFloat(heightIn) });
 
             LogEvent({
-                pid: participantId,
-                action: "Participant height (cm): '" + height + "'"
+                participantId: participantId,
+                value: `${heightFt}' ${heightIn}''`,
+                action: 13
             })
         }
 
 
         Swal.fire({
-            title: "Updating Height (cm)",
+            title: "Updating Height",
             confirmButtonText: "Save",
             showCancelButton: true,
             html: renderToString(<HTMLContent />)
@@ -280,6 +352,39 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
             }
         });
     }
+
+    function updateWeight() {
+        let weight = participantInfo['weightLbs'];
+
+        const HTMLContent = () => {
+            return <input type="number" id="newWeight" defaultValue={weight} />
+        }
+
+        const saveWeight = () => {
+            weight = document.getElementById("newWeight").value;
+
+
+            updateValue("/participants/" + participantId, { weightLbs: weight });
+            LogEvent({
+                participantId: participantId,
+                value: weight,
+                action: 13
+            })
+        }
+
+
+        Swal.fire({
+            title: "Updating Weight (lb)",
+            confirmButtonText: "Save",
+            showCancelButton: true,
+            html: renderToString(<HTMLContent />)
+        }).then((result) => {
+            if (result.isConfirmed) {
+                saveWeight();
+            }
+        });
+    }
+
 
 
 
@@ -358,6 +463,36 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
                                     <td className="participant-table-right">{`${participantInfo['residenceCity']}, ${Constants['usStates'][participantInfo['residenceState']]}`}</td>
                                 </tr>
                                 <tr>
+                                    <td className="participant-table-left">Age range / Gender</td>
+                                    <td className="participant-table-right">{GetAgeRange(participantInfo)['ageRange'] + " / " + Constants['genders'][participantInfo['gender']]}</td>
+                                </tr>
+                                <tr>
+                                    <td className="participant-table-left">Tattoos</td>
+                                    <td className="participant-table-right">
+                                        {tattoos.toString().split(";").join(", ")}
+                                        {participantInfo['status'] != 3 && <a className='copy-email-link fas fa-edit'
+                                            title='Update Tattoos list'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                updateTattoos();
+                                            }} target='_blank'></a>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="participant-table-left">Piercings</td>
+                                    <td className="participant-table-right">
+                                        {piercings.toString().split(";").join(", ")}
+                                        {participantInfo['status'] != 3 && <a className='copy-email-link fas fa-edit'
+                                            title='Update Tattoos list'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                updatePiercings();
+                                            }} target='_blank'></a>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td className="participant-table-left">Ethnicities</td>
                                     <td className="participant-table-right">
                                         {ethnicities.toString().split(";").join(", ")}
@@ -370,7 +505,120 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
                                         }
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td className="participant-table-left">Skin tone / Range</td>
+                                    <td className="participant-table-right">
+                                        {participantInfo['skintone']} / {GetSkinTone(participantInfo)['skinRange']}
+                                        <a className='copy-email-link fas fa-edit'
+                                            title='Update Skin tone'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                updateSkinColor();
+                                            }} target='_blank'></a>
+                                    </td>
+                                </tr>
 
+                                <tr>
+                                    <td className="participant-table-left">Hair Color</td>
+                                    <td className="participant-table-right">
+                                        <select className="session-data-selector"
+                                            onChange={(e) => {
+                                                updateValue("/participants/" + participantId, { hairColor: parseInt(e.currentTarget.value) });
+                                                LogEvent({ participantId, action: 13, value: parseInt(e.currentTarget.value), userId: userId });
+                                            }}
+                                        >
+                                            {Object.keys(Constants['hairColor']).map(hairColor => {
+                                                const status = Constants['hairColor'][hairColor];
+                                                return <option key={"participant-status-" + hairColor} value={hairColor} selected={hairColor == participantInfo['hairColor']}>{status}</option>
+                                            })}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="participant-table-left">Hair Type</td>
+                                    <td className="participant-table-right">
+                                        <select className="session-data-selector"
+                                            onChange={(e) => {
+                                                updateValue("/participants/" + participantId, { hairType: parseInt(e.currentTarget.value) });
+                                                LogEvent({ participantId, action: 13, value: parseInt(e.currentTarget.value), userId: userId });
+                                            }}
+                                        >
+                                            {Object.keys(Constants['hairType']).map(hairType => {
+                                                const status = Constants['hairType'][hairType];
+                                                return <option key={"participant-status-" + hairType} value={hairType} selected={hairType == participantInfo['hairType']}>{status}</option>
+                                            })}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="participant-table-left">Hair Length</td>
+                                    <td className="participant-table-right">
+                                        <select className="session-data-selector"
+                                            onChange={(e) => {
+                                                updateValue("/participants/" + participantId, { hairLength: parseInt(e.currentTarget.value) });
+                                                LogEvent({ participantId, action: 13, value: parseInt(e.currentTarget.value), userId: userId });
+                                            }}
+                                        >
+                                            {Object.keys(Constants['hairLength']).map(hairLength => {
+                                                const status = Constants['hairLength'][hairLength];
+                                                return <option key={"participant-status-" + hairLength} value={hairLength} selected={hairLength == participantInfo['hairLength']}>{status}</option>
+                                            })}
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td className="participant-table-left">Facial hair</td>
+                                    <td className="participant-table-right">
+                                        <select className="session-data-selector"
+                                            onChange={(e) => {
+                                                updateValue("/participants/" + participantId, { facialHair: parseInt(e.currentTarget.value) });
+                                                LogEvent({ participantId, action: 13, value: parseInt(e.currentTarget.value), userId: userId });
+                                            }}
+                                        >
+                                            {Object.keys(Constants['facialHair']).map(facialHair => {
+                                                const status = Constants['facialHair'][facialHair];
+                                                return <option key={"participant-status-" + facialHair} value={facialHair} selected={facialHair == participantInfo['facialHair']}>{status}</option>
+                                            })}
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td className="participant-table-left">Height</td>
+                                    <td className="participant-table-right">{`${participantInfo['heightFt']}' ${participantInfo['heightIn']}''`}
+                                        <a className='copy-email-link fas fa-edit'
+                                            title='Update Height'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                updateHeight();
+                                            }} target='_blank'></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="participant-table-left">Weight (lb)</td>
+                                    <td className="participant-table-right">{`${parseFloat(participantInfo['weightLbs']).toFixed(2)}`}
+                                        <a className='copy-email-link fas fa-edit'
+                                            title='Update Weight'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                updateWeight();
+                                            }} target='_blank'></a>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td className="participant-table-left">Date of birth</td>
+                                    <td className="participant-table-right">
+                                        {participantInfo['dob']}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="participant-table-left">BMI (Range)</td>
+                                    <td className="participant-table-right">
+                                        {Object.values(GetBMIRange(participantInfo)).join(" (") + ")"}
+                                    </td>
+                                </tr>
 
                                 <tr>
                                     <td className="participant-table-left">Participant comment</td>
@@ -407,64 +655,10 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
                                 <tr>
                                     <td className="participant-table-left">&nbsp;</td>
                                 </tr>
-                                <tr>
-                                    <td className="participant-table-left">Age range / Gender</td>
-                                    <td className="participant-table-right">{GetAgeRange(participantInfo)['ageRange'] + " / " + Constants['genders'][participantInfo['gender']]}</td>
-                                </tr>
-                                <tr>
-                                    <td className="participant-table-left">Height</td>
-                                    <td className="participant-table-right">{`${participantInfo['heightFt']}' ${participantInfo['heightIn']}''`}
-                                        <a className='copy-email-link fas fa-edit'
-                                            title='Update Height'
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                //updateHeight();
-                                            }} target='_blank'></a>
-                                    </td>
 
-                                </tr>
-                                <tr>
-                                    <td className="participant-table-left">Weight (lb)</td>
-                                    <td className="participant-table-right">{`${parseFloat(participantInfo['weightLbs']).toFixed(2)}`}
-                                        <a className='copy-email-link fas fa-edit'
-                                            title='Update Weight'
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                            }} target='_blank'></a>
-                                    </td>
-                                </tr>
 
-                                <tr>
-                                    <td className="participant-table-left">Skin tone / Range</td>
-                                    <td className="participant-table-right">
-                                        {participantInfo['skintone']} / {GetSkinTone(participantInfo)['skinRange']}
-                                        <a className='copy-email-link fas fa-edit'
-                                            title='Update Skin tone'
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                //updateSkinColor();
-                                            }} target='_blank'></a>
-                                    </td>
 
-                                </tr>
-                                <tr>
-                                    <td className="participant-table-left">Hair Length</td>
-                                    <td className="participant-table-right">
-                                        {Constants['hairLength'][participantInfo['hairLength']]}
-                                        <a className='copy-email-link fas fa-edit'
-                                            title='Update Height'
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                //updateHairLength();
-                                            }} target='_blank'></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="participant-table-left">Date of birth</td>
-                                    <td className="participant-table-right">
-                                        {participantInfo['dob']}
-                                    </td>
-                                </tr>
+
                                 <tr>
                                     <td className="participant-table-left">&nbsp;</td>
                                 </tr>
@@ -529,6 +723,26 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
                                         </select>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td className="participant-table-left">Make Up</td>
+                                    <td className="participant-table-right">
+                                        <select className="session-data-selector"
+                                            onChange={(e) => {
+                                                updateValue("/timeslots/" + sessionId, { makeUp: parseInt(e.currentTarget.value) });
+                                                LogEvent({
+                                                    participantId: participantId,
+                                                    value: `${Constants['makeup'][parseInt(e.target.value)]}`,
+                                                    action: 13
+                                                })
+                                            }}
+                                        >
+                                            {Object.keys(Constants['makeup']).map((s, i) => {
+                                                const status = Constants['makeup'][s];
+                                                return <option key={"data-session-status" + s} value={s} selected={s == session['makeUp']}>{status}</option>
+                                            })}
+                                        </select>
+                                    </td>
+                                </tr>
 
 
                                 <tr>
@@ -554,6 +768,7 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
                                         </select>
                                     </td>
                                 </tr>
+
 
                                 <tr>
                                     <td className="participant-table-left">Session comment</td>
