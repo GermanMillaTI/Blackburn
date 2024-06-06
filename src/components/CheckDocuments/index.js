@@ -4,12 +4,19 @@ import './index.css';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { realtimeDb } from '../../firebase/config';
 import { ref, onValue, off } from 'firebase/database';
+import { useSelector, useDispatch } from 'react-redux';
+import { setShowDocs } from '../../Redux/Features';
 
-function CheckDocuments({ setShowDocs, participantId }) {
+
+function CheckDocuments() {
+    const dispatch = useDispatch();
     const [participant, setParticipant] = useState({})
 
+    const participantId = useSelector((state) => state.userInfo.showDocs);
+
+
     useEffect(() => {
-        const handleEsc = (event) => { if (event.keyCode === 27) setShowDocs("") };
+        const handleEsc = (event) => { if (event.keyCode === 27) dispatch(setShowDocs("")) };
         window.addEventListener('keydown', handleEsc);
         return () => { window.removeEventListener('keydown', handleEsc) };
     }, []);
@@ -33,7 +40,7 @@ function CheckDocuments({ setShowDocs, participantId }) {
 
 
     return ReactDOM.createPortal((
-        <div className="modal-check-documents-backdrop" onClick={(e) => { if (e.target.className == "modal-check-documents-backdrop") setShowDocs("") }}>
+        <div className="modal-check-documents-backdrop" onClick={(e) => { if (e.target.className == "modal-check-documents-backdrop") dispatch(setShowDocs("")) }}>
             <div className="modal-check-documents-main-container">
                 <div className="modal-check-documents-header">
                     Document of {participantId}

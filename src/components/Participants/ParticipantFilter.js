@@ -20,7 +20,8 @@ const defaultFilterValues = {
     hairTypes: Object.values(Constants['hairType']),
     hairColors: Object.values(Constants['hairColor']),
     facialHairs: Object.values(Constants['facialHair']),
-    bmiRanges: Constants['bmiRanges']
+    bmiRanges: Constants['bmiRanges'],
+    furtherSessions: ["Yes", "No"]
 
 }
 
@@ -156,6 +157,9 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
 
         const facialHair = Constants['facialHair'][participantInfo['facialHair']];
         if (!filterData['facialHairs'].includes(facialHair)) return false;
+
+        const furtherSession = participantInfo['furtherSessions'] || false === true ? "Yes" : "No";
+        if (!filterData['furtherSessions'].includes(furtherSession)) return false;
 
         // Check date of registration
         let dateOfRegistration;
@@ -312,7 +316,7 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
 
         <div className="filter-container" >
 
-            <div className="filter-element" id="multipleEthnicities" >
+            <div className="filter-element" >
                 <span className="filter-container-header">Multiple Ethnicities?</span>
                 {["Yes", "No"].map((val, i) => {
                     val = val.toString();
@@ -393,6 +397,20 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
                 })}
             </div>
 
+        </div>
+        <div className="filter-container" >
+
+            <div className="filter-element" >
+                <span className="filter-container-header">Repeat</span>
+                {["Yes", "No"].map((val, i) => {
+                    val = val.toString();
+                    return <div key={"filter-furtherSessions-" + i} className="filter-object">
+                        <input id={"filter-furtherSessions-" + val} name={val} type="checkbox" alt="furtherSessions" onChange={setFilterData} checked={filterData['furtherSessions'].includes(val)} />
+                        <label htmlFor={"filter-furtherSessions-" + val}>{val + " (" + filterStats['furtherSessions'][val] + ")"}</label>
+                        <button name={val} alt="furtherSessions" className="filter-this-button" onClick={setFilterData}>!</button>
+                    </div>
+                })}
+            </div>
         </div>
     </Card>
 

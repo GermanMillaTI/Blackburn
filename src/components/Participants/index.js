@@ -11,7 +11,7 @@ import ParticipantCard from './ParticipantCard';
 import UpdateSession from '../Scheduler/UpdateSession';
 import GetBMIRange from '../CommonFunctions/GetBMIRange';
 import BookSession2 from '../Scheduler/BookSession2';
-
+import CheckDocuments from '../CheckDocuments';
 
 const defaultFilterStats = {
     genders: Object.assign({}, ...Object.values(Constants['genders']).map(k => ({ [k]: 0 }))),
@@ -25,6 +25,7 @@ const defaultFilterStats = {
     hairTypes: Object.assign({}, ...Object.values(Constants['hairType']).map(k => ({ [k]: 0 }))),
     hairColors: Object.assign({}, ...Object.values(Constants['hairColor']).map(k => ({ [k]: 0 }))),
     bmiRanges: Object.assign({}, ...Constants['bmiRanges'].map(k => ({ [k]: 0 }))),
+    furtherSessions: Object.assign({}, ...['Yes', 'No'].map(k => ({ [k]: 0 }))),
 };
 
 
@@ -39,6 +40,7 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
     const [sessions, setSessions] = useState({});
     const showUpdateSession = useSelector((state) => state.userInfo.showUpdateSession);
     const showBookSession2 = useSelector((state) => state.userInfo.showBookSession2);
+
 
 
     useEffect(() => {
@@ -99,6 +101,7 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
                 const hairType = Constants['hairType'][participantInfo['hairType']];
                 const hairColor = Constants['hairColor'][participantInfo['hairColor']];
                 const ethnicities = participantInfo['ethnicities']
+                const furtherSession = participantInfo['furtherSessions'] || false === true ? "Yes" : "No"
                 let ethnicityGroups = ethnicities.toString().split(';').map(eth => {
                     return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
                 });
@@ -115,6 +118,7 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
                 filterStats['hairTypes'][hairType]++;
                 filterStats['hairColors'][hairColor]++;
                 filterStats['facialHairs'][facialHair]++;
+                filterStats['furtherSessions'][furtherSession]++;
 
                 if (index >= 100) return null;
 
@@ -126,8 +130,8 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
             })
             }
         </div>
-        {showUpdateSession && <UpdateSession showUpdateSession={showUpdateSession} />}
         {showBookSession2 && <BookSession2 showBookSession2={showBookSession2} />}
+
     </div>
 };
 

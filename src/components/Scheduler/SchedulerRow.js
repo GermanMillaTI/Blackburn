@@ -19,7 +19,6 @@ function SchedulerRow({ database, sessionId, index, array }) {
     const [showBookSession, setShowBookSession] = useState(false);
     const [selectedSessionId, setSelectedSessionId] = useState("");
     const [justBookedSession, setJustBookedSession] = useState("");
-    const showUpdateSession = useSelector((state) => state.userInfo.showUpdateSession);
     const dispatch = useDispatch();
 
 
@@ -173,11 +172,7 @@ function SchedulerRow({ database, sessionId, index, array }) {
             </div>
         </td>
         {showBookSession && <BookSession database={database} setShowBookSession={setShowBookSession} selectedSessionId={selectedSessionId} setJustBookedSession={setJustBookedSession} />}
-        {showUpdateSession && <UpdateSession
-            database={database}
-            showUpdateSession={showUpdateSession}
 
-        />}
     </tr>
     )
 }

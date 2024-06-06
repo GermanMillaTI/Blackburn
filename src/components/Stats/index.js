@@ -63,7 +63,8 @@ function Stats({ setFilterDataFromStats }) {
             hairTypes: Object.values(Constants['hairType']),
             hairColors: Object.values(Constants['hairColor']),
             facialHairs: Object.values(Constants['facialHair']),
-            bmiRanges: Constants['bmiRanges']
+            bmiRanges: Constants['bmiRanges'],
+            furtherSessions: ['Yes', 'No'],
         });
 
         navigate('participants');
@@ -189,7 +190,7 @@ function Stats({ setFilterDataFromStats }) {
 
                                             return <td className={"stats-demo-bin-cell " + (binClassTag)}>
                                                 <span className="first-number" onClick={() => selectDemoBin(filterData['statuses'], eth, [ageRange], gender)}>{output}</span>
-                                                <span className="second-number" >{output2}</span>
+                                                <span className="second-number" onClick={() => selectDemoBin(filterData['statuses2'], eth, [ageRange], gender)}>{output2}</span>
                                             </td>
                                         })}
 

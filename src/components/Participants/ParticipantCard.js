@@ -10,7 +10,7 @@ import CheckDocuments from '../CheckDocuments';
 import ICFModal from '../ICFModal';
 import { ref, onValue, off } from 'firebase/database';
 import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
-import { setShowUpdateSession, setShowBookSession2 } from '../../Redux/Features';
+import { setShowUpdateSession, setShowBookSession2, setShowDocs } from '../../Redux/Features';
 import FormatTime from '../CommonFunctions/FormatTime';
 import './ParticipantCard.css';
 import Constants from '../Constants';
@@ -22,7 +22,6 @@ import GetFormattedLogDate from '../CommonFunctions/GetFormattedLogDate';
 function ParticipantCard({ participantId, participants }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userId = userInfo['userId'];
-    const [showDocs, setShowDocs] = useState(false);
     const [showICFs, setShowICFs] = useState(false);
     const [timeslots, setTimeslots] = useState({});
 
@@ -354,7 +353,7 @@ function ParticipantCard({ participantId, participants }) {
                 <button className={"doc-button" + (participantInfo['docs']['pending'] ? " pending-doc" : "")}
                     onClick={
                         () => {
-                            setShowDocs(true);
+                            dispatch(setShowDocs(participantId));
                             updateValue(`/participants/${participantId}/docs`, { pending: false })
                         }
                     }>
@@ -366,7 +365,7 @@ function ParticipantCard({ participantId, participants }) {
                     updateValue(`/participants/${participantId}/docs`, { pending: true })
                 }}></div>
             </div>
-            {showDocs && <CheckDocuments setShowDocs={setShowDocs} participantId={participantId} />}
+
             {showICFs && <ICFModal setShowICFs={setShowICFs} participantId={participantId} />}
             <div className="participant-attribute-container">
 

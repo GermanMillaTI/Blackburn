@@ -4,10 +4,11 @@ import { realtimeDb } from '../../firebase/config';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
+
 import md5 from 'md5';
 import { ref, onValue, off } from 'firebase/database';
-import { setShowUpdateSession } from '../../Redux/Features';
-import { updateValue } from "../../firebase/config";
+import { setShowUpdateSession, setShowDocs } from '../../Redux/Features';
+import { updateValue, deleteValue } from "../../firebase/config";
 import './UpdateSession.css';
 import Constants from '../Constants';
 import LogEvent from '../CommonFunctions/LogEvent';
@@ -407,6 +408,13 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td className="participant-table-left">Identification</td>
+                                    <button className="participant-table-right doc-button" onClick={(e) => {
+                                        e.preventDefault();
+                                        dispatch(setShowDocs(participantId))
+                                    }}>Open</button>
+                                </tr>
+                                <tr>
                                     <td className="participant-table-left">E-mail</td>
                                     <td className="participant-table-right">
                                         {participantInfo['email']}
@@ -466,6 +474,7 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
                                     <td className="participant-table-left">Age range / Gender</td>
                                     <td className="participant-table-right">{GetAgeRange(participantInfo)['ageRange'] + " / " + Constants['genders'][participantInfo['gender']]}</td>
                                 </tr>
+
                                 <tr>
                                     <td className="participant-table-left">Tattoos</td>
                                     <td className="participant-table-right">
@@ -583,6 +592,26 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
                                         </select>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td className="participant-table-left">Facial Makeup</td>
+                                    <td className="participant-table-right">
+                                        <select className="session-data-selector"
+                                            onChange={(e) => {
+                                                updateValue("/timeslots/" + sessionId, { makeup: parseInt(e.currentTarget.value) });
+                                                LogEvent({
+                                                    participantId: participantId,
+                                                    value: `${Constants['makeup'][parseInt(e.target.value)]}`,
+                                                    action: 13
+                                                })
+                                            }}
+                                        >
+                                            {Object.keys(Constants['makeup']).map((s, i) => {
+                                                const status = Constants['makeup'][s];
+                                                return <option key={"data-session-status" + s} value={s} selected={s == session['makeup']}>{status}</option>
+                                            })}
+                                        </select>
+                                    </td>
+                                </tr>
 
                                 <tr>
                                     <td className="participant-table-left">Height</td>
@@ -619,6 +648,7 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
                                         {Object.values(GetBMIRange(participantInfo)).join(" (") + ")"}
                                     </td>
                                 </tr>
+
 
                                 <tr>
                                     <td className="participant-table-left">Participant comment</td>
@@ -723,26 +753,7 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
                                         </select>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td className="participant-table-left">Make Up</td>
-                                    <td className="participant-table-right">
-                                        <select className="session-data-selector"
-                                            onChange={(e) => {
-                                                updateValue("/timeslots/" + sessionId, { makeUp: parseInt(e.currentTarget.value) });
-                                                LogEvent({
-                                                    participantId: participantId,
-                                                    value: `${Constants['makeup'][parseInt(e.target.value)]}`,
-                                                    action: 13
-                                                })
-                                            }}
-                                        >
-                                            {Object.keys(Constants['makeup']).map((s, i) => {
-                                                const status = Constants['makeup'][s];
-                                                return <option key={"data-session-status" + s} value={s} selected={s == session['makeUp']}>{status}</option>
-                                            })}
-                                        </select>
-                                    </td>
-                                </tr>
+
 
 
                                 <tr>
@@ -768,7 +779,57 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
                                         </select>
                                     </td>
                                 </tr>
+                                {(session['bonus'] || !participantInfo['bonus_amount']) &&
 
+                                    <tr>
+                                        <td className="participant-table-left">Bonus Info</td>
+                                        <td className="participant-table-right bonus-container" colSpan="2">
+
+                                            <select className='session-data-selector'
+                                                onChange={(e) => {
+                                                    updateValue("/timeslots/" + sessionId + "/", { bonus: parseInt(e.currentTarget.value) });
+                                                    LogEvent({
+                                                        participantId: participantId,
+                                                        value: parseInt(e.currentTarget.value) === 0 ? `Removal of bonus for ${sessionId}` : `set of bonus of $${e.currentTarget.value} for ${sessionId}`,
+                                                        action: parseInt(e.currentTarget.value) === 0 ? 12 : 11
+                                                    })
+                                                }}
+                                            >
+                                                {Constants['bonusList'].map(el => {
+                                                    return <option key={el} value={el} selected={el === session['bonus']}>${parseFloat(el)}</option>
+                                                })}
+                                            </select>
+
+                                        </td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td className="participant-table-left">Repeat?</td>
+                                    <input
+                                        type='checkbox'
+                                        value={true}
+                                        checked={participantInfo['furtherSessions'] === true ? true : false}
+                                        onChange={(e) => {
+                                            if (e.target.checked) {
+                                                updateValue("/participants/" + participantId, { furtherSessions: true })
+                                                LogEvent({
+                                                    participantId,
+                                                    action: 13,
+                                                    value: `Further sessions: true`,
+                                                    userId: userId
+                                                });
+                                            } else {
+                                                deleteValue(`/participants/${participantId}/furtherSessions`)
+                                                LogEvent({
+                                                    participantId,
+                                                    action: 13,
+                                                    value: `Further sessions: false`,
+                                                    userId: userId
+                                                });
+                                            }
+                                        }}
+                                    ></input>
+                                </tr>
 
                                 <tr>
                                     <td className="participant-table-left">Session comment</td>
@@ -808,31 +869,7 @@ export default ({ showUpdateSession, showLog, setShowLog }) => {
                                     </td>
                                 </tr>
 
-                                {(session['bonus'] || !participantInfo['bonus_amount']) &&
-                                    <tr>
-                                        <td className="participant-table-left">Bonus Info</td>
-                                    </tr>
-                                }
-                                <tr>
-                                    <td className="participant-table-right bonus-container" colSpan="2">
 
-                                        <select className='session-data-selector'
-                                            onChange={(e) => {
-                                                updateValue("/timeslots/" + sessionId + "/", { bonus: parseInt(e.currentTarget.value) });
-                                                LogEvent({
-                                                    participantId: participantId,
-                                                    value: parseInt(e.currentTarget.value) === 0 ? `Removal of bonus for ${sessionId}` : `set of bonus of $${e.currentTarget.value} for ${sessionId}`,
-                                                    action: parseInt(e.currentTarget.value) === 0 ? 12 : 11
-                                                })
-                                            }}
-                                        >
-                                            {Constants['bonusList'].map(el => {
-                                                return <option key={el} value={el} selected={el === session['bonus']}>${parseFloat(el)}</option>
-                                            })}
-                                        </select>
-
-                                    </td>
-                                </tr>
 
 
                                 {participantInfo['bonus_amount'] &&

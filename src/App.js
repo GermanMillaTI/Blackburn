@@ -15,6 +15,8 @@ import Bins from './components/Stats/Bins';
 import ICF from './components/Form/ICF';
 import Scheduler from './components/Scheduler';
 import UpdateSession from './components/Scheduler/UpdateSession';
+import CheckDocuments from './components/CheckDocuments';
+
 
 function App() {
   const [userId, setUserId] = useState('');
@@ -23,8 +25,8 @@ function App() {
   const [timeslotforLog, setTimeslotforLog] = useState("");
 
   const [filterDataFromStats, setFilterDataFromStats] = useState(false);
-
-
+  const showDocs = useSelector((state) => state.userInfo.showDocs);
+  const showUpdateSession = useSelector((state) => state.userInfo.showUpdateSession);
 
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.userInfo.value || {});
@@ -95,6 +97,11 @@ function App() {
       </Routes>
       {isStatsActive && <Stats setFilterDataFromStats={setFilterDataFromStats} />}
       {isDemoStatsActive && <Bins />}
+      {showDocs && <CheckDocuments />}
+      {showUpdateSession && <UpdateSession
+        showUpdateSession={showUpdateSession}
+
+      />}
 
 
     </div>

@@ -388,7 +388,7 @@ const Constants = {
         10: "Update session",
         11: "Bonus addition",
         12: "Bonus removal",
-        13: "Update demographics"
+        13: "Update parameter"
     },
 
     emailTypes: {
@@ -480,8 +480,8 @@ const Constants = {
     ],
     makeup: {
         0: "",
-        1: "Make Up",
-        2: "No Make Up"
+        1: "Makeup",
+        2: "No Makeup"
     },
 
     getKeyByValue: function (obj, value) {

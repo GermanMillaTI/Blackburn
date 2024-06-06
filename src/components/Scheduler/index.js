@@ -119,7 +119,8 @@ function Scheduler({ setUpdateSession, updateSession }) {
 
         const participantId = session['participant_id'];
         const participant = database['timeslots'][participantId] || {};
-        const participantStatus = participant['status'] || 'Blank';
+        const participantStatus = Constants['participantStatuses'][participant['status']] || 'Blank';
+        console.log(participant['status'])
 
         return filterData['participantStatuses'].includes(participantStatus) &&
             filterData['sessionStatuses'].includes(sessionStatus) &&

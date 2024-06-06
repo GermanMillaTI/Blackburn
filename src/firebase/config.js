@@ -3,7 +3,7 @@ import 'firebase/compat/database'
 import 'firebase/compat/auth'
 import { getAuth } from "firebase/auth"
 import { getStorage } from 'firebase/storage';
-import { getDatabase, ref, update, onValue, get } from 'firebase/database';
+import { getDatabase, ref, update, onValue, get, remove } from 'firebase/database';
 
 
 const firebaseConfig = {
@@ -28,4 +28,8 @@ const updateValue = (path, value) => {
     update(ref(realtimeDb, path), value);
 }
 
-export { auth, realtimeDb, getAuth, storage, updateValue, onValue, ref, get };
+const deleteValue = async (path) => {
+    await remove(ref(realtimeDb, path))
+}
+
+export { auth, realtimeDb, getAuth, storage, updateValue, onValue, ref, get, deleteValue };
