@@ -21,6 +21,20 @@ function SessionInfo({ database, participantId, sessionId }) {
                             <th># {participantId}</th>
                             <td>{participantInfo['firstName'] + " " + participantInfo['lastName']}</td>
                         </tr>
+                        <tr>
+                            <th>Date of birth</th>
+                            <td>{participantInfo['dob']}</td>
+                        </tr>
+                        <tr>
+                            <th>Gender</th>
+                            <td>{Constants['genders'][participantInfo['gender']]}</td>
+                        </tr>
+                        <tr>
+                            <th>Ethnicities</th>
+                            <td><ul>{participantInfo['ethnicities'].split(";").map(eth => {
+                                return <li key={eth}>{Constants['ethnicitiesDisplay'][eth]}</li>
+                            })}</ul></td>
+                        </tr>
 
                     </tbody>
                 </table>

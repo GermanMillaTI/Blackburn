@@ -483,6 +483,9 @@ const Constants = {
         1: "Makeup",
         2: "No Makeup"
     },
+    sessionNumbers: [
+        1, 2
+    ],
 
     getKeyByValue: function (obj, value) {
         return Object.keys(obj).find(key => obj[key] === value);

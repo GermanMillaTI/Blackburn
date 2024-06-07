@@ -43,6 +43,7 @@ function Navbar({ setUserId }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userRole = userInfo['role'];
     const admin = ['admin'].includes(userRole);
+    const apple = ['apple'].includes(userRole);
 
     const navigate = useNavigate();
     const [appVersion, setAppVersion] = useState('');
@@ -70,6 +71,7 @@ function Navbar({ setUserId }) {
                 {["german.milla01@telusinternational.com"].includes(auth.currentUser.email) && <a href="/files" onClick={(e) => { e.preventDefault(); navigate("/files"); }}>Files</a>}
                 {admin && <a href="/participants" onClick={(e) => { e.preventDefault(); navigate("/participants"); }}>Participants</a>}
                 {admin && <a href="/scheduler" onClick={(e) => { e.preventDefault(); navigate("/scheduler"); }}>Scheduler</a>}
+                {(admin || apple) && <a href="/scheduler-external" onClick={(e) => { e.preventDefault(); navigate("/scheduler-external"); }}>Scheduler External</a>}
                 {admin && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(isStatsActive(true)); }}>Participant Stats</a>}
                 {admin && <a href="/demo-bins" onClick={(e) => { e.preventDefault(); dispatch(isDemoStatsActive(true)); }}>Demo bins</a>}
 

@@ -107,7 +107,6 @@ function BookSession2({ showBookSession2 }) {
     }
 
     useEffect(() => {
-        console.log(timeslots)
         let tempDays = [];
         let tempTimeslots = [];
         const now = new Date();

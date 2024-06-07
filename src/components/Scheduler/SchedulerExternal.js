@@ -7,6 +7,9 @@ import TableFilter from '../CommonFunctions/TableFilter';
 import SchedulerRow from './SchedulerRow';
 import { realtimeDb } from '../../firebase/config';
 import { ref, onValue, off } from 'firebase/database';
+import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
+import GetAgeRange from '../CommonFunctions/GetAgeRange';
+import GetBMIRange from '../CommonFunctions/GetBMIRange';
 
 
 const filterReducer = (state, event) => {
@@ -39,7 +42,7 @@ const filterReducer = (state, event) => {
 
 
 
-function Scheduler({ setUpdateSession, updateSession }) {
+function SchedulerExternal({ setUpdateSession, updateSession }) {
     const [days, setDays] = useState([]);
     const [csvData, setCsvData] = useState([[]]);
     const [database, setDatabase] = useState({});
@@ -49,6 +52,7 @@ function Scheduler({ setUpdateSession, updateSession }) {
         sessionStatuses: ['Blank', 'Locked', ...Object.values(Constants['sessionStatuses'])],
         participantStatuses: ['Blank', ...Object.values(Constants['participantStatuses'])]
     });
+
 
     useEffect(() => {
 
@@ -63,15 +67,16 @@ function Scheduler({ setUpdateSession, updateSession }) {
 
         return () => {
             off(pptRef, "value", listener);
+
         }
 
     }, [])
 
     useEffect(() => {
         if (Object.keys(database).length === 0) return;
-        document.getElementById('navbarTitle').innerText = `Filtered sessions: ${Object.keys(database['timeslots'])
-            .filter(timeslotId => filterFunction(timeslotId)).length}`;
-    }, [database, filterData]);
+        document.getElementById('navbarTitle').innerText = `Total of booked sessions: ${Object.keys(database['timeslots']).filter(el => database['timeslots'][el]['participant_id']).length}`;
+    }, [database]);
+
 
     useMemo(() => {
         var temp = [];
@@ -94,17 +99,23 @@ function Scheduler({ setUpdateSession, updateSession }) {
         setHighlightedTimeslots(glassesTimeSlots);
         setDays(temp);
 
+
+
     }, [database])
 
     function getCSVData() {
-        let output = [['Date', 'Station', 'Session status', 'Participant status', 'Participant ID', 'Name', 'Email', 'Weight (kg)', 'Height (cm)', 'Session comments']];
+        let headers = document.querySelectorAll('#tableHeaders tr th');
+        let columns = []
+        headers.forEach(child => {
+            columns.push(child.textContent)
+        })
 
+        let output = [[...columns]];
         let table = document.getElementById("schedulerTable");
         for (var r = 1; r < table.rows.length; r++) {
             let row = table.rows[r];
             let temp = [];
-            // -1, because we don't need the last column...
-            for (var c = 0; c < row.cells.length - 1; c++) {
+            for (var c = 0; c < row.cells.length; c++) {
                 temp.push(row.cells[c].innerHTML);
             }
             output.push(temp);
@@ -114,38 +125,6 @@ function Scheduler({ setUpdateSession, updateSession }) {
         return output;
     }
 
-    function filterFunction(timeslotId) {
-        const timeslotDate = timeslotId.substring(0, 4) + "-" + timeslotId.substring(4, 6) + "-" + timeslotId.substring(6, 8);
-        const session = database['timeslots'][timeslotId];
-        let sessionStatus = Constants['sessionStatuses'][session['status']] || "Blank";
-        if (session['locked']) sessionStatus = 'Locked';
-
-        const participantId = session['participant_id'];
-        const participant = database['participants'][participantId] || {};
-        const participantStatus = Constants['participantStatuses'][participant['status']] || 'Blank';
-        let sessionNumber = 'N/A';
-
-        // if (participant) {
-        //     if (participant['sessionCounter']) {
-        //         sessionNumber = (participant['sessionCounter'][timeslotId] || 'N/A').toString();
-        //     } else {
-        //         participant['sessionCounter'] = {}
-        //         if (['Scheduled', 'Checked In', 'Completed'].includes(participantStatus)) {
-        //             const nr = Object.keys(participant['SessionCounter'] || 0).length + 1;
-        //             console.log(nr)
-        //             participant['sessionCounter'][timeslotId] = nr;
-        //         }
-        //     }
-        // }
-
-
-        return filterData['participantStatuses'].includes(participantStatus) &&
-            filterData['sessionStatuses'].includes(sessionStatus) &&
-            filterData['date'].includes(timeslotDate) /*&&
-            filterData['sessionNumbers'].includes(sessionNumber)*/;
-    }
-
-
     return (Object.keys(database).length > 0 && Object.keys(filterData).length > 0 &&
         <div id="schedulerContainer">
             <CSVLink
@@ -153,67 +132,67 @@ function Scheduler({ setUpdateSession, updateSession }) {
                 target="_blank"
                 asyncOnClick={true}
                 onClick={() => getCSVData()}
-                filename={"Blackburn scheduler - exported at " + format(new Date(), "yyyy-MM-dd") + ".csv"}
+                filename={"Blackburn scheduler - " + format(new Date(), "yyyy-MM-dd") + ".csv"}
                 data={csvData}
             >Download CSV</CSVLink>
             <div className="scheduler-table-container">
                 <table id="schedulerTable" className="scheduler-table">
-                    <thead >
+                    <thead id='tableHeaders'>
                         <tr>
                             <th>
-                                <TableFilter
-                                    filterName="Date"
-                                    alt="date"
-                                    values={days}
-                                    filterData={filterData}
-                                    setFilterData={setFilterData}
-                                    selectedEach={true}
-                                />
-                            </th>
-                            <th>Slot</th>
-                            <th>
-                                <TableFilter
-                                    filterName="Session status"
-                                    alt="sessionStatuses"
-                                    values={['Blank', 'Locked', ...Object.values(Constants['sessionStatuses'])]}
-                                    filterData={filterData}
-                                    setFilterData={setFilterData}
-                                    selectedEach={false}
-                                />
+                                Date
                             </th>
                             <th>
-                                <TableFilter
-                                    filterName="Participant status"
-                                    alt="participantStatuses"
-                                    values={['Blank', ...Object.values(Constants['participantStatuses'])]}
-                                    filterData={filterData}
-                                    setFilterData={setFilterData}
-                                    selectedEach={false}
-                                />
+                                Status
                             </th>
-                            <th>Participant ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-
-                            <th>Session comments</th>
-                            <th>Functions</th>
+                            <th>TELUS ID</th>
+                            <th>First Name</th>
+                            <th>Last Initial</th>
+                            <th>Gender</th>
+                            <th>Age</th>
+                            <th>BMI</th>
+                            <th>Ethnicity Group</th>
+                            <th>Skintone</th>
+                            <th>Hair Color</th>
+                            <th>Hair Length</th>
+                            <th>Hair Type</th>
+                            <th>Facial Hair</th>
+                            <th>Facial Makeup</th>
+                            <th>Tattoos</th>
+                            <th>Piercings</th>
                         </tr>
                     </thead>
                     <tbody>
                         {Object.keys(database).length > 0 && Object.keys(database['timeslots'])
-                            .filter(timeslotId => filterFunction(timeslotId))
                             .sort((a, b) => (a.length == 15 ? (a.substring(0, 14) + "0" + a.substring(14)) : a) < (b.length == 15 ? (b.substring(0, 14) + "0" + b.substring(14)) : b) ? -1 : 1)
                             .map((key, index, array) => {
-                                return <SchedulerRow
-                                    key={"sch-row-" + key}
-                                    database={database}
-                                    sessionId={key}
-                                    index={index}
-                                    array={array}
-                                    setUpdateSession={setUpdateSession}
-                                    updateSession={updateSession}
-                                    highlightedTimeslots={highlightedTimeslots}
-                                />
+
+                                let pInfo = database['participants'][database['timeslots'][key]['participant_id']]
+                                return <tr>
+                                    <td className='center-tag'>{TimeSlotFormat(key)}</td>
+                                    <td className='center-tag'>{Constants['sessionStatuses'][database['timeslots'][key]['status']]}</td>
+                                    <td className='center-tag'>{database['timeslots'][key]['participant_id']}</td>
+                                    <td className='center-tag'>{pInfo ? pInfo['firstName'] : ""}</td>
+                                    <td className='center-tag'>{pInfo ? pInfo['lastName'][0] + "." : ""}</td>
+                                    <td className='center-tag'>{pInfo ? Constants['genders'][pInfo['gender']] : ""}</td>
+                                    <td className='center-tag'>{pInfo ? GetAgeRange(pInfo)['age'] : ""}</td>
+                                    <td className='center-tag'>{pInfo ? GetBMIRange(pInfo)['bmi'] : ""}</td>
+                                    <td className='center-tag'>{pInfo ? pInfo['ethnicities'].split(";").map(eth => {
+                                        return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
+                                    }).join(", ") : ""}</td>
+                                    <td className='center-tag'>{pInfo ? pInfo['skintone'] : ""}</td>
+                                    <td className='center-tag'>{pInfo ? Constants['hairColor'][pInfo['hairColor']] : ""}</td>
+                                    <td className='center-tag'>{pInfo ? Constants['hairLength'][pInfo['hairLength']] : ""}</td>
+                                    <td className='center-tag'>{pInfo ? Constants['hairType'][pInfo['hairType']] : ""}</td>
+                                    <td className='center-tag'>{pInfo ? Constants['facialHair'][pInfo['facialHair']] : ""}</td>
+                                    <td className='center-tag'>{Constants['makeup'][database['timeslots'][key]['makeup']]}</td>
+                                    <td className='center-tag'>{pInfo ?
+                                        pInfo['tattoos'] === "4" ? "No" : "Yes"
+                                        : ""}</td>
+                                    <td className='center-tag'>{pInfo ?
+                                        pInfo['piercings    '] === "4" ? "No" : "Yes"
+                                        : ""}</td>
+                                </tr>
                             })}
                     </tbody>
                 </table>
@@ -223,4 +202,4 @@ function Scheduler({ setUpdateSession, updateSession }) {
 
 };
 
-export default Scheduler;
+export default SchedulerExternal;

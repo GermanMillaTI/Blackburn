@@ -16,6 +16,7 @@ import ICF from './components/Form/ICF';
 import Scheduler from './components/Scheduler';
 import UpdateSession from './components/Scheduler/UpdateSession';
 import CheckDocuments from './components/CheckDocuments';
+import SchedulerExternal from './components/Scheduler/SchedulerExternal';
 
 
 function App() {
@@ -75,6 +76,8 @@ function App() {
         />;
       case "/files":
         return <FilesView />;
+      case "/scheduler-external":
+        return <SchedulerExternal />;
       default:
         return null;
     }
@@ -91,6 +94,7 @@ function App() {
         <Route path="/login" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
         <Route path="/registration" element={getElement('/registration')} />
         <Route path='/scheduler' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/scheduler") : getElement("/login")} />
+        <Route path='/scheduler-external' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/scheduler-external") : getElement("/login")} />
         <Route path="/icf/:participantId" element={<ICF />} />
         <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
         <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
