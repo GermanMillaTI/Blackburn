@@ -7,7 +7,7 @@ import appInfo from '../../../package.json';
 import Swal from 'sweetalert2';
 import { realtimeDb } from '../../firebase/config';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateUserInfo, isStatsActive, isDemoStatsActive } from '../../Redux/Features';
+import { updateUserInfo, isStatsActive, isDemoStatsActive, setSessionStats } from '../../Redux/Features';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import telusLogo from './telusLogo.png';
 
@@ -68,11 +68,13 @@ function Navbar({ setUserId }) {
                 <img src={telusLogo} style={{ height: '20px', width: 'auto', position: "absolute", left: "0" }} alt='TELUS International Logo' onClick={(e) => { e.preventDefault(); navigate("/participants"); }} ></img>
                 <span id="navbarTitle" className='notifier'></span>
                 <span className='projectName'>Blackburn</span>
-                {["german.milla01@telusinternational.com"].includes(auth.currentUser.email) && <a href="/files" onClick={(e) => { e.preventDefault(); navigate("/files"); }}>Files</a>}
+                {["german.milla01@telusinternational.com"].includes(auth.currentUser.email) && admin && <a href="/files" onClick={(e) => { e.preventDefault(); navigate("/files"); }}>Files</a>}
                 {admin && <a href="/participants" onClick={(e) => { e.preventDefault(); navigate("/participants"); }}>Participants</a>}
                 {admin && <a href="/scheduler" onClick={(e) => { e.preventDefault(); navigate("/scheduler"); }}>Scheduler</a>}
+                {(admin || apple) && <a href="/overview" onClick={(e) => { e.preventDefault(); navigate("/overview"); }}>Overview</a>}
                 {(admin || apple) && <a href="/scheduler-external" onClick={(e) => { e.preventDefault(); navigate("/scheduler-external"); }}>Scheduler External</a>}
-                {admin && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(isStatsActive(true)); }}>Participant Stats</a>}
+                {(admin || apple) && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(isStatsActive(true)); }}>Participant Stats</a>}
+                {(admin || apple) && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(setSessionStats(true)); }}>Session Stats</a>}
                 {admin && <a href="/demo-bins" onClick={(e) => { e.preventDefault(); dispatch(isDemoStatsActive(true)); }}>Demo bins</a>}
 
                 <a href="/" onClick={(e) => { e.preventDefault(); handleLogout(); navigate("/"); }}>Logout</a>
