@@ -43,9 +43,11 @@ export const surveyJson = {
                             + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Be photographed or video recorded following directives from our team for a total duration of 3 hours (including short breaks)</span></li>`
                             + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Wear form-fitting compression tops and shorts provided on-site</span></li>`
                             + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Agree to body composition measurements to be taken during the study</span></li>`
+                            + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">You must be able to stand and perform physical activities during the study session (including independently climbing a flight of stairs and walking)</span></li>`
+
                             + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">All ages 13-75 are qualified to participate</span></li>`
                             + `<ul>
-                    <li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">13-17-year-olds need a legal guardian to register, provide consent, and need to be accompanied for the session</span></li>
+                    <li class="done" style="font-weight: 400; padding-left:20px" aria-level="1"><span style="font-weight: 400">13-17-year-olds need a legal guardian to register, provide consent, and need to be accompanied for the session</span></li>
                     </ul>`
                             + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Must be able to read, speak, and understand instructions provided in English</span></li>`
                             + `<li class="done" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400">Must be a US citizen, legal permanent resident, or authorized to work in the USA (proof will be required)</span></li>`
@@ -416,7 +418,7 @@ export const surveyJson = {
                         'Advertising',
                         'Education',
                         'Marketing and Media',
-                        'Telecommunitacions',
+                        'Telecommunications',
                         'Fashion',
                         'Entertainment',
                         'Manufacturing',

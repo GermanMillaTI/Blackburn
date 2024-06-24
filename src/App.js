@@ -99,7 +99,7 @@ function App() {
         <Route path="/" element={getElement("/")} />
         <Route path="/login" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/overview") : getElement("/login")} />
         <Route path="/registration" element={getElement('/registration')} />
-        <Route path='/scheduler' element={(userId && Object.keys(userInfo || {}).length > 0) && userInfo['role'] === 'admin' ? getElement("/scheduler") : getElement("/")} />
+        <Route path='/scheduler' element={(userId && Object.keys(userInfo || {}).length > 0) && userInfo['role'] === 'admin' ? getElement("/scheduler") : getElement("/login")} />
         <Route path='/scheduler-external' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/scheduler-external") : getElement("/login")} />
         <Route path="/icf/:participantId" element={<ICF />} />
         <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />

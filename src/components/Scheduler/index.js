@@ -57,7 +57,24 @@ function Scheduler({ setUpdateSession, updateSession }) {
 
         const listener = onValue(pptRef, (res) => {
 
-            setDatabase(res.val() || {});
+            let temp = res.val() || {};
+
+            let tempTimeslots = temp['timeslots'];
+            let datesList = {}
+            Object.keys(tempTimeslots).map(el => {
+                let date = el.substring(0, 4) + "-" + el.substring(4, 6) + "-" + el.substring(6, 8);
+
+                if (!datesList[date]) {
+                    datesList[date] = 1
+                    temp['timeslots'][el]['slot'] = 1;
+                } else {
+                    temp['timeslots'][el]['slot'] = datesList[date] + 1;
+                    datesList[date]++
+                }
+            })
+
+            console.log(temp['timeslots'])
+            setDatabase(temp);
         });
 
 

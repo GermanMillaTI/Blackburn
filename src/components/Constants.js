@@ -178,6 +178,9 @@ const Constants = {
     rejectedHealthConditions: [
         0, 1, 2, 3, 5, 6, 10, 12, 13, 14, 15, 16
     ],
+    rejectedCompanies: [
+        0, 1, 2, 3, 5, 6, 7, 10, 11, 12, 15, 16,
+    ],
     earConditions: {
         0: "Swimmer’s ear/Bony growths",
         1: "Excessive Hair",
@@ -329,7 +332,7 @@ const Constants = {
         8: 'Advertising',
         9: 'Education',
         10: 'Marketing and Media',
-        11: 'Telecommunitacions',
+        11: 'Telecommunications',
         12: 'Fashion',
         13: 'Entertainment',
         14: 'Manufacturing',

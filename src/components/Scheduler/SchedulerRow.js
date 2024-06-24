@@ -141,7 +141,7 @@ function SchedulerRow({ database, sessionId, index, array }) {
 
         </td>
         <td className="center-tag no-wrap">
-            {"St. " + sessionId.substring(14)}
+            {database['timeslots'][sessionId]['slot']}
         </td>
         <td className={"center-tag " + (database['timeslots'][sessionId]['locked'] === true ? "locked-session-cell" : "")}>
             {database['timeslots'][sessionId]['locked'] === true ? "Locked" : Constants['sessionStatuses'][database['timeslots'][sessionId]['status']]}
