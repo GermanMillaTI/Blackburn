@@ -7,7 +7,7 @@ export const userInfo = createSlice({
         activeStats: false,
         sessionSessionStats: false,
         activeDemoStats: false,
-        activeLog: false,
+        showLog: '',
         showUpdateSession: '',
         showBookSession2: '',
         showDocs: ''
@@ -22,9 +22,6 @@ export const userInfo = createSlice({
         isDemoStatsActive: (state, action) => {
             state.activeDemoStats = action.payload;
         },
-        isLogActive: (state, action) => {
-            state.activeLog = action.payload;
-        },
         setShowUpdateSession: (state, action) => {
             state.showUpdateSession = action.payload;
         },
@@ -36,12 +33,15 @@ export const userInfo = createSlice({
         },
         setSessionStats: (state, action) => {
             state.sessionSessionStats = action.payload
+        },
+        setShowLog: (state, action) => {
+            state.showLog = action.payload;
         }
 
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { updateUserInfo, isStatsActive, isDemoStatsActive, setShowUpdateSession, setShowBookSession2, setShowDocs, setSessionStats } = userInfo.actions;
+export const { updateUserInfo, isStatsActive, isDemoStatsActive, setShowUpdateSession, setShowBookSession2, setShowDocs, setSessionStats, setShowLog } = userInfo.actions;
 
 export default userInfo.reducer;

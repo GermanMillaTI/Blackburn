@@ -107,7 +107,7 @@ function Stats({ setFilterDataFromStats }) {
             let ethnicities = participant['ethnicities'].split(';').map(ethnicity => Constants['ethnicities'][ethnicity]);
             let ethValue = 1 / ethnicities.length;
             let status = Constants['participantStatuses'][participant['status']] || "Blank";
-
+            console.log(ethnicities, participant)
             for (const element of ethnicities) {
                 let ethnicity = element.trim();
 

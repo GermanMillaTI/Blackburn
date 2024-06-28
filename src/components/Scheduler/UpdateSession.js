@@ -19,7 +19,7 @@ import GetSkinTone from '../CommonFunctions/GetSkinTone';
 import { object } from 'prop-types';
 import GetBMIRange from '../CommonFunctions/GetBMIRange';
 
-export default ({ showUpdateSession, showLog, setShowLog }) => {
+export default ({ showUpdateSession }) => {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userId = userInfo['userId'];
 

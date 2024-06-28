@@ -969,10 +969,9 @@ export const surveyJson = {
                             "White - Northern European [Dutch, English, Northern French, German, Irish, Norwegian, Northern European (not listed)]",
                             "White - Southern European [Italian, Southern French, Spanish, Portuguese, Southern European (not listed)]",
                             "Prefer not to state",
+                            "Other",
                         ],
                         visibleIf: '{isMultipleEthnicities} = "No"',
-                        showOtherItem: true,
-                        otherText: "Other",
                         isRequired: true
                     }, {
                         type: "checkbox",
@@ -992,10 +991,9 @@ export const surveyJson = {
                             "White - Northern European [Dutch, English, Northern French, German, Irish, Norwegian, Northern European (not listed)]",
                             "White - Southern European [Italian, Southern French, Spanish, Portuguese, Southern European (not listed)]",
                             "Prefer not to state",
+                            "Other"
                         ],
                         visibleIf: '{isMultipleEthnicities} = "Yes"',
-                        showOtherItem: true,
-                        otherText: "Other",
                         isRequired: true
                     }, {
                         type: "html",

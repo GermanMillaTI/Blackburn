@@ -7,7 +7,7 @@ import appInfo from '../../../package.json';
 import Swal from 'sweetalert2';
 import { realtimeDb } from '../../firebase/config';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateUserInfo, isStatsActive, isDemoStatsActive, setSessionStats } from '../../Redux/Features';
+import { updateUserInfo, isStatsActive, isDemoStatsActive, setSessionStats, setShowLog } from '../../Redux/Features';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import telusLogo from './telusLogo.png';
 
@@ -75,6 +75,7 @@ function Navbar({ setUserId }) {
                 {(admin || apple) && <a href="/scheduler-external" onClick={(e) => { e.preventDefault(); navigate("/scheduler-external"); }}>Scheduler External</a>}
                 {(admin || apple) && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(isStatsActive(true)); }}>Participant Stats</a>}
                 {(admin || apple) && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(setSessionStats(true)); }}>Session Stats</a>}
+                {admin && <a href='#' onClick={(e) => { e.preventDefault(); dispatch(setShowLog(true)); }}>Activity Log</a>}
                 {admin && <a href="/demo-bins" onClick={(e) => { e.preventDefault(); dispatch(isDemoStatsActive(true)); }}>Demo bins</a>}
 
                 <a href="/" onClick={(e) => { e.preventDefault(); handleLogout(); navigate("/"); }}>Logout</a>

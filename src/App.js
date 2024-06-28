@@ -19,11 +19,11 @@ import CheckDocuments from './components/CheckDocuments';
 import SchedulerExternal from './components/Scheduler/SchedulerExternal';
 import Overview from './components/Scheduler/Overview';
 import SessionStats from './components/Stats/SessionStats';
+import Log from './components/Log';
 
 
 function App() {
   const [userId, setUserId] = useState('');
-  const [showLog, setShowLog] = useState(false);
   const [updateSession, setUpdateSession] = useState("");
   const [timeslotforLog, setTimeslotforLog] = useState("");
 
@@ -36,7 +36,7 @@ function App() {
   const userInfo = useSelector((state) => state.userInfo.value || {});
   const isStatsActive = useSelector((state) => state.userInfo.activeStats);
   const isDemoStatsActive = useSelector((state) => state.userInfo.activeDemoStats);
-  const isLogActive = useSelector((state) => state.userInfo.activeLog);
+  const showLog = useSelector((state) => state.userInfo.showLog);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -112,7 +112,7 @@ function App() {
       {showDocs && <CheckDocuments />}
       {showUpdateSession && <UpdateSession showUpdateSession={showUpdateSession} />}
       {showSessionStats && <SessionStats setFilterDataFromStats={setFilterDataFromStats} />}
-
+      {showLog && <Log />}
 
 
     </div>
