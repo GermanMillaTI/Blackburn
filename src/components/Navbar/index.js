@@ -61,23 +61,45 @@ function Navbar({ setUserId }) {
         }
     };
 
+    useEffect(() => {
+        const elements = document.querySelectorAll('#navbar a');
+        elements.forEach(element => {
+            element.classList.remove('selected');
+            if (window.location.origin + window.location.pathname == element.href) element.classList.add('selected');
+        });
+    }, [window.location.href]);
+
+    const copyUrlToClipBoard = () => {
+        const url = window.location.href.replace(origin, "https://blackburn-la.web.app");
+        navigator.clipboard.writeText(url);
+        Swal.fire({
+            toast: true,
+            icon: 'success',
+            title: 'Copied: ' + url,
+            position: 'bottom',
+            width: 'unset',
+            showConfirmButton: false,
+            timer: 2000
+        })
+    }
+
+
 
     return (
         <ThemeProvider theme={theme}>
             <nav id="navbar">
-                <img src={telusLogo} style={{ height: '20px', width: 'auto', position: "absolute", left: "0" }} alt='TELUS International Logo' onClick={(e) => { e.preventDefault(); navigate("/participants"); }} ></img>
-                <span id="navbarTitle" className='notifier'></span>
-                <span className='projectName'>Blackburn</span>
-                {["german.milla01@telusinternational.com"].includes(auth.currentUser.email) && admin && <a href="/files" onClick={(e) => { e.preventDefault(); navigate("/files"); }}>Files</a>}
+                <img src={telusLogo} alt="Telus International" onClick={copyUrlToClipBoard} />
+                <span id="navbarTitle" />
+                {/* <span className='projectName'>Blackburn</span> */}
                 {admin && <a href="/participants" onClick={(e) => { e.preventDefault(); navigate("/participants"); }}>Participants</a>}
                 {admin && <a href="/scheduler" onClick={(e) => { e.preventDefault(); navigate("/scheduler"); }}>Scheduler</a>}
                 {(admin || apple) && <a href="/overview" onClick={(e) => { e.preventDefault(); navigate("/overview"); }}>Overview</a>}
-                {(admin || apple) && <a href="/scheduler-external" onClick={(e) => { e.preventDefault(); navigate("/scheduler-external"); }}>Scheduler External</a>}
-                {(admin || apple) && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(isStatsActive(true)); }}>Participant Stats</a>}
-                {(admin || apple) && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(setSessionStats(true)); }}>Session Stats</a>}
-                {admin && <a href='#' onClick={(e) => { e.preventDefault(); dispatch(setShowLog(true)); }}>Activity Log</a>}
+                {(admin || apple) && <a href="/scheduler-external" onClick={(e) => { e.preventDefault(); navigate("/scheduler-external"); }}>Scheduler external</a>}
+                {(admin || apple) && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(isStatsActive(true)); }}>Participant stats</a>}
+                {(admin || apple) && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(setSessionStats(true)); }}>Session stats</a>}
+                {admin && <a href='#' onClick={(e) => { e.preventDefault(); dispatch(setShowLog(true)); }}>Activity log</a>}
                 {admin && <a href="/demo-bins" onClick={(e) => { e.preventDefault(); dispatch(isDemoStatsActive(true)); }}>Demo bins</a>}
-
+                {["zoltan.bathori@telusinternational.com"].includes(auth.currentUser.email) && <a href="/files" onClick={(e) => { e.preventDefault(); navigate("/files"); }}>Files</a>}
                 <a href="/" onClick={(e) => { e.preventDefault(); handleLogout(); navigate("/"); }}>Logout</a>
             </nav>
 

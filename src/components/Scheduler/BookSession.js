@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { realtimeDb, updateValue } from '../../firebase/config';
+import { realtimeDb } from '../../firebase/config';
 import Swal from 'sweetalert2';
 import Constants from '../Constants';
 import './BookSession.css';
@@ -9,6 +9,10 @@ import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
 
 function BookSession({ database, setShowBookSession, selectedSessionId, setJustBookedSession }) {
     const [searchBarText, setSearchBarText] = useState("");
+
+    const updateValue = (path, value) => {
+        realtimeDb.ref(path).update(value);
+    }
 
     function participantFilter(pid) {
         let searchText = searchBarText.trim();

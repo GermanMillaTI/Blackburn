@@ -11,10 +11,6 @@ import FormatTime from '../CommonFunctions/FormatTime';
 import { useSelector, useDispatch } from 'react-redux';
 import { setShowBookSession2 } from '../../Redux/Features';
 import { ref, onValue, off } from 'firebase/database';
-import { updateValue } from "../../firebase/config";
-
-
-
 
 
 function BookSession2({ showBookSession2 }) {
@@ -27,6 +23,10 @@ function BookSession2({ showBookSession2 }) {
     const [participantInfo, setParticipantInfo] = useState({});
 
     const participantId = showBookSession2;
+
+    const updateValue = (path, value) => {
+        realtimeDb.ref(path).update(value);
+    }
 
     useEffect(() => {
         const path = '/timeslots/';

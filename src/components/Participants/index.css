@@ -1,0 +1,23 @@
+#participants {
+    display: flex;
+    flex-direction: column;
+    gap: .5em;
+    width: 100%;
+    background-color: var(--body-color);
+    overflow: auto;
+}
+
+#filterNote {
+    display: block;
+    font-weight: bold;
+    font-style: italic;
+    margin: 0 1em;
+}
+
+#participants #participantTable {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 0 1em 5em 1em;
+    width: 100%;
+}

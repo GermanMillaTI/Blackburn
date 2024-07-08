@@ -58,10 +58,6 @@
     background: #224bd436;
 }
 
-.day-separator {
-    border-bottom: .2em solid black;
-}
-
 .pinfo-popup {
     display: flex;
     flex-direction: column;

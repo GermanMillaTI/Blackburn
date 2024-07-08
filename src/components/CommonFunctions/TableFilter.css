@@ -1,9 +1,21 @@
-.table-filter-object {
+.table-filter-object .filter-top {
+    display: inline-block;
     cursor: pointer;
+    user-select: none;
+    width: 100%;
 }
 
-.filter-button {
-    margin-left: .3em;
+.table-filter-object .filter-top span {
+    cursor: pointer;
+    color: var(--link-text-1);
+}
+
+.table-filter-object .filter-top:hover span {
+    color: var(--link-hover-text-1);
+}
+
+.table-filter-object .filter-top button {
+    margin-left: .8em;
     font-weight: bold;
     background: none;
     border: none;
@@ -11,69 +23,66 @@
     outline: none;
 }
 
-.filter-button:hover {
-    color: #ff5100;
+.table-filter-object .filter-top button.inactive {
+    color: var(--link-text-1);
 }
 
-.filter-button-inactive {
-    color: #1d3062;
+.table-filter-object .filter-top button.active {
+    color: #8BE234;
 }
 
-.filter-button-active {
-    color: #ff5100;
+.table-filter-object .filter-top:hover button.inactive {
+    color: var(--link-hover-text-1);
 }
 
-.table-filter-container {
+.table-filter-object .filter-top:hover button.active {
+    color: rgb(108, 197, 19);
+}
+
+.table-filter-object .filter-bottom {
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
     position: absolute;
     display: flex;
     flex-direction: column;
-    max-height: calc(60vh - 20%);
+    max-height: 40em;
     overflow-y: auto;
     overflow-x: hidden;
-    min-width: 5em;
-    top: 1.8em;
+    min-width: 8em;
+    top: 1.75em;
     left: 0em;
     background: rgb(255, 255, 255);
-    padding: .2em .4em .4em .4em;
+    padding: .2em .4em;
     gap: .2em;
-    border: 1px solid rgb(199, 198, 198);
+    border: .1em solid grey;
 }
 
-.check-all-button {
-    min-width: 8em;
-    margin: 0 2em 0.25em 0;
-    width: 100%;
+.table-filter-object .filter-bottom button {
     font-weight: bold;
     border: none;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
     cursor: pointer;
     border-radius: .2em;
     outline: none;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    padding-top: 0.25em;
-    padding-bottom: 0.25em;
+    user-select: none;
 }
 
-.check-all-button:hover {
-    color: #fff;
-    background-color: #ff5100;
+.table-filter-object .filter-bottom button:hover {
+    color: var(--link-hover-text-1);
 }
 
-.table-filter-container-row {
+.table-filter-object .filter-bottom .table-filter-row {
     display: flex;
     flex-direction: row;
-    justify-content: left;
-    padding-left: .2em;
-    margin-top: 0.25em;
 }
 
-.table-filter-container-row input {
+.table-filter-object .filter-bottom .table-filter-row input {
     cursor: pointer;
+    accent-color: #8BE234;
 }
 
-.table-filter-container-row label {
+.table-filter-object .filter-bottom .table-filter-row label {
     padding-left: .3em;
-    user-select: none;
     cursor: pointer;
+    user-select: none;
 }

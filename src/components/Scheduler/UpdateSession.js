@@ -8,7 +8,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import md5 from 'md5';
 import { ref, onValue, off } from 'firebase/database';
 import { setShowUpdateSession, setShowDocs } from '../../Redux/Features';
-import { updateValue, deleteValue } from "../../firebase/config";
 import './UpdateSession.css';
 import Constants from '../Constants';
 import LogEvent from '../CommonFunctions/LogEvent';
@@ -19,9 +18,14 @@ import GetSkinTone from '../CommonFunctions/GetSkinTone';
 import { object } from 'prop-types';
 import GetBMIRange from '../CommonFunctions/GetBMIRange';
 
+
 export default ({ showUpdateSession }) => {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userId = userInfo['userId'];
+
+    const updateValue = (path, value) => {
+        realtimeDb.ref(path).update(value);
+    }
 
     const sessionId = showUpdateSession;
     const [session, setSession] = useState({});
@@ -33,7 +37,6 @@ export default ({ showUpdateSession }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-
         const path = '/timeslots/' + showUpdateSession;
         const pptRef = ref(realtimeDb, path);
 
@@ -45,11 +48,13 @@ export default ({ showUpdateSession }) => {
             setParticipantId(participantId);
         });
 
-        return () => {
-            off(pptRef, "value", listener);
+        return () => off(pptRef, "value", listener);
+    }, []);
 
-        }
-
+    useEffect(() => {
+        const handleEsc = (event) => { if (event.keyCode === 27) dispatch(setShowUpdateSession("")) };
+        window.addEventListener('keydown', handleEsc);
+        return () => { window.removeEventListener('keydown', handleEsc) };
     }, []);
 
     useEffect(() => {
@@ -411,7 +416,7 @@ export default ({ showUpdateSession }) => {
                                     <td className="participant-table-left">Identification</td>
                                     <button className="participant-table-right doc-button" onClick={(e) => {
                                         e.preventDefault();
-                                        dispatch(setShowDocs(participantId))
+                                        dispatch(setShowDocs(participantId));
                                     }}>Open</button>
                                 </tr>
                                 <tr>
@@ -819,7 +824,8 @@ export default ({ showUpdateSession }) => {
                                                     userId: userId
                                                 });
                                             } else {
-                                                deleteValue(`/participants/${participantId}/furtherSessions`)
+                                                realtimeDb.ref(`/participants/${participantId}/furtherSessions`).remove();
+
                                                 LogEvent({
                                                     participantId,
                                                     action: 13,

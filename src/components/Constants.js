@@ -85,14 +85,14 @@ const Constants = {
         13: "Other"
     },
     ethnicityGroups: {
-        "African/African-American/Black": [1],
+        "Afr./Afr-Am./Black": [1],
         "Med / Mid East": [6, 11],
         "Latin / S. Amer": [5],
         "East Asian": [4],
         "South Asian": [8],
         "N. European": [10],
         "Other": [0, 2, 3, 7, 9, 12, 13],
-        "Total": Array.from({ length: 14 }, (v, i) => i)
+        "Total": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
     },
     ethDbMap: {
         "Aboriginal Australians/Papuans": "Other",
@@ -128,7 +128,6 @@ const Constants = {
         1: 'Closed',
         2: 'Closed'
     },
-
     hairLength: {
         0: 'Bald',
         1: 'Short',
@@ -172,17 +171,12 @@ const Constants = {
         15: "Need assistance standing or have difficulty remaining standing for 10-20 minutes (for example, you feel unsteady on your feet)",
         16: "Previously had a seizure, or have an epileptic condition",
         17: "Sensitivity to enclosed spaces",
-        18: "none"
-
+        18: "None"
     },
-    rejectedHealthConditions: [
-        0, 1, 2, 3, 5, 6, 10, 12, 13, 14, 15, 16
-    ],
-    rejectedCompanies: [
-        0, 1, 2, 3, 5, 6, 7, 10, 11, 12, 15, 16,
-    ],
+    rejectedHealthConditions: [0, 1, 2, 3, 5, 6, 10, 12, 13, 14, 15, 16],
+    rejectedCompanies: [0, 1, 2, 3, 5, 6, 7, 10, 11, 12, 15, 16],
     earConditions: {
-        0: "Swimmer’s ear/Bony growths",
+        0: "Swimmer's ear/Bony growths",
         1: "Excessive Hair",
         2: "Impacted Wax/Cerumen",
         3: "Unremovable piercings",

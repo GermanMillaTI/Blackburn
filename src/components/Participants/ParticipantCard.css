@@ -1,89 +1,12 @@
-.mark-unchecked {
-    padding-top: .2em;
-    cursor: pointer;
-    text-decoration: none;
-    color: #1d3062;
-}
-
-.mark-unchecked:hover {
-    color: #333;
-}
-
-
-
-.doc-button {
-
-    padding: 0 1em;
-    padding: 0em .3em;
-    font-weight: bold;
-    font-size: 1em;
-    border: none;
-    background-color: #c7c7c7;
-    cursor: pointer;
-    border-radius: .3em;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
-    outline: none;
-}
-
-.pending-doc {
-    background-color: #8BE234;
-    color: #333;
-}
-
-.icf-doc {
-    background-color: #333;
-    color: white;
-}
-
-.missing-doc {
-    background-color: red;
-    color: white;
-}
-
-.session-button {
-    margin: 0em auto;
-    width: 100%;
-    font-weight: bold;
-    font-size: 1em;
-    border: none;
-    color: #fff;
-    padding: .2em 1em;
-    border-radius: 2em;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
-    cursor: pointer;
-    outline: none;
-    background-color: #333;
-}
-
-.book-session-button {
-    margin: 0em auto;
-    width: 100%;
-    font-weight: bold;
-    font-size: 1em;
-    border: none;
-    background-color: #4B286D;
-    color: white;
-    padding: .2em 1em;
-    cursor: pointer;
-    border-radius: 2em;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
-    outline: none;
-}
-
-
-
 #participants .participant-card {
     display: flex;
     flex-direction: row;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, .2);
     border-radius: .3em;
-    margin-left: 0.35em;
-    margin-right: 0.35em;
-    margin-bottom: 0.45em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .5);
 }
 
 #participants .participant-card:nth-child(even) {
-    background-color: #F7F7F8;
+    background-color: aliceblue;
 }
 
 #participants .participant-card:nth-child(odd) {
@@ -108,18 +31,7 @@
     min-width: 30em;
 }
 
-#participants .participant-card .column-2 {
-    width: 25.5em;
-    min-width: 25.5em;
-}
-
 #participants .participant-card .column-3 {
-    width: 18em;
-    min-width: 16em;
-    max-width: 18em;
-}
-
-#participants .participant-card .column-4 {
     width: 22em;
     min-width: 12em;
     background: rgba(0, 0, 0, 0.1);
@@ -128,23 +40,9 @@
     border-radius: .3em;
 }
 
-#participants .participant-card .column-4 div span:nth-child(1) {
-    display: inline-block;
-    width: 5.5em;
-    font-weight: bold;
-}
-
-#participants .participant-card .column-5 {
-    flex-grow: 1;
+#participants .participant-card .column-4 {
     max-width: 25em;
-    background: rgba(0, 0, 0, 0.025);
-    border-radius: .3em;
     margin: .5em;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, .5);
-}
-
-#participants .participant-card .column-6 {
-    flex-grow: 1;
 }
 
 #participants .participant-card .participant-attribute-container {
@@ -167,23 +65,17 @@
 
 #participants .participant-card .column-2 .field-label {
     width: 8em;
+    display: flex;
+    flex-direction: column;
 }
 
 #participants .participant-card .column-3 .field-label {
-    min-width: 8em;
-}
-
-#participants .participant-card .column-4 .field-label {
     width: 9em;
     min-width: 9em;
 }
 
-#participants .participant-card .column-5 .field-label {
+#participants .participant-card .column-4 .field-label {
     min-width: 8em;
-}
-
-#participants .participant-card .min-width-selector {
-    min-width: 13em;
 }
 
 #participants .participant-card .participant-attribute-header {
@@ -197,14 +89,15 @@
     box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
     outline: none;
     border-radius: .3em;
+    color: black;
 }
 
 #participants .participant-card .participant-comment {
     font-size: 1em;
-    width: 90%;
+    width: 100%;
     padding: .3em;
     resize: vertical;
-    min-height: 2em;
+    min-height: 100%;
     box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
     outline: none;
     border-radius: .3em;
@@ -276,4 +169,87 @@
     color: white;
     font-weight: bold;
     border-radius: .3em;
+}
+
+.mark-unchecked {
+    padding-top: .2em;
+    cursor: pointer;
+    text-decoration: none;
+    color: #1d3062;
+}
+
+.mark-unchecked:hover {
+    color: #333;
+}
+
+#participants .participant-card .doc-button {
+    padding: 0 1em;
+    font-size: 1em;
+    border: none;
+    background-color: #c7c7c7;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: .3em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
+    outline: none;
+}
+
+#participants .participant-card .pending-doc {
+    color: #fff;
+    background-color: #ff5100;
+}
+
+#participants .participant-card .icf-doc {
+    background: transparent;
+    color: blue;
+    border: none;
+    user-select: none;
+    cursor: pointer;
+    outline: none;
+}
+
+#participants .participant-card .icf-doc:hover {
+    text-decoration: underline;
+}
+
+#participants .participant-card .missing-icf-doc {
+    background-color: red;
+    color: var(--link-text-1);
+    border: none;
+    user-select: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0 2em;
+    border-radius: .3em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
+}
+
+.session-button {
+    margin: 0em auto;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1em;
+    border: none;
+    color: #fff;
+    padding: .2em 1em;
+    border-radius: 2em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
+    cursor: pointer;
+    outline: none;
+    background-color: #333;
+}
+
+.book-session-button {
+    margin: 0em auto;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1em;
+    border: none;
+    background-color: #4B286D;
+    color: white;
+    padding: .2em 1em;
+    cursor: pointer;
+    border-radius: 2em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
+    outline: none;
 }

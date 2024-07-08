@@ -1,185 +1,153 @@
-.filter-main-container {
-    display: flex;
+#participants #participantFilter {
+    display: inline-flex;
     flex-direction: row;
+    gap: 1em;
+    padding: 0.5em 1em;
+    outline: none;
+    min-height: 26em;
+    overflow-x: auto;
+}
+
+#participants #participantFilter .filter-column {
+    display: inline-flex;
+    flex-direction: column;
     gap: .5em;
-    padding: .5em;
-    border-radius: 5px;
-    width: fit-content;
-    padding-bottom: 0.5em;
-    background-color: white;
-    margin-top: 0.50em;
-    margin-right: 5px;
-    margin-left: 5px;
-    margin-bottom: 0.35em;
-    height: 275px;
 }
 
-
-
-.filter-container {
+#participants #participantFilter .filter-main-container {
     display: inline-flex;
     flex-direction: column;
-    padding: .45em;
-    gap: .3em;
-    border-radius: 0.5em;
-    color: #333;
-    overflow-y: auto;
-    height: 250px;
+    background-color: #fff;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .5);
+    border-radius: .3em;
 }
 
-.filter-element::-webkit-scrollbar {
-    border-radius: 0.5em;
+#participants #participantFilter .inner-header {
+    text-align: center;
+    font-weight: bold;
 }
 
-
-.filter-container:hover {
-    background-color: #F7F7F8;
-    width: fit-content;
+#participants #participantFilter .main-filter-container {
+    background: red;
 }
 
-.filter-container .gap {
+#participants #participantFilter .filter-container {
+    display: inline-flex;
+    flex-direction: column;
+    gap: .5em;
+    flex-grow: 1;
+    padding: .5em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .5);
+}
+
+#participants #participantFilter .gap {
     margin-top: .5em;
-    color: #333;
 }
 
-.filter-container-header {
+#participants #participantFilter .filter-header {
     font-weight: bold;
     text-align: center;
-
+    user-select: none;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
+    padding: 0 1em;
+    border-radius: .3em .3em 0 0;
 }
 
-.scroll-indicator {
-    position: absolute;
-    align-self: center;
-    text-align: center;
-    transform: translateY(262px);
-    background-color: transparent;
-    color: white;
-    border-radius: 5px;
-    z-index: 1;
-    width: 25px;
-    height: fit-content;
-    font-size: 12px;
-    cursor: pointer;
-}
-
-
-.filter-object {
+#participants #participantFilter .checkbox-filter {
     display: flex;
     flex-direction: row;
-    color: #333;
-    padding: 0.15em;
 }
 
-.filter-element {
-    display: inline-flex;
-    gap: .3em;
-    flex-direction: column;
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
-}
-
-.filter-element span {
-    font-weight: bold;
-    text-align: center;
-}
-
-.filter-object label {
+#participants #participantFilter .checkbox-filter label {
     padding: 0 .3em;
     cursor: pointer;
     user-select: none;
+    white-space: nowrap;
 }
 
-.filter-element input[type=checkbox] {
+#participants #participantFilter .filter-element {
+    display: inline-flex;
+    flex-direction: column;
+    gap: .3em;
+}
+
+#participants #participantFilter .date-selector-element {
+    display: flex;
+    flex-direction: row;
+    gap: .3em;
+}
+
+#participants #participantFilter .date-selector-element input {
+    border: 1px solid gray;
+    width: 50%;
+    padding: .1em .2em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
+    outline: none;
+    border-radius: .3em;
+}
+
+#participants #participantFilter .filter-element span {
+    font-weight: bold;
+    text-align: center;
+}
+
+#participants #participantFilter input[type=checkbox] {
     cursor: pointer;
-    accent-color: #8BE234;
+    accent-color: var(--telus-color-2);
+    outline: none;
 }
 
-
-
-.filter-element .main-input {
-    border: 1px solid #666;
-    border-radius: .3em;
+#participants #participantFilter .filter-element .main-input {
+    border: 1px solid gray;
+    width: 17em;
     padding: .1em .2em;
     box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
-
-}
-
-.filter-element .main-input input[type=number] {
-    border: 1px solid #666;
-    width: 11em;
+    outline: none;
     border-radius: .3em;
-    padding: .1em .2em;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
-
 }
 
-.filter-element input::-webkit-outer-spin-button,
-.filter-element input::-webkit-inner-spin-button {
+#participants #participantFilter .filter-element input::-webkit-outer-spin-button,
+#participants #participantFilter .filter-element input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-.filter-element input[type=number] {
-    -moz-appearance: textfield;
-}
-
-.reset-filter-button {
-    width: 60%;
-    min-width: 10em;
+#participants #participantFilter #resetFilter {
+    width: 100%;
     margin: .2em auto;
     font-weight: bold;
     font-size: .9em;
     border: none;
-    background-color: #333;
-    color: #F7F7F1;
-    padding: .2em 1em;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
+    padding: .2em 0;
     cursor: pointer;
-    border-radius: 2em;
     box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
     outline: none;
+    border-radius: .3em;
 }
 
-.filter-this-button {
+#participants #participantFilter #resetFilter:hover {
+    color: var(--link-hover-text-1);
+}
+
+#participants #participantFilter .filter-this-button {
     margin-left: auto;
-    width: 1.25em;
-    height: 1.25em;
+    width: 1.2em;
+    height: 1.1em;
     font-weight: bold;
     border: none;
     color: #fff;
-    background-color: #B4B4BB;
+    background-color: var(--telus-color-2);
     font-size: .9em;
     cursor: pointer;
-    border-radius: .2em;
     box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
     outline: none;
+    opacity: .3;
+    border-radius: .1em;
 }
 
-.filter-this-button:hover {
-    background-color: #57A708;
-}
-
-.red-highlighted-filter {
-    border-radius: .2em;
-    background: rgba(255, 0, 0, 0.5);
-    color: white;
-    font-weight: bold;
-}
-
-::-webkit-scrollbar {
-    width: 3px;
-    height: 15px;
-}
-
-::-webkit-scrollbar-track {
-    background: #cccaca;
-}
-
-
-
-::-webkit-scrollbar-thumb {
-    background: #666;
-    border-radius: 5px;
+#participants #participantFilter .filter-this-button:hover {
+    opacity: unset;
 }

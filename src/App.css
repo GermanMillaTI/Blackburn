@@ -1,4 +1,8 @@
-#mainContainer {
+#mainApplication {
+  overflow: none;
   display: flex;
-  flex-flow: column;
+  flex-direction: column;
+  height: 100vh;
+  height: 100svh;
+  max-height: -webkit-fill-available;
 }

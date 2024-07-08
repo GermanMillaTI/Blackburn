@@ -1,6 +1,6 @@
 
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
-import Registration from './components/Form/Registration';
+// import Registration from './components/Form/Registration';
 import LoginPage from './components/LoginPage';
 import React, { useEffect, useState } from 'react';
 import { realtimeDb, auth } from './firebase/config';
@@ -9,10 +9,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateUserInfo } from './Redux/Features';
 import Navbar from './components/Navbar';
 import Participants from './components/Participants';
-import FilesView from './components/FilesView';
+// import FilesView from './components/FilesView';
 import Stats from './components/Stats';
 import Bins from './components/Stats/Bins';
-import ICF from './components/Form/ICF';
+// import ICF from './components/Form/ICF';
 import Scheduler from './components/Scheduler';
 import UpdateSession from './components/Scheduler/UpdateSession';
 import CheckDocuments from './components/CheckDocuments';
@@ -21,6 +21,7 @@ import Overview from './components/Scheduler/Overview';
 import SessionStats from './components/Stats/SessionStats';
 import Log from './components/Log';
 
+import './App.css';
 
 function App() {
   const [userId, setUserId] = useState('');
@@ -55,8 +56,6 @@ function App() {
   }, [userId, dispatch])
 
 
-
-
   function getElement(path) {
 
     switch (path) {
@@ -66,8 +65,8 @@ function App() {
         return <Scheduler updateSession={updateSession} setUpdateSession={setUpdateSession} />
       case "/login":
         return <LoginPage setUserId={setUserId} />;
-      case "/registration":
-        return <Registration />;
+      // case "/registration":
+      //   return <Registration />;
       case "/participants":
         return <Participants
           filterDataFromStats={filterDataFromStats}
@@ -78,10 +77,10 @@ function App() {
           updateSession={updateSession}
 
         />;
-      case "/files":
-        return <FilesView />;
-      case "/scheduler-external":
-        return <SchedulerExternal />;
+      // case "/files":
+      //   return <FilesView />;
+      // case "/scheduler-external":
+      //   return <SchedulerExternal />;
       case "/overview":
         return <Overview />
       default:
@@ -90,33 +89,26 @@ function App() {
 
   }
 
-  return (
-    <div id="mainContainer">
-      {userInfo['role'] && <Navbar
-        setUserId={setUserId}
-      />}
-      <Routes>
-        <Route path="/" element={getElement("/")} />
-        <Route path="/login" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/overview") : getElement("/login")} />
-        <Route path="/registration" element={getElement('/registration')} />
-        <Route path='/scheduler' element={(userId && Object.keys(userInfo || {}).length > 0) && userInfo['role'] === 'admin' ? getElement("/scheduler") : getElement("/login")} />
-        <Route path='/scheduler-external' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/scheduler-external") : getElement("/login")} />
-        <Route path="/icf/:participantId" element={<ICF />} />
-        <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
-        <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
-        <Route path='/overview' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/overview") : getElement("/login")} />
-
-      </Routes>
-      {isStatsActive && <Stats setFilterDataFromStats={setFilterDataFromStats} />}
-      {isDemoStatsActive && <Bins />}
-      {showDocs && <CheckDocuments />}
-      {showUpdateSession && <UpdateSession showUpdateSession={showUpdateSession} />}
-      {showSessionStats && <SessionStats setFilterDataFromStats={setFilterDataFromStats} />}
-      {showLog && <Log />}
-
-
-    </div>
-  );
+  return <div id="mainApplication">
+    {userInfo['role'] && <Navbar setUserId={setUserId} />}
+    <Routes>
+      <Route path="/" element={getElement("/")} />
+      <Route path="/login" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/overview") : getElement("/login")} />
+      <Route path="/registration" element={getElement('/registration')} />
+      <Route path='/scheduler' element={(userId && Object.keys(userInfo || {}).length > 0) && userInfo['role'] === 'admin' ? getElement("/scheduler") : getElement("/login")} />
+      <Route path='/scheduler-external' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/scheduler-external") : getElement("/login")} />
+      {/*  <Route path="/icf/:participantId" element={<ICF />} />*/}
+      <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
+      <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
+      <Route path='/overview' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/overview") : getElement("/login")} />
+    </Routes>
+    {isStatsActive && <Stats setFilterDataFromStats={setFilterDataFromStats} />}
+    {isDemoStatsActive && <Bins />}
+    {showDocs && <CheckDocuments />}
+    {showUpdateSession && <UpdateSession showUpdateSession={showUpdateSession} />}
+    {showSessionStats && <SessionStats setFilterDataFromStats={setFilterDataFromStats} />}
+    {showLog && <Log />}
+  </div>
 }
 
 export default App;

@@ -107,10 +107,6 @@
     background: rgba(254, 217, 93, 0.55);
 }
 
-.day-separator {
-    border-bottom: .2em solid black;
-}
-
 .buttons-of-timeslot {
     width: 16.8em;
     display: flex;

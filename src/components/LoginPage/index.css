@@ -4,7 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #2A2C2E;
+    background: #c4cfedb9;
 }
 
 #loginPage #loginContainer {
@@ -13,9 +13,7 @@
     padding: 2em;
     text-align: center;
     box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
-    color: #333;
-    background: #F7F7F8;
-    border-radius: 3px;
+    color: #1d3062;
 }
 
 #loginPage form {
@@ -33,7 +31,6 @@
     box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
     color: #1d3062;
     outline: none;
-    border-radius: 3px;
 }
 
 #loginPage #loginButton,
@@ -47,12 +44,10 @@
     box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
     outline: none;
     cursor: pointer;
-    border-radius: 3px;
 }
 
 #loginPage #resetButton {
-    background: #66CC00;
-    border-radius: 3px;
+    background: rgba(43, 128, 0);
 }
 
 #loginPage #loginButton:hover,

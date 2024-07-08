@@ -3,7 +3,6 @@ import { useState, useReducer, useMemo } from 'react';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import { updateValue } from "../../firebase/config";
 import UpdateSession from './UpdateSession';
 import { useSelector, useDispatch } from 'react-redux';
 import './index.css';
@@ -21,6 +20,9 @@ function SchedulerRow({ database, sessionId, index, array }) {
     const [justBookedSession, setJustBookedSession] = useState("");
     const dispatch = useDispatch();
 
+    const updateValue = (path, value) => {
+        realtimeDb.ref(path).update(value);
+    }
 
     const participantId = database['timeslots'][sessionId]['participant_id'];
     const participantInfo = database['participants'][participantId] || {};
@@ -78,7 +80,7 @@ function SchedulerRow({ database, sessionId, index, array }) {
             if (result.isConfirmed) {
                 updateValue("/timeslots/" + sessionId, { remind: false });
 
-                const scriptURL = 'https://script.google.com/macros/s/AKfycbzBFsfBSx-k5MqCQFz_hv7IH6UJTGGfesQKPsnFg8t8mOpQ_el-KCgfRIowyolDqqxy/exec';
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbyJVtGd_9WgJy5HwIB1_Y_qZG9YCBlbG1Y5uLVn7d3k9FbknSvOTuL_0aASWwsv6hQZOA/exec';
                 fetch(scriptURL, {
                     method: 'POST',
                     muteHttpExceptions: true,

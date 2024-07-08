@@ -15,14 +15,6 @@
     color: #ff5100;
 }
 
-.filter-button-inactive {
-    color: #1d3062;
-}
-
-.filter-button-active {
-    color: #ff5100;
-}
-
 .table-filter-container {
     position: absolute;
     display: flex;

@@ -1,4 +1,4 @@
-.modal-check-documents-backdrop {
+#checkDocumentsModal {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +11,7 @@
     z-index: 100;
 }
 
-.modal-check-documents-main-container {
+#checkDocumentsModal #checkDocumentsMainContainer {
     width: 40em;
     height: 100%;
     display: flex;
@@ -25,28 +25,23 @@
     background-color: #333;
 }
 
-.modal-check-documents-header {
+#checkDocumentsModal #checkDocumentsHeader {
     top: 0px;
     position: sticky;
     padding: .2em;
     font-weight: bold;
     text-align: center;
-    background-color: #F7F7F1;
-    color: #333;
-    font-size: 1.3em;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
 }
 
-.documents-container {
+#checkDocumentsModal #checkDocumentsMainContent {
     overflow: auto;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: auto;
-    margin-bottom: auto;
-
+    margin: auto;
 }
 
-.document-upload-date {
+#checkDocumentsModal #checkDocumentsMainContent .document-upload-date {
     margin-top: 1em;
     display: block;
     text-align: center;
@@ -54,10 +49,9 @@
     font-size: 1.3em;
 }
 
-.document-preview {
-    margin: 0em auto 1em auto;
+#checkDocumentsModal #checkDocumentsMainContent .document-preview {
+    margin: 0 auto;
     display: block;
     height: 50em;
     width: auto;
-
 }

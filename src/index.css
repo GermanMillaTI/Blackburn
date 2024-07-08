@@ -8,17 +8,31 @@
 
 :root {
   /* ===== Colors ===== */
-  --body-color: #D8D8D8;
-  ;
-  --font-color: #333;
+  --body-color: #E4E9F7;
+  --font-color: #1d3062;
+  --telus-color-1: rgba(75, 40, 109);
+  --telus-color-2: rgb(53, 160, 0);
+  --telus-color-3: rgb(85, 255, 0);
+  --link-text-1: #fff;
+  --link-hover-text-1: #ffffffda;
 
   /* ====== Fontsize ====== */
   --font-size: 13px;
-  overflow-y: auto;
 }
 
 body {
   background-color: var(--body-color);
+  color: var(--font-color);
+  font-size: var(--font-size);
+  overflow: hidden;
+}
+
+body:has(#registrationForm) {
+  overflow: auto;
+}
+
+.swal2-popup {
+  font-size: 1em !important;
 }
 
 #root {
@@ -67,8 +81,6 @@ a:hover {
 
 }
 
-
-
 #loading {
   position: fixed;
   top: 0;
@@ -96,6 +108,6 @@ a:hover {
   z-index: 10;
 }
 
-.copy-email-link {
-  padding-left: 0.5em;
+.growing-item {
+  flex-grow: 1;
 }

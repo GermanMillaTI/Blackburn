@@ -1,6 +1,6 @@
 #schedulerContainer {
     position: absolute;
-    margin-top: 3em;
+    margin-top: 2.5em;
     width: 100%;
     height: 100vh;
     overflow: hidden;
@@ -46,20 +46,16 @@
 }
 
 .scheduler-table tr:nth-child(even) {
-    background: #ECE7EF;
-}
-
-.scheduler-table tr:nth-child(odd) {
     background: rgba(255, 255, 255, 0.644);
 }
 
 .scheduler-table tr:hover {
-    background: rgba(254, 217, 93, 0.55);
+    background: #224bd436;
 }
 
-.day-separator {
+/* .day-separator {
     border-bottom: .2em solid black;
-}
+} */
 
 .buttons-of-timeslot {
     width: 16.8em;
@@ -151,22 +147,27 @@
     color: #006BA6;
 }
 
-.download-csv-button {
-    z-index: 50;
-    padding: .2em 1em;
+#schedulerContainer #downloadCsvButton,
+#schedulerContainer #downloadCsvButton {
+    padding: .2em;
     text-align: center;
-    width: 10em;
-    margin: .3em;
+    width: 12em;
     border: none;
-    border-radius: 2em;
     font-weight: bold;
     font-size: .9em;
     text-decoration: none;
-    color: #2F2F30;
-    background-color: #B2D47E;
     box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
     cursor: pointer;
     outline: none;
+    margin: 0 1em 1em 1em;
+    border-radius: .3em;
+    background-color: var(--telus-color-1);
+    color: var(--link-text-1);
+}
+
+#schedulerContainer #downloadCsvButton:hover,
+#schedulerContainer #downloadCsvButton:hover {
+    color: var(--link-hover-text-1);
 }
 
 @-webkit-keyframes target-fade {

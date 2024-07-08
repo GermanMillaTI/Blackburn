@@ -1,4 +1,4 @@
-.modal-check-documents-backdrop {
+#checkIcfModal {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,61 +11,48 @@
     z-index: 100;
 }
 
-.modal-check-icfs-main-container {
+#checkIcfModal #checkIcfMainContainer {
     width: 40em;
     height: 100%;
     display: flex;
     flex-direction: column;
     margin-left: 2em;
-    background: #F7F7F1;
+    background-color: var(--body-color);
     position: absolute;
     right: 0;
     border-radius: .2em;
     overflow: hidden;
-    background-color: #333;
 }
 
-.modal-check-documents-header {
+#checkIcfModal #checkIcfHeader {
     top: 0px;
     position: sticky;
     padding: .2em;
     font-weight: bold;
     text-align: center;
-    background-color: #F7F7F1;
-    color: #333;
-    font-size: 1.3em;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
 }
 
-.documents-container {
+#checkIcfModal #checkIcfContent {
     overflow: auto;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: auto;
-    margin-bottom: auto;
-
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
 }
 
-.document-upload-date {
-    margin-top: 1em;
-    display: block;
+#checkIcfModal #checkIcfContent .document-title {
     text-align: center;
-    font-weight: bold;
-    font-size: 1.3em;
-}
-
-.document-title {
-    color: white;
-    text-align: center;
-    font-weight: 400;
     font-size: medium;
-    margin-bottom: 0.5em;
+    margin-bottom: .2em;
 }
 
-.document-preview {
-    margin: 0em auto 1em auto;
+#checkIcfModal #checkIcfContent .document-preview {
+    margin: 0 auto;
     display: block;
-    height: 50em;
+    height: fit-content;
     width: auto;
-
+    max-width: 50%;
+    background: white;
 }

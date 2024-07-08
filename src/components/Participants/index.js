@@ -13,6 +13,8 @@ import GetBMIRange from '../CommonFunctions/GetBMIRange';
 import BookSession2 from '../Scheduler/BookSession2';
 import CheckDocuments from '../CheckDocuments';
 
+import './index.css';
+
 const defaultFilterStats = {
     genders: Object.assign({}, ...Object.values(Constants['genders']).map(k => ({ [k]: 0 }))),
     ageRanges: Object.assign({}, ...Constants['ageRanges'].map(k => ({ [k]: 0 }))),
@@ -28,9 +30,6 @@ const defaultFilterStats = {
     furtherSessions: Object.assign({}, ...['Yes', 'No'].map(k => ({ [k]: 0 }))),
 };
 
-
-
-
 function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataFromStats }) {
 
     const userInfo = useSelector((state) => state.userInfo.value || {});
@@ -41,12 +40,9 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
     const showUpdateSession = useSelector((state) => state.userInfo.showUpdateSession);
     const showBookSession2 = useSelector((state) => state.userInfo.showBookSession2);
 
-
-
     useEffect(() => {
-        document.getElementById('navbarTitle').innerText = `Filtered participants: ${shownParticipants.length} ${shownParticipants.length > 100 ? "(the list is cropped at 100)" : ""}`;
-    }, [shownParticipants]);
-
+        document.getElementById('navbarTitle').innerText = 'Participants';
+    }, []);
 
     useEffect(() => {
         if (!['admin'].includes(userRole)) return null;
@@ -68,7 +64,6 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
         return () => {
             off(pptRef, "value", listener);
             off(sessionsRef, "value", sessionsListener);
-
         }
 
     }, []);
@@ -85,6 +80,14 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
             setFilterDataFromStats={setFilterDataFromStats}
             sessions={sessions}
         />
+
+        <span id="filterNote">
+            Filtered participants: {shownParticipants.length}
+            {shownParticipants.length > 100 && (
+                <span> (The list is cropped at 100)</span>
+            )}
+        </span>
+
         <div id="participantTable">
             {shownParticipants.map((participantId, index) => {
                 const participantInfo = participants[participantId];

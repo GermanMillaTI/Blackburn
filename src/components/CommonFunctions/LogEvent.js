@@ -1,6 +1,11 @@
-import { auth, updateValue } from '../../firebase/config';
+import { realtimeDb, auth } from '../../firebase/config';
 
 export default async (input) => {
+    const updateValue = (path, value) => {
+        realtimeDb.ref(path).update(value);
+    }
+
+
     let { participantId, timeslot, action, value, userId } = input;
     if (!userId) userId = auth.currentUser.uid;
 

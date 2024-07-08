@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useReducer } from 'react';
 import ReactDOM from 'react-dom';
-import { realtimeDb, updateValue } from '../../firebase/config';
+import { realtimeDb } from '../../firebase/config';
 import { ref, onValue, off, get } from 'firebase/database';
 import Constants from '../Constants';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
@@ -29,6 +29,10 @@ function Bins({ }) {
     const [demos, setDemos] = useState({});
     const dispatch = useDispatch();
 
+    const updateValue = (path, value) => {
+        realtimeDb.ref(path).update(value);
+    }
+
     useEffect(() => {
         const demoRef = ref(realtimeDb, '/demo_bins');
         const demoListener = onValue(demoRef, (res) => {
@@ -40,9 +44,6 @@ function Bins({ }) {
         }
 
     }, []);
-
-
-
 
     useEffect(() => {
         const handleEsc = (event) => { if (event.keyCode === 27) dispatch(isDemoStatsActive(false)); };
