@@ -191,7 +191,7 @@ function ParticipantCard({ participantId, participants }) {
             <div className="participant-attribute-container">
                 <span className="field-label">Height / Weight (BMI)</span>
                 <span>
-                    {`${participantInfo['heightFt']}' ${participantInfo['heightIn']}'' / ${participantInfo['weightLbs']} ${BMICalculator(participantInfo['heightFt'], participantInfo['heightIn'], participantInfo['weightLbs'])}`}
+                    {participantInfo['heightFt']}' {participantInfo['heightIn']}" / {participantInfo['weightLbs']} ({BMICalculator(participantInfo['heightFt'], participantInfo['heightIn'], participantInfo['weightLbs'])})
                 </span>
 
             </div>
@@ -289,7 +289,7 @@ function ParticipantCard({ participantId, participants }) {
                 <span className="field-label">Identification</span>
                 <select className="participant-data-selector"
                     onChange={(e) => {
-                        updateValue("/participants/" + participantId, { document_approval: parseInt(e.currentTarget.value) });
+                        updateValue("/participants/" + participantId, { documentApproval: parseInt(e.currentTarget.value) });
                         LogEvent({
                             participantId: participantId,
                             action: 3,
@@ -298,7 +298,7 @@ function ParticipantCard({ participantId, participants }) {
                     }}
                 >
                     {Object.values(Constants['documentStatuses']).map((s, i) => (
-                        <option key={"documents" + i} value={parseInt(i)} selected={i == parseInt(participantInfo['document_approval'])}>{s}</option>
+                        <option key={"documents" + i} value={parseInt(i)} selected={i == parseInt(participantInfo['documentApproval'])}>{s}</option>
                     ))}
                 </select>
                 <button className={"doc-button" + (participantInfo['docs']['pending'] ? " pending-doc" : "")}
@@ -333,7 +333,7 @@ function ParticipantCard({ participantId, participants }) {
             </div>
 
             {participantInfo['icfs'] && !["Rejected", "Withdrawn", "Completed", "Not Selected", "Duplicate"].includes(Constants['participantStatuses'][participantInfo['status']]) &&
-                participantInfo['document_approval'] == 1 &&
+                participantInfo['documentApproval'] == 1 &&
                 <div className="participant-attribute-container">
                     <span className="field-label">Communication</span>
                     <button className="email-button handoff-button" onClick={() => sendMail("Handoff")}>Send Handoff email</button>
@@ -385,7 +385,7 @@ function ParticipantCard({ participantId, participants }) {
             {Object.keys(timeslots || {}).map(timeslotId => {
                 const session = timeslots[timeslotId];
                 const station = parseInt(timeslotId.substring(14)) > 100 ? 'Backup' : timeslotId.substring(14);
-                if (participantId !== session['participant_id']) return null;
+                if (participantId !== session['participantId']) return null;
                 return (
                     <button
                         key={"session" + timeslotId}

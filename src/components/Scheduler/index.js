@@ -1,13 +1,12 @@
 import { useState, useReducer, useMemo, useEffect } from 'react';
+import { realtimeDb } from '../../firebase/config';
 import { CSVLink } from 'react-csv';
 import { format } from 'date-fns';
+
 import './index.css';
 import Constants from '../Constants';
 import TableFilter from '../CommonFunctions/TableFilter';
 import SchedulerRow from './SchedulerRow';
-import { realtimeDb } from '../../firebase/config';
-import { ref, onValue, off } from 'firebase/database';
-
 
 const filterReducer = (state, event) => {
 
@@ -41,7 +40,9 @@ const filterReducer = (state, event) => {
 function Scheduler({ setUpdateSession, updateSession }) {
     const [days, setDays] = useState([]);
     const [csvData, setCsvData] = useState([[]]);
-    const [database, setDatabase] = useState({});
+    const [participants, setParticipants] = useState({});
+    const [timeslots, setTimeslots] = useState({});
+    const [client, setClient] = useState([]);
     const [filterDatesResetted, setFilterDatesResetted] = useState(false);
     const [filterData, setFilterData] = useReducer(filterReducer, {
         date: [format(new Date(), "yyyy-MM-dd")],
@@ -50,28 +51,16 @@ function Scheduler({ setUpdateSession, updateSession }) {
     });
 
     useEffect(() => {
-        const path = '/';
-        const pptRef = ref(realtimeDb, path);
-        const listener = onValue(pptRef, (res) => {
-            let temp = res.val() || {};
-            let tempTimeslots = temp['timeslots'];
-            let datesList = {}
-            Object.keys(tempTimeslots).map(el => {
-                let date = el.substring(0, 4) + "-" + el.substring(4, 6) + "-" + el.substring(6, 8);
+        const listener = realtimeDb.ref('/timeslots').on('value', timeslots => setTimeslots(timeslots.val() || {}));
+        const listener2 = realtimeDb.ref('/participants').on('value', participants => setParticipants(participants.val() || {}));
+        const listener3 = realtimeDb.ref('/client').on('value', client => setClient(client.val() || {}));
 
-                if (!datesList[date]) {
-                    datesList[date] = 1
-                    temp['timeslots'][el]['slot'] = 1;
-                } else {
-                    temp['timeslots'][el]['slot'] = datesList[date] + 1;
-                    datesList[date]++
-                }
-            })
-            setDatabase(temp);
-        });
-
-        return () => off(pptRef, "value", listener);
-    }, [])
+        return () => {
+            realtimeDb.ref('/timeslots').off('value', listener);
+            realtimeDb.ref('/participants').off('value', listener2);
+            realtimeDb.ref('/client').off('value', listener3);
+        }
+    }, []);
 
     useEffect(() => {
         document.getElementById('navbarTitle').innerText = 'Scheduler';
@@ -85,20 +74,20 @@ function Scheduler({ setUpdateSession, updateSession }) {
     }, [days]);
 
     useMemo(() => {
-        if (Object.keys(database).length === 0) return null;
+        if (Object.keys(timeslots).length === 0) return null;
 
         var temp = [];
-        for (var timeslotId in database['timeslots']) {
+        for (var timeslotId in timeslots) {
             let timeslotDate = timeslotId.substring(0, 4) + "-" + timeslotId.substring(4, 6) + "-" + timeslotId.substring(6, 8);
             if (!temp.includes(timeslotDate)) temp.push(timeslotDate);
         }
 
         setDays(temp);
 
-    }, [JSON.stringify(database['timeslots'])])
+    }, [JSON.stringify(timeslots)]);
 
     function getCSVData() {
-        let output = [['Date', 'Station', 'Session status', 'Participant status', 'Participant ID', 'Name', 'Email', 'Weight (kg)', 'Height (cm)', 'Session comments']];
+        let output = [['Date', 'Session status', 'Participant status', 'Participant ID', 'Apple ID', 'Name', 'Email', 'Comments']];
 
         let table = document.getElementById("schedulerTable");
         for (var r = 1; r < table.rows.length; r++) {
@@ -117,12 +106,12 @@ function Scheduler({ setUpdateSession, updateSession }) {
 
     function filterFunction(timeslotId) {
         const timeslotDate = timeslotId.substring(0, 4) + "-" + timeslotId.substring(4, 6) + "-" + timeslotId.substring(6, 8);
-        const session = database['timeslots'][timeslotId];
+        const session = timeslots[timeslotId];
         let sessionStatus = Constants['sessionStatuses'][session['status']] || "Blank";
         if (session['locked']) sessionStatus = 'Locked';
 
-        const participantId = session['participant_id'];
-        const participant = database['participants'][participantId] || {};
+        const participantId = session['participantId'];
+        const participant = participants[participantId] || {};
         const participantStatus = Constants['participantStatuses'][participant['status']] || 'Blank';
 
         return filterData['participantStatuses'].includes(participantStatus) &&
@@ -130,7 +119,7 @@ function Scheduler({ setUpdateSession, updateSession }) {
             filterData['date'].includes(timeslotDate);
     }
 
-    return (Object.keys(database).length > 0 && Object.keys(filterData).length > 0 &&
+    return (Object.keys(timeslots).length > 0 && Object.keys(participants).length > 0 && Object.keys(filterData).length > 0 &&
         <div id="schedulerContainer">
             <CSVLink
                 id="downloadCsvButton"
@@ -154,7 +143,6 @@ function Scheduler({ setUpdateSession, updateSession }) {
                                     selectedEach={true}
                                 />
                             </th>
-                            <th>Slot</th>
                             <th>
                                 <TableFilter
                                     filterName="Session status"
@@ -176,25 +164,26 @@ function Scheduler({ setUpdateSession, updateSession }) {
                                 />
                             </th>
                             <th>Participant ID</th>
+                            <th>Apple ID</th>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Session comments</th>
+                            <th>Comments</th>
                             <th>Functions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {Object.keys(database).length > 0 && Object.keys(database['timeslots'])
+                        {Object.keys(timeslots).length > 0 && Object.keys(timeslots)
                             .filter(timeslotId => filterFunction(timeslotId))
                             .sort((a, b) => (a.length == 15 ? (a.substring(0, 14) + "0" + a.substring(14)) : a) < (b.length == 15 ? (b.substring(0, 14) + "0" + b.substring(14)) : b) ? -1 : 1)
                             .map((key, index, array) => {
                                 return <SchedulerRow
                                     key={"sch-row-" + key}
-                                    database={database}
+                                    participants={participants}
+                                    timeslots={timeslots}
                                     sessionId={key}
                                     index={index}
                                     array={array}
-                                    setUpdateSession={setUpdateSession}
-                                    updateSession={updateSession}
+                                    client={client}
                                 />
                             })}
                     </tbody>

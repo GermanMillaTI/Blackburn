@@ -1,24 +1,14 @@
-import { useState, useReducer, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { CSVLink } from 'react-csv';
 import { format } from 'date-fns';
 import './index.css';
 import Constants from '../Constants';
-import TableFilter from '../CommonFunctions/TableFilter';
-import SchedulerRow from './SchedulerRow';
 import { realtimeDb } from '../../firebase/config';
 import { ref, onValue, off } from 'firebase/database';
-import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
-import GetAgeRange from '../CommonFunctions/GetAgeRange';
-import GetBMIRange from '../CommonFunctions/GetBMIRange';
 
 function Overview() {
-    const [days, setDays] = useState([]);
     const [csvData, setCsvData] = useState([[]]);
     const [database, setDatabase] = useState({});
-
-    const defaultStats = {
-
-    }
 
     useEffect(() => {
         const path = '/timeslots';
@@ -29,7 +19,7 @@ function Overview() {
 
             let stats = {};
 
-            Object.keys(temp).filter(el => temp[el]['participant_id']).map(el => {
+            Object.keys(temp).filter(el => temp[el]['participantId']).map(el => {
                 if (!stats[el.substring(0, 4) + "-" + el.substring(4, 6) + "-" + el.substring(6, 8)]) {
                     stats[el.substring(0, 4) + "-" + el.substring(4, 6) + "-" + el.substring(6, 8)] = { [Constants['sessionStatuses'][temp[el]['status']]]: 1 }
                 } else if (!stats[el.substring(0, 4) + "-" + el.substring(4, 6) + "-" + el.substring(6, 8)][Constants['sessionStatuses'][temp[el]['status']]]) {
@@ -96,7 +86,7 @@ function Overview() {
                     <tbody>
                         {Object.keys(database).length > 0 && Object.keys(database)
                             .sort((a, b) => (a.length == 15 ? (a.substring(0, 14) + "0" + a.substring(14)) : a) < (b.length == 15 ? (b.substring(0, 14) + "0" + b.substring(14)) : b) ? -1 : 1)
-                            .map((key, index, array) => {
+                            .map((key, index) => {
 
                                 return <tr key={key + 'row' + index}>
                                     <td className='center-tag'>{key}</td>
@@ -104,8 +94,6 @@ function Overview() {
                                     <td className='center-tag'>{database[key]['Checked In'] || ""}</td>
                                     <td className='center-tag'>{database[key]['Completed'] || ""}</td>
                                     <td className='center-tag'>{database[key]['No Show'] || ""}</td>
-
-
                                 </tr>
                             })}
                     </tbody>

@@ -76,25 +76,15 @@ function Stats({ setFilterDataFromStats }) {
     }
 
     useEffect(() => {
-
         const pptRef = ref(realtimeDb, '/participants');
-        const demoRef = ref(realtimeDb, '/demo_bins');
-
-        const listener = onValue(pptRef, (res) => {
-            setDatabase(res.val() || {});
-        });
-
-
-        const demoListener = onValue(demoRef, (res) => {
-            setDemos(res.val() || {});
-        });
-
+        const demoRef = ref(realtimeDb, '/demoBins');
+        const listener = onValue(pptRef, (res) => setDatabase(res.val() || {}));
+        const listener2 = onValue(demoRef, (res) => setDemos(res.val() || {}));
 
         return () => {
-            off(pptRef, "value", listener);
-            off(demoRef, "value", demoListener);
+            realtimeDb.ref('/participants').off('value', listener);
+            realtimeDb.ref('/demoBins').off('value', listener2);
         }
-
     }, []);
 
 

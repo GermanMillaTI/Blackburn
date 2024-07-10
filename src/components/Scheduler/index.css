@@ -12,7 +12,7 @@
 .scheduler-table-container {
     height: 100%;
     width: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .scheduler-table {
@@ -147,7 +147,6 @@
     color: #006BA6;
 }
 
-#schedulerContainer #downloadCsvButton,
 #schedulerContainer #downloadCsvButton {
     padding: .2em;
     text-align: center;
@@ -165,7 +164,6 @@
     color: var(--link-text-1);
 }
 
-#schedulerContainer #downloadCsvButton:hover,
 #schedulerContainer #downloadCsvButton:hover {
     color: var(--link-hover-text-1);
 }

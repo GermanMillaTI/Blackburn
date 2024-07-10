@@ -78,31 +78,15 @@ function SessionStats({ setFilterDataFromStats }) {
     }
 
     useEffect(() => {
-
-        const pptRef = ref(realtimeDb, '/participants');
-        const demoRef = ref(realtimeDb, '/demo_bins');
-        const timeslotsRef = ref(realtimeDb, '/timeslots');
-
-        const listener = onValue(pptRef, (res) => {
-            setDatabase(res.val() || {});
-        });
-
-
-        const demoListener = onValue(demoRef, (res) => {
-            setDemos(res.val() || {});
-        });
-
-        const timeslotsListener = onValue(timeslotsRef, (res) => {
-            setTimeslots(res.val() || {});
-        })
-
+        const listener = onValue(ref(realtimeDb, '/participants'), (res) => setDatabase(res.val() || {}));
+        const listener2 = onValue(ref(realtimeDb, '/demoBins'), (res) => setDemos(res.val() || {}));
+        const listener3 = onValue(ref(realtimeDb, '/timeslots'), (res) => setTimeslots(res.val() || {}));
 
         return () => {
-            off(pptRef, "value", listener);
-            off(demoRef, "value", demoListener);
-            off(timeslotsRef, "value", timeslotsListener);
+            realtimeDb.ref('/participants').off('value', listener);
+            realtimeDb.ref('/demoBins').off('value', listener2);
+            realtimeDb.ref('/timeslots').off('value', listener3);
         }
-
     }, []);
 
 
@@ -111,7 +95,7 @@ function SessionStats({ setFilterDataFromStats }) {
         let tempStats = getDefaultNumbers();
         Object.keys(timeslots).map(sessionId => {
             const session = timeslots[sessionId];
-            const participantId = session['participant_id'];
+            const participantId = session['participantId'];
             if (!participantId) return;
 
             const participant = database[participantId];

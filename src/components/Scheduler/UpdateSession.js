@@ -43,7 +43,7 @@ export default ({ showUpdateSession }) => {
         const listener = onValue(pptRef, (res) => {
             const temp = res.val() || {};
             setSession(temp);
-            const participantId = temp['participant_id'];
+            const participantId = temp['participantId'];
 
             setParticipantId(participantId);
         });
@@ -113,10 +113,9 @@ export default ({ showUpdateSession }) => {
             if (result.isConfirmed) {
                 let path = "/timeslots/" + sessionId;
                 let data = {
-                    participant_id: "",
+                    participantId: "",
                     status: "",
                     confirmed: "",
-                    booked_today: false,
                     remind: false,
                     comments: ""
                 }
@@ -656,7 +655,7 @@ export default ({ showUpdateSession }) => {
 
 
                                 <tr>
-                                    <td className="participant-table-left">Participant comment</td>
+                                    <td className="participant-table-left">Participant comments</td>
                                 </tr>
                                 <tr>
                                     <td className="participant-table-left" colSpan="2">
@@ -838,7 +837,7 @@ export default ({ showUpdateSession }) => {
                                 </tr>
 
                                 <tr>
-                                    <td className="participant-table-left">Session comment</td>
+                                    <td className="participant-table-left">Session comments</td>
                                 </tr>
 
                                 <tr className="participant-table-left">

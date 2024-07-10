@@ -7,48 +7,46 @@ import './BookSession.css';
 import LogEvent from '../CommonFunctions/LogEvent';
 import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
 
-function BookSession({ database, setShowBookSession, selectedSessionId, setJustBookedSession }) {
+function BookSession({ participants, timeslots, setShowBookSession, selectedSessionId, setJustBookedSession }) {
     const [searchBarText, setSearchBarText] = useState("");
 
     const updateValue = (path, value) => {
         realtimeDb.ref(path).update(value);
     }
 
-    function participantFilter(pid) {
-        let searchText = searchBarText.trim();
-        if (!searchBarText) return false;
+    function participantFilter(participantId) {
+        const searchText = (searchBarText || '').toString().toLowerCase().trim();
+        if (!searchBarText) return [];
 
-        let pInfo = database['participants'][pid];
-        let pName = pInfo['firstName'].toLocaleLowerCase();
-        let email = pInfo['email'];
-        let phone = pInfo['phone'].replaceAll('T: ', '').replaceAll(' ', '');
+        const participantInfo = participants[participantId];
+        const participantName = participantInfo['firstName'].toString().toLowerCase().trim();
+        const email = participantInfo['email'].toString().toLowerCase().trim();
+        const phone = participantInfo['phone'].replaceAll('T: ', '').replaceAll(' ', '').toString().toLowerCase().trim();
 
         let output = [];
-        if (pid.includes(searchText)) output.push('Participant ID');
-        if (pName.includes(searchText)) output.push('Name');
+        if (participantId.toString().includes(searchText)) output.push('Participant ID');
+        if (participantName.includes(searchText)) output.push('Name');
         if (email.includes(searchText)) output.push('E-mail');
         if (phone.includes(searchText)) output.push('Phone');
 
         return output;
     }
 
-    function bookSession(pid) {
-        let backupSession = database['timeslots'][selectedSessionId]['backup'] === true;
+    function bookSession(participantId) {
+        const participantInfo = participants[participantId];
 
         Swal.fire({
             title: "Booking an appointment",
             showCancelButton: true,
-            confirmButtonText: backupSession ? 'Yes (backup)' : 'Yes',
-            html: "<b>" + TimeSlotFormat(selectedSessionId) +
-                "<br/>Station: " + selectedSessionId.substring(14) + "<br/>" +
-                database['participants'][pid]['firstName'] + " " + database['participants'][pid]['lastName'] + "</b>" +
-                (backupSession ? "<br/><br/><b><u>!!! BACKUP SESSION !!!</u></b><br/>" : ""),
+            confirmButtonText: 'Yes',
+            html: "<b>" + TimeSlotFormat(selectedSessionId) + "<br/>" +
+                participantInfo['firstName'] + " " + participantInfo['lastName'] + "</b>"
 
         }).then((result) => {
             if (result.isConfirmed) {
                 let data = {
                     status: 0,
-                    participant_id: pid,
+                    participantId: participantId,
                     confirmed: "no",
                     remind: true
                 }
@@ -63,14 +61,14 @@ function BookSession({ database, setShowBookSession, selectedSessionId, setJustB
 
                 LogEvent({
                     value: `Booked session`,
-                    participantId: pid,
+                    participantId: participantId,
                     action: 8
                 })
 
-                updateValue(`/participants/${pid}`, { status: 2 })
+                updateValue('/participants/' + participantId, { status: 2 })
 
                 LogEvent({
-                    participantId: pid,
+                    participantId: participantId,
                     value: "Participant status: '" + "Scheduled" + "'",
                     action: 0
                 })
@@ -85,14 +83,13 @@ function BookSession({ database, setShowBookSession, selectedSessionId, setJustB
     }, []);
 
     return ReactDOM.createPortal((
-        <div className="modal-book-session-backdrop" onClick={(e) => { if (e.target.className == "modal-book-session-backdrop") setShowBookSession(false) }}>
+        <div className="modal-book-session-backdrop" onClick={(e) => { if (e.target.className === "modal-book-session-backdrop") setShowBookSession(false) }}>
             <div className="modal-book-session-main-container">
                 <div className="modal-book-session-header">
-                    Schedule session
+                    Booking an appointment
                 </div>
                 <div
                     className="modal-book-session-sub-header">
-                    Station {selectedSessionId.substring(14)}:&nbsp;
                     {TimeSlotFormat(selectedSessionId)}
                 </div>
                 <input
@@ -118,44 +115,40 @@ function BookSession({ database, setShowBookSession, selectedSessionId, setJustB
                         </thead>
                         <tbody>
 
-                            {Object.keys(database['participants'])
-                                .sort((a, b) => {
-                                    return a < b ? -1 : 1;
-                                })
-                                .map(key => {
-                                    const participantStatus = database['participants'][key]['status'];
+                            {Object.keys(participants).sort((a, b) => a < b ? -1 : 1).map(participantId => {
+                                const filterResult = participantFilter(participantId);
+                                //if (filterResult.length === 0) return null;
 
-                                    const filterResult = participantFilter(key);
-                                    if (filterResult.length > 0) return (
-                                        <tr onClick={() => bookSession(key)}>
-                                            <td className={(filterResult.includes('Participant ID') ? "filter-highlighted-cell" : "") + " center-tag"}>
-                                                {key}
-                                            </td>
-                                            <td className={filterResult.includes('Name') ? "filter-highlighted-cell" : ""}>
-                                                {database['participants'][key]['full_name']}
-                                            </td>
-                                            <td className={filterResult.includes('E-mail') ? "filter-highlighted-cell" : ""}>
-                                                {database['participants'][key]['email']}
-                                            </td>
-                                            <td className={(filterResult.includes('Phone') ? "filter-highlighted-cell" : "") + " center-tag"}>
-                                                {database['participants'][key]['phone'].replace("T: ", "")}
-                                            </td>
-                                            <td className="center-tag">
-                                                {Constants['genders'][database['participants'][key]['gender']]}
-                                            </td>
-                                            <td className={(filterResult.includes('Year of birth') ? "filter-highlighted-cell" : "") + " center-tag"}>
-                                                {database['participants'][key]['dob'].substring(0, 4)}
-                                            </td>
-                                            <td className="center-tag">
-                                                {Constants['participantStatuses'][database['participants'][key]['status'] || 0]}
-                                            </td>
-                                            <td>
-                                                {database['participants'][key]['comment']}
-                                            </td>
-                                        </tr>
-                                    )
-                                }
-                                )}
+                                const participantInfo = participants[participantId];
+
+                                return <tr key={'book-session-row' + participantId} onClick={() => bookSession(participantId)}>
+                                    <td className={(filterResult.includes('Participant ID') ? "filter-highlighted-cell" : "") + " center-tag"}>
+                                        {participantId}
+                                    </td>
+                                    <td className={filterResult.includes('Name') ? "filter-highlighted-cell" : ""}>
+                                        {participantInfo['firstName'] + ' ' + participantInfo['lastName']}
+                                    </td>
+                                    <td className={filterResult.includes('E-mail') ? "filter-highlighted-cell" : ""}>
+                                        {participantInfo['email']}
+                                    </td>
+                                    <td className={(filterResult.includes('Phone') ? "filter-highlighted-cell" : "") + " center-tag"}>
+                                        {participantInfo['phone'].replace("T: ", "")}
+                                    </td>
+                                    <td className="center-tag">
+                                        {Constants['genders'][participantInfo['gender']]}
+                                    </td>
+                                    <td className={(filterResult.includes('Year of birth') ? "filter-highlighted-cell" : "") + " center-tag"}>
+                                        {participantInfo['dob'].substring(0, 4)}
+                                    </td>
+                                    <td className="center-tag">
+                                        {Constants['participantStatuses'][participantInfo['status'] || 0]}
+                                    </td>
+                                    <td>
+                                        {participantInfo['comment']}
+                                    </td>
+                                </tr>
+                            }
+                            )}
                         </tbody>
                     </table>
                 </div>

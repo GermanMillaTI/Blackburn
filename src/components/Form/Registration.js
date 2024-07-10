@@ -126,7 +126,7 @@ function Registration() {
                     });
 
                     if (content.length === options.files.length) {
-                        // Return a file for preview as a { file, content } object 
+                        // Return a file for preview as a { file, content } object
                         const promises = content.map(fileContent => {
                             return new Promise((resolve, reject) => {
                                 const byteChars = atob(fileContent.content.split(',')[1]);
@@ -215,8 +215,19 @@ function Registration() {
         }
 
         const completeFunction = async (sender, options) => {
-            options.allow = false;
+            const capitalize = (text) => {
+                let cw;
+                try {
+                    cw = text.split(" ").map((word) => {
+                        return (word == "") ? "" : word[0].toUpperCase() + word.substring(1).toLowerCase();
+                    }).join(" ");
+                } catch (e) {
+                    cw = text;
+                }
+                return cw.toString().trim();
+            };
 
+            options.allow = false;
 
             await uploadSignature(sender.data['sdcSignature'], pptId, "sdc");
             await uploadSignature(sender.data['signature'], pptId, "sla");
@@ -224,18 +235,23 @@ function Registration() {
             let senderObj = {};
 
             Object.keys(sender.data).forEach(element => {
-
                 if (!Constants.tobeExcluded.includes(element)) {
-
                     senderObj[element] = sender.data[element];
                 }
-
             })
 
-            //deleting no's 
+            //deleting no's
             if (senderObj['interestedInRecruiting'] === "No") delete senderObj['interestedInRecruiting'];
             //if (senderObj['tattoos'][0] === 'none') delete senderObj['tattoos'];
             //if (senderObj['piercings'][0] === 'none') delete senderObj['piercings'];
+
+
+            senderObj['firstName'] = capitalize(senderObj['firstName']);
+            senderObj['lastName'] = capitalize(senderObj['lastName']);
+            senderObj['residenceCity'] = capitalize(senderObj['residenceCity']);
+            if (senderObj['guardianFirstName']) senderObj['guardianFirstName'] = capitalize(senderObj['guardianFirstName']);
+            if (senderObj['guardianLastName']) senderObj['guardianLastName'] = capitalize(senderObj['guardianLastName']);
+            senderObj['email'] = senderObj['email'].toString().toLowerCase().trim();
 
             //Reassignment of Object properties based on Constants
             senderObj['registeredAs'] = parseInt(Constants.getKeyByValue(Constants['registeredAs'], sender.data['registeredAs']));
@@ -297,7 +313,7 @@ function Registration() {
             //rejection validations
             if (Validator.rejectionValidator(senderObj)) {
                 senderObj['status'] = 5;
-                senderObj['comment'] = `${senderObj['date']} SYSTEM: automatically rejected by validator`
+                senderObj['comment'] = senderObj['date'] + 'SYSTEM: automatically rejected by validator';
             }
             //re-enabling the form completion for redirection
             options.allow = true;
@@ -306,7 +322,7 @@ function Registration() {
             })
 
             //db record
-            const firebasePath = `/participants/${pptId}/`;
+            const firebasePath = '/participants/' + pptId;
             updateValue(firebasePath, senderObj);
 
             //displays thank you page
@@ -321,24 +337,21 @@ function Registration() {
             survey.onCompleting.remove(completeFunction);
             survey.onUploadFiles.remove(uploadFunction);
             survey.onClearFiles.remove(clearFileFunction);
-
         }
 
     }, [survey.onCompleting, survey.onUploadFiles, survey.onClearFiles]);
 
-    return (
-        <div className='form-container'>
-            <div id='loading'></div>
-            {showtymsg && <div id="ThankyouPage">
-                <img className="telus-logo" src={telus} style={{ width: "300px", maxWidth: "100%" }} alt="TELUS Logo" />
+    return <div id='registrationForm'>
+        <div id='loading'></div>
+        {showtymsg && <div id="ThankyouPage">
+            <img className="telus-logo" src={telus} style={{ width: "300px", maxWidth: "100%" }} alt="TELUS Logo" />
 
-                <h4>Thank you for your registration.</h4><br />
-                <p>We will review your registration and contact you with any further steps.</p>
-            </div>}
-            <img className="telus-logo" src={telus} style={{ width: "300px", maxWidth: "100%" }} alt="" />
-            <Survey model={survey}></Survey>
-        </div>
-    );
+            <h4>Thank you for your registration.</h4><br />
+            <p>We will review your registration and contact you with any further steps.</p>
+        </div>}
+        <img className="telus-logo" src={telus} style={{ width: "300px", maxWidth: "100%" }} alt="" />
+        <Survey model={survey}></Survey>
+    </div>
 }
 
 export default Registration;

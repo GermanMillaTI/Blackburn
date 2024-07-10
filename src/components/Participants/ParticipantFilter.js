@@ -173,7 +173,7 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
             sessionDateFrom = new Date(sessionDateFrom);
             let sessionFromList = Object.keys(sessions).find(session => {
                 let tempDate = new Date(session.substring(0, 4) + "-" + session.substring(4, 6) + "-" + session.substring(6, 8))
-                return tempDate >= sessionDateFrom && sessions[session]['participant_id'] == participantId
+                return tempDate >= sessionDateFrom && sessions[session]['participantId'] == participantId
             })
             if (typeof sessionFromList == "undefined") return false
         }
@@ -183,7 +183,7 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
             let sessionToList = Object.keys(sessions).find(session => {
                 let tempDate = new Date(session.substring(0, 4) + "-" + session.substring(4, 6) + "-" + session.substring(6, 8))
 
-                return tempDate <= sessionDateTo && sessions[session]['participant_id'] == participantId
+                return tempDate <= sessionDateTo && sessions[session]['participantId'] == participantId
             })
             if (typeof sessionToList == "undefined") return false
         }

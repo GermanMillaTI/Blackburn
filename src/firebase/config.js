@@ -1,8 +1,10 @@
 import firebase from 'firebase/compat/app';
-import 'firebase/compat/database';
-import 'firebase/compat/auth';
-import { getAuth } from "firebase/auth";
-//import { getStorage, ref, uploadString, getDownloadURL, getBlob, deleteObject, getMetadata } from "firebase/storage";
+import 'firebase/compat/database'
+import 'firebase/compat/auth'
+import { getAuth } from "firebase/auth"
+import { getStorage } from 'firebase/storage';
+import { getDatabase, ref, update, onValue, get, remove } from 'firebase/database';
+
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -14,10 +16,23 @@ const firebaseConfig = {
     appId: process.env.REACT_APP_FBAPPID
 };
 
+// Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 
 // Init services
-const auth = firebase.auth();
+const auth = getAuth(app);
 const realtimeDb = firebase.database();
+const storage = getStorage(app);
 
-export { auth, realtimeDb, getAuth }
+const updateValue = (path, value) => {
+    update(ref(realtimeDb, path), value);
+}
+
+const deleteValue = async (path) => {
+    await remove(ref(realtimeDb, path))
+}
+
+
+
+
+export { auth, realtimeDb, getAuth, storage, updateValue, onValue, ref, get, deleteValue };

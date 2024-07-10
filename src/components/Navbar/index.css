@@ -19,6 +19,8 @@
     font-weight: bold;
     color: var(--link-text-1);
     line-height: 1.2;
+    cursor: default;
+    user-select: none;
 }
 
 #navbar a {

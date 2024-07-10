@@ -34,7 +34,7 @@ function Bins({ }) {
     }
 
     useEffect(() => {
-        const demoRef = ref(realtimeDb, '/demo_bins');
+        const demoRef = ref(realtimeDb, '/demoBins');
         const demoListener = onValue(demoRef, (res) => {
             setDemos(res.val() || {});
         });
@@ -82,7 +82,7 @@ function Bins({ }) {
                                             //let eth2 = Constants['ethnicityGroups'][columnName].map(el => Constants['ethnicities'][el]);
 
                                             let currentValue = demos[gender][eth][ageRange]
-                                            return <td className={"stats-demo-bin-cell demo-bin-" + currentValue.toString()} onClick={() => updateValue("/demo_bins/" + gender + "/" + eth, { [ageRange]: (currentValue === 2 ? 0 : currentValue + 1) })}>
+                                            return <td className={"stats-demo-bin-cell demo-bin-" + currentValue.toString()} onClick={() => updateValue("/demoBins/" + gender + "/" + eth, { [ageRange]: (currentValue === 2 ? 0 : currentValue + 1) })}>
                                                 <span className="demo-status" >{Constants['demoBinStatusDictionary'][currentValue]}</span>
                                             </td>
                                         })}

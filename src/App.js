@@ -1,6 +1,6 @@
 
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
-// import Registration from './components/Form/Registration';
+import Registration from './components/Form/Registration';
 import LoginPage from './components/LoginPage';
 import React, { useEffect, useState } from 'react';
 import { realtimeDb, auth } from './firebase/config';
@@ -12,7 +12,7 @@ import Participants from './components/Participants';
 // import FilesView from './components/FilesView';
 import Stats from './components/Stats';
 import Bins from './components/Stats/Bins';
-// import ICF from './components/Form/ICF';
+import ICF from './components/Form/ICF';
 import Scheduler from './components/Scheduler';
 import UpdateSession from './components/Scheduler/UpdateSession';
 import CheckDocuments from './components/CheckDocuments';
@@ -65,8 +65,8 @@ function App() {
         return <Scheduler updateSession={updateSession} setUpdateSession={setUpdateSession} />
       case "/login":
         return <LoginPage setUserId={setUserId} />;
-      // case "/registration":
-      //   return <Registration />;
+      case "/registration":
+        return <Registration />;
       case "/participants":
         return <Participants
           filterDataFromStats={filterDataFromStats}
@@ -79,8 +79,8 @@ function App() {
         />;
       // case "/files":
       //   return <FilesView />;
-      // case "/scheduler-external":
-      //   return <SchedulerExternal />;
+      case "/scheduler-external":
+        return <SchedulerExternal />;
       case "/overview":
         return <Overview />
       default:
@@ -97,7 +97,7 @@ function App() {
       <Route path="/registration" element={getElement('/registration')} />
       <Route path='/scheduler' element={(userId && Object.keys(userInfo || {}).length > 0) && userInfo['role'] === 'admin' ? getElement("/scheduler") : getElement("/login")} />
       <Route path='/scheduler-external' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/scheduler-external") : getElement("/login")} />
-      {/*  <Route path="/icf/:participantId" element={<ICF />} />*/}
+      <Route path="/icf/:participantId" element={<ICF />} />
       <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
       <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
       <Route path='/overview' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/overview") : getElement("/login")} />

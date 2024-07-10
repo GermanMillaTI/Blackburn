@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { setShowBookSession2 } from '../../Redux/Features';
 import { realtimeDb } from '../../firebase/config';
+import { ref, onValue, off } from 'firebase/database';
 import Swal from 'sweetalert2';
-import './BookSession2.css';
 
+
+import './BookSession2.css';
 import Constants from '../Constants';
 import LogEvent from '../CommonFunctions/LogEvent';
 import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
 import FormatTime from '../CommonFunctions/FormatTime';
-import { useSelector, useDispatch } from 'react-redux';
-import { setShowBookSession2 } from '../../Redux/Features';
-import { ref, onValue, off } from 'firebase/database';
-
 
 function BookSession2({ showBookSession2 }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const dispatch = useDispatch();
-    const userId = userInfo['userId'];
     const [days, setDays] = useState([]);
     const [timeslots, setTimeslots] = useState({});
     const [calculatedTimeslots, setCalculatedTimeslots] = useState([]);
@@ -35,14 +34,9 @@ function BookSession2({ showBookSession2 }) {
         const listener = onValue(pptRef, (res) => {
             const temp = res.val() || {};
             setTimeslots(temp);
-
         });
 
-        return () => {
-            off(pptRef, "value", listener);
-
-        }
-
+        return () => off(pptRef, "value", listener);
     }, []);
 
     useEffect(() => {
@@ -78,7 +72,7 @@ function BookSession2({ showBookSession2 }) {
             if (result.isConfirmed) {
                 let data = {
                     status: 0,
-                    participant_id: participantId,
+                    participantId: participantId,
                     confirmed: "no",
                     remind: true
                 }
@@ -95,7 +89,7 @@ function BookSession2({ showBookSession2 }) {
                     action: 8
                 })
 
-                updateValue(`/participants/${participantId}`, { status: 2 })
+                updateValue('/participants/' + participantId, { status: 2 })
 
                 LogEvent({
                     participantId: participantId,
@@ -135,7 +129,7 @@ function BookSession2({ showBookSession2 }) {
         <div className="modal-book-session2-backdrop" onClick={(e) => { if (e.target.className == "modal-book-session2-backdrop") dispatch(setShowBookSession2("")) }}>
             <div className="modal-book-session2-main-container">
                 <div className="modal-book-session2-header">
-                    Schedule session
+                    Booking a session
                 </div>
                 <div
                     className="modal-book-session2-sub-header">
@@ -145,48 +139,42 @@ function BookSession2({ showBookSession2 }) {
                     <table className="session2-table">
                         <thead>
                             <tr>
-                                <th className="session2-table-header-cell">
-
-                                </th>
+                                <th className="session2-table-header-cell"></th>
                                 {days.map(day => {
-                                    return (
-                                        <th key={"scheduler-table-item-" + day} className="session2-table-header-cell">
-                                            {day}
-                                        </th>
-                                    )
+                                    return <th key={"scheduler-table-item-" + day} className="session2-table-header-cell">
+                                        {day}
+                                    </th>
                                 })}
                             </tr>
                         </thead>
                         <tbody>
 
                             {calculatedTimeslots.map(timeslot => {
-                                return (
-                                    <tr key={"scheduler-table-item-" + timeslot}>
-                                        <th className="session2-table-header-cell">
-                                            {FormatTime(timeslot)}
-                                        </th>
-                                        {days.map(day => {
-                                            let sessionId = day.replaceAll('-', '') + '_' + timeslot.replaceAll(':', '') + '_';
-                                            let sessionIdWithLab = "";
-                                            let bookedSessions = Object.keys(timeslots).filter(key => key.startsWith(sessionId) && timeslots[key]['participant_id']).length;
-                                            let totalOfSessions = Object.keys(timeslots).filter(key => key.startsWith(sessionId) && !timeslots[key]['locked']).length;
-                                            let nextFreeLab = "";
-                                            let free = bookedSessions < totalOfSessions;
-                                            if (free) {
-                                                nextFreeLab = Object.keys(timeslots).filter(key => key.startsWith(sessionId) && !timeslots[key]['participant_id']).sort((a, b) => a < b ? 1 : -1).sort((a, b) => timeslots[a]['backup'] ? 1 : -1)[0].substring(14);
-                                                sessionIdWithLab = day.replaceAll('-', '') + '_' + timeslot.replaceAll(':', '') + '_' + nextFreeLab;
-                                            }
-                                            return (
-                                                <td
-                                                    className={"session2-table-cell " + (free ? "free-sessions" : "booked-sessions")}
-                                                    onClick={() => { if (free) bookSession(sessionIdWithLab) }}
-                                                >
-                                                    {bookedSessions + " / " + totalOfSessions}
-                                                </td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
+                                return <tr key={"scheduler-table-item-" + timeslot}>
+                                    <th className="session2-table-header-cell">
+                                        {FormatTime(timeslot)}
+                                    </th>
+                                    {days.map(day => {
+                                        let sessionId = day.replaceAll('-', '') + '_' + timeslot.replaceAll(':', '') + '_';
+                                        let sessionIdWithLab = "";
+                                        let bookedSessions = Object.keys(timeslots).filter(key => key.startsWith(sessionId) && timeslots[key]['participantId']).length;
+                                        let totalOfSessions = Object.keys(timeslots).filter(key => key.startsWith(sessionId) && !timeslots[key]['locked']).length;
+                                        let nextFreeLab = "";
+                                        let free = bookedSessions < totalOfSessions;
+                                        if (free) {
+                                            nextFreeLab = Object.keys(timeslots).filter(key => key.startsWith(sessionId) && !timeslots[key]['participantId']).sort((a, b) => a < b ? 1 : -1).sort((a, b) => timeslots[a]['backup'] ? 1 : -1)[0].substring(14);
+                                            sessionIdWithLab = day.replaceAll('-', '') + '_' + timeslot.replaceAll(':', '') + '_' + nextFreeLab;
+                                        }
+                                        return (
+                                            <td
+                                                className={"session2-table-cell " + (free ? "free-sessions" : "booked-sessions")}
+                                                onClick={() => { if (free) bookSession(sessionIdWithLab) }}
+                                            >
+                                                {bookedSessions + " / " + totalOfSessions}
+                                            </td>
+                                        )
+                                    })}
+                                </tr>
                             })}
                         </tbody>
                     </table>

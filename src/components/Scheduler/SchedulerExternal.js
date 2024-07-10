@@ -1,16 +1,13 @@
 import { useState, useReducer, useMemo, useEffect } from 'react';
 import { CSVLink } from 'react-csv';
 import { format } from 'date-fns';
+import { realtimeDb } from '../../firebase/config';
+
 import './index.css';
 import Constants from '../Constants';
-import TableFilter from '../CommonFunctions/TableFilter';
-import SchedulerRow from './SchedulerRow';
-import { realtimeDb } from '../../firebase/config';
-import { ref, onValue, off } from 'firebase/database';
 import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import GetBMIRange from '../CommonFunctions/GetBMIRange';
-
 
 const filterReducer = (state, event) => {
 
@@ -38,14 +35,11 @@ const filterReducer = (state, event) => {
     return newState;
 }
 
-
-
-
-
 function SchedulerExternal({ setUpdateSession, updateSession }) {
     const [days, setDays] = useState([]);
     const [csvData, setCsvData] = useState([[]]);
-    const [database, setDatabase] = useState({});
+    const [participants, setParticipants] = useState({});
+    const [timeslots, setTimeslots] = useState({});
     const [highlightedTimeslots, setHighlightedTimeslots] = useState([]);
     const [filterData, setFilterData] = useReducer(filterReducer, {
         date: [format(new Date(), "yyyy-MM-dd")],
@@ -53,55 +47,31 @@ function SchedulerExternal({ setUpdateSession, updateSession }) {
         participantStatuses: ['Blank', ...Object.values(Constants['participantStatuses'])]
     });
 
-
     useEffect(() => {
-
-        const path = '/';
-        const pptRef = ref(realtimeDb, path);
-
-        const listener = onValue(pptRef, (res) => {
-
-            setDatabase(res.val() || {});
-        });
-
+        const listener = realtimeDb.ref('/timeslots').on('value', timeslots => setTimeslots(timeslots.val() || {}));
+        const listener2 = realtimeDb.ref('/participants').on('value', participants => setParticipants(participants.val() || {}));
 
         return () => {
-            off(pptRef, "value", listener);
-
+            realtimeDb.ref('/timeslots').off('value', listener);
+            realtimeDb.ref('/participants').off('value', listener2);
         }
-
-    }, [])
-
+    }, []);
     useEffect(() => {
-        if (Object.keys(database).length === 0) return;
-        document.getElementById('navbarTitle').innerText = `Total of booked sessions: ${Object.keys(database['timeslots']).filter(el => database['timeslots'][el]['participant_id']).length}`;
-    }, [database]);
-
+        document.getElementById('navbarTitle').innerText = 'Scheduler';
+    }, []);
 
     useMemo(() => {
+        if (Object.keys(timeslots).length === 0) return null;
+
         var temp = [];
-        var glassesTimeSlots = {};
-
-        if (Object.keys(database).length === 0) return null
-
-        for (var timeslotId in database['timeslots']) {
+        for (var timeslotId in timeslots) {
             let timeslotDate = timeslotId.substring(0, 4) + "-" + timeslotId.substring(4, 6) + "-" + timeslotId.substring(6, 8);
             if (!temp.includes(timeslotDate)) temp.push(timeslotDate);
-
-            let timeslot = database['timeslots'][timeslotId];
-            let timeslotTime = timeslotId.substring(0, 13);
-            //let timeslotNr = parseInt(timeslotId.substring(0, 8));
-            if (!glassesTimeSlots[timeslotTime]) glassesTimeSlots[timeslotTime] = 0;
-            if (timeslot['participant_id'] && timeslot['glasses'] == true) { // && timeslotNr >= todayNr - 1) {
-                glassesTimeSlots[timeslotTime]++;
-            }
         }
-        setHighlightedTimeslots(glassesTimeSlots);
+
         setDays(temp);
 
-
-
-    }, [database])
+    }, [JSON.stringify(timeslots)]);
 
     function getCSVData() {
         let headers = document.querySelectorAll('#tableHeaders tr th');
@@ -125,10 +95,10 @@ function SchedulerExternal({ setUpdateSession, updateSession }) {
         return output;
     }
 
-    return (Object.keys(database).length > 0 && Object.keys(filterData).length > 0 &&
+    return (Object.keys(timeslots).length > 0 && Object.keys(filterData).length > 0 &&
         <div id="schedulerContainer">
             <CSVLink
-                className="download-csv-button"
+                id="downloadCsvButton"
                 target="_blank"
                 asyncOnClick={true}
                 onClick={() => getCSVData()}
@@ -139,12 +109,8 @@ function SchedulerExternal({ setUpdateSession, updateSession }) {
                 <table id="schedulerTable" className="scheduler-table">
                     <thead id='tableHeaders'>
                         <tr>
-                            <th>
-                                Date
-                            </th>
-                            <th>
-                                Status
-                            </th>
+                            <th>Date</th>
+                            <th>Status</th>
                             <th>TELUS ID</th>
                             <th>First Name</th>
                             <th>Last Initial</th>
@@ -163,37 +129,36 @@ function SchedulerExternal({ setUpdateSession, updateSession }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {Object.keys(database).length > 0 && Object.keys(database['timeslots'])
-                            .sort((a, b) => (a.length == 15 ? (a.substring(0, 14) + "0" + a.substring(14)) : a) < (b.length == 15 ? (b.substring(0, 14) + "0" + b.substring(14)) : b) ? -1 : 1)
-                            .map((key, index, array) => {
+                        {Object.keys(timeslots).map(timeslotId => {
+                            const participantInfo = participants[timeslots[timeslotId]['participantId']];
+                            if (!participantInfo) return null;
 
-                                let pInfo = database['participants'][database['timeslots'][key]['participant_id']]
-                                return <tr>
-                                    <td className='center-tag'>{TimeSlotFormat(key)}</td>
-                                    <td className='center-tag'>{Constants['sessionStatuses'][database['timeslots'][key]['status']]}</td>
-                                    <td className='center-tag'>{database['timeslots'][key]['participant_id']}</td>
-                                    <td className='center-tag'>{pInfo ? pInfo['firstName'] : ""}</td>
-                                    <td className='center-tag'>{pInfo ? pInfo['lastName'][0] + "." : ""}</td>
-                                    <td className='center-tag'>{pInfo ? Constants['genders'][pInfo['gender']] : ""}</td>
-                                    <td className='center-tag'>{pInfo ? GetAgeRange(pInfo)['age'] : ""}</td>
-                                    <td className='center-tag'>{pInfo ? GetBMIRange(pInfo)['bmi'] : ""}</td>
-                                    <td className='center-tag'>{pInfo ? pInfo['ethnicities'].split(";").map(eth => {
-                                        return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
-                                    }).join(", ") : ""}</td>
-                                    <td className='center-tag'>{pInfo ? pInfo['skintone'] : ""}</td>
-                                    <td className='center-tag'>{pInfo ? Constants['hairColor'][pInfo['hairColor']] : ""}</td>
-                                    <td className='center-tag'>{pInfo ? Constants['hairLength'][pInfo['hairLength']] : ""}</td>
-                                    <td className='center-tag'>{pInfo ? Constants['hairType'][pInfo['hairType']] : ""}</td>
-                                    <td className='center-tag'>{pInfo ? Constants['facialHair'][pInfo['facialHair']] : ""}</td>
-                                    <td className='center-tag'>{Constants['makeup'][database['timeslots'][key]['makeup']]}</td>
-                                    <td className='center-tag'>{pInfo ?
-                                        pInfo['tattoos'] === "4" ? "No" : "Yes"
-                                        : ""}</td>
-                                    <td className='center-tag'>{pInfo ?
-                                        pInfo['piercings    '] === "4" ? "No" : "Yes"
-                                        : ""}</td>
-                                </tr>
-                            })}
+                            return <tr key={'timeslot-row-id-' + timeslotId}>
+                                <td className='center-tag'>{TimeSlotFormat(timeslotId)}</td>
+                                <td className='center-tag'>{Constants['sessionStatuses'][timeslots[timeslotId]['status']]}</td>
+                                <td className='center-tag'>{timeslots[timeslotId]['participantId']}</td>
+                                <td className='center-tag'>{participantInfo ? participantInfo['firstName'] : ""}</td>
+                                <td className='center-tag'>{participantInfo ? participantInfo['lastName'][0] + "." : ""}</td>
+                                <td className='center-tag'>{participantInfo ? Constants['genders'][participantInfo['gender']] : ""}</td>
+                                <td className='center-tag'>{participantInfo ? GetAgeRange(participantInfo)['age'] : ""}</td>
+                                <td className='center-tag'>{participantInfo ? GetBMIRange(participantInfo)['bmi'] : ""}</td>
+                                <td className='center-tag'>{participantInfo ? participantInfo['ethnicities'].split(";").map(eth => {
+                                    return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
+                                }).join(", ") : ""}</td>
+                                <td className='center-tag'>{participantInfo ? participantInfo['skintone'] : ""}</td>
+                                <td className='center-tag'>{participantInfo ? Constants['hairColor'][participantInfo['hairColor']] : ""}</td>
+                                <td className='center-tag'>{participantInfo ? Constants['hairLength'][participantInfo['hairLength']] : ""}</td>
+                                <td className='center-tag'>{participantInfo ? Constants['hairType'][participantInfo['hairType']] : ""}</td>
+                                <td className='center-tag'>{participantInfo ? Constants['facialHair'][participantInfo['facialHair']] : ""}</td>
+                                <td className='center-tag'>{Constants['makeup'][timeslots[timeslotId]['makeup']]}</td>
+                                <td className='center-tag'>{participantInfo ?
+                                    participantInfo['tattoos'] === "4" ? "No" : "Yes"
+                                    : ""}</td>
+                                <td className='center-tag'>{participantInfo ?
+                                    participantInfo['piercings    '] === "4" ? "No" : "Yes"
+                                    : ""}</td>
+                            </tr>
+                        })}
                     </tbody>
                 </table>
             </div>

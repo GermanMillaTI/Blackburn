@@ -211,13 +211,15 @@ const Constants = {
         4: 'Red',
         5: 'White',
         6: 'Colorful'
-    }, piercings: {
+    },
+    piercings: {
         0: 'Face, neck or head',
         1: 'Arms',
         2: 'Upper body or torso',
         3: 'Legs',
         4: 'none'
-    }, tattoos: {
+    },
+    tattoos: {
         0: 'Face, neck or head',
         1: 'Arms',
         2: 'Upper body or torso',
@@ -225,7 +227,6 @@ const Constants = {
         4: 'none'
     },
     usStates: {
-        // Do no modify these in any case !!
         0: '',
         1: 'Alabama',
         2: 'Alaska',
@@ -279,7 +280,6 @@ const Constants = {
         50: 'Wisconsin',
         51: 'Wyoming'
     },
-
     noAvailabilityReasons: {
         0: 'I am generally not interested in going to an onsite study.',
         1: "I am hesitant to join a study when I don't know what it is about but I would like to have more information.",
@@ -292,7 +292,6 @@ const Constants = {
         8: 'The compensation is not enough for me to go to Los Angeles. I would go if the place would be nearer.',
         9: 'The place is too far for me.'
     },
-
     otherCompanies: {
         0: 'Alphabet',
         1: 'Amazon',
@@ -340,7 +339,6 @@ const Constants = {
         22: 'Pharmaceutics',
         23: 'I am currently not working',
     },
-
     sources: {
         0: 'Respondent',
         1: 'TELUS International Website',
@@ -387,7 +385,6 @@ const Constants = {
         12: "Bonus removal",
         13: "Update parameter"
     },
-
     emailTypes: {
         // Do no modify these in any case !!
         0: "ICF Request",
@@ -395,7 +392,6 @@ const Constants = {
         2: "Schedule Request",
         3: "Confirmation"
     },
-
     participantStatuses: {
         // Do no modify these in any case !!
         0: "",
@@ -406,6 +402,34 @@ const Constants = {
         5: "Rejected",
         6: "Duplicate",
         7: "Withdrawn"
+    },
+    sessionStatuses: {
+        0: "Scheduled",
+        1: "Checked In",
+        2: "Completed",
+        3: "Rescheduled",
+        4: "NoShow",
+        5: "Withdrawn",
+        6: "Failed - Comp.",
+        7: "Failed - No Comp."
+    },
+    // sessionStatuses2: {
+    //     // In order to compare them to the client's statues
+    //     0: 0,
+    //     1: 1,
+    //     2: 2,
+    //     3: 0,
+    //     4: 0,
+    //     5: 3,
+    //     6: 4,
+    //     7: 4
+    // },
+    clientSessionStatuses: {
+        0: "New",
+        1: "Checked in",
+        2: "Completed",
+        3: "Archived",
+        4: "Failed"
     },
     ageRanges: [
         "<13",
@@ -445,30 +469,16 @@ const Constants = {
         "7-8",
         "9-10"
     ],
-
     icfNames: {
         "icfExternal": "HRTF Modeling Scan",
         "icfFaceHands": "Head, Face and Hands",
         "icfFullBody": "Full Body Light Stage"
     },
-
-    sessionStatuses: {
-        0: "Scheduled",
-        1: "Checked In",
-        2: "Completed",
-        3: "Rescheduled",
-        4: "NoShow",
-        5: "Withdrawn",
-        6: "Failed - Comp.",
-        7: "Failed - No Comp."
-    },
-
     bonuses: {
         b1: "Bonus",
         b2: "Bonus",
         b3: "Bonus",
     },
-
     bonusList: [
         "0",
         "25",
@@ -480,14 +490,10 @@ const Constants = {
         1: "Makeup",
         2: "No Makeup"
     },
-    sessionNumbers: [
-        1, 2
-    ],
-
+    sessionNumbers: [1, 2],
     getKeyByValue: function (obj, value) {
         return Object.keys(obj).find(key => obj[key] === value);
     }
-
 }
 
 export default Constants;
