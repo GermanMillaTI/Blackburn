@@ -49,6 +49,13 @@ function ParticipantCard({ participantId, participants }) {
 
     const sendMail = async (emailType) => {
 
+        if (emailType === 'Handoff') {
+            Swal.fire({
+                title: "This function is disabled now temporarily..."
+            })
+            return;
+        }
+
         const swalAnswer = await Swal.fire({
             title: "Are you sure?",
             showCancelButton: true,
@@ -339,6 +346,11 @@ function ParticipantCard({ participantId, participants }) {
                     <button className="email-button handoff-button" onClick={() => sendMail("Handoff")}>Send Handoff email</button>
                     <a className="copy-booking-link fas fa-copy" onClick={(e) => {
                         e.preventDefault();
+
+                        Swal.fire({
+                            title: "This function is disabled now temporarily..."
+                        })
+                        return;
 
                         let url = "https://blackburn-appointments.web.app/#" + md5('p_' + participantId) + "&" + participantId
                         navigator.clipboard.writeText(url);

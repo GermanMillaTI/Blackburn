@@ -148,6 +148,9 @@ function SchedulerRow({ participants, timeslots, sessionId, index, array, client
             {timeslots[sessionId]['comments']}
         </td>
         <td className="center-tag">
+            {Constants['genders'][timeslots[sessionId]['gender']]}
+        </td>
+        <td className="center-tag">
             <div className="buttons-of-timeslot">
                 {timeslots[sessionId]['status'] === "" && !timeslots[sessionId]['locked'] && <button className="update-timeslot-button book-button" onClick={() => { setSelectedSessionId(sessionId); setShowBookSession(true) }}>Book</button>}
                 {timeslots[sessionId]['status'] === "" && !timeslots[sessionId]['locked'] && <button className="update-timeslot-button lock-button" onClick={() => { lockSession(sessionId) }}>Lock</button>}

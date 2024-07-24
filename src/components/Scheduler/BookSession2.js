@@ -28,32 +28,32 @@ function BookSession2({ showBookSession2 }) {
     }
 
     useEffect(() => {
-        const path = '/timeslots/';
-        const pptRef = ref(realtimeDb, path);
-
+        if (Object.keys(participantInfo).length === 0) return;
+        const pptRef = ref(realtimeDb, '/timeslots/');
         const listener = onValue(pptRef, (res) => {
-            const temp = res.val() || {};
+            let data = res.val() || {};
+            let temp = {};
+            Object.keys(data).map(sessionId => {
+                const gender = data[sessionId]['gender'];
+                if (gender !== participantInfo['gender']) return;
+
+                temp[sessionId] = data[sessionId];
+            })
             setTimeslots(temp);
         });
-
         return () => off(pptRef, "value", listener);
-    }, []);
+    }, [JSON.stringify(participantInfo)]);
 
     useEffect(() => {
         if (participantId == '') return;
-
-        const pptPath = '/participants/' + participantId;
-        const pptInfoRef = ref(realtimeDb, pptPath);
+        const pptInfoRef = ref(realtimeDb, '/participants/' + participantId);
 
         const pptListener = onValue(pptInfoRef, (res) => {
             const temp = res.val() || {};
-            setParticipantInfo(temp)
+            setParticipantInfo(temp);
         });
 
-        return () => {
-            off(pptInfoRef, "value", pptListener);
-
-        }
+        return () => off(pptInfoRef, "value", pptListener);
     }, [participantId]);
 
     function bookSession(sessionId) {

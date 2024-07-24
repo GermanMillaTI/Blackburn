@@ -453,48 +453,48 @@ export const surveyJson = {
                     type: "html",
                     html: `<b>Project Sponsor</b>
                     <br>
-                    <p>TIAI is collecting the information you submit on behalf of a client of TIAI. Our Client (the “Customer”) 
-                    is not affiliated with TIAI and is a separate company that operates in the technology industry (“Customer”). 
-                    We will provide the Customer's name before the Study's commencement. If you decide at that time, or any time after commencing the Study, not to participate, you may withdraw from it without any penalty. 
+                    <p>TIAI is collecting the information you submit on behalf of a client of TIAI. Our Client (the “Customer”)
+                    is not affiliated with TIAI and is a separate company that operates in the technology industry (“Customer”).
+                    We will provide the Customer's name before the Study's commencement. If you decide at that time, or any time after commencing the Study, not to participate, you may withdraw from it without any penalty.
                     Any consent you have provided to transfer information to the Customer will not be effective (i.e., we will consider your consent withdrawn).</p>
                     <br>
                     <b>Selection Process</b>
-                    <p>TIAI collects personal information to determine whether you are eligible to be considered for the Study. 
+                    <p>TIAI collects personal information to determine whether you are eligible to be considered for the Study.
                     If you are selected you will be contacted with detailed guidelines on how to get started.</p>
                     <br>
-                    <p>Note that submission of this Participation Agreement is not a guarantee that you will be selected for the Study. Even if you meet all of the eligibility requirements, you may not be selected for the Study for various reasons. For example, 
+                    <p>Note that submission of this Participation Agreement is not a guarantee that you will be selected for the Study. Even if you meet all of the eligibility requirements, you may not be selected for the Study for various reasons. For example,
                     TIAI may have received a sufficient number of participants with similar characteristics.</p>
                     <br>
                     <b>Data Used and Shared</b>
                     <br><br>
-                    <p><strong>Contract Data</strong> is collected about people who would like to be considered for our studies.  
-                    Contract Data is utilized to, among other things, engage with you, set up your profile, administer our contractual relationship, 
+                    <p><strong>Contract Data</strong> is collected about people who would like to be considered for our studies.
+                    Contract Data is utilized to, among other things, engage with you, set up your profile, administer our contractual relationship,
                     determine project-related eligibility, and meet our regulatory obligations. We do not share the Contract Data with the Customer. </p>
                     <br>
-                    <p><strong>Demographic Data</strong> refers to additional data that we collect, which is not mandatory when registering with us, and that helps us evaluate your suitability for studies.  
-                    If you are selected to participate in this Study we may share some Demographic Data with the Customer. 
+                    <p><strong>Demographic Data</strong> refers to additional data that we collect, which is not mandatory when registering with us, and that helps us evaluate your suitability for studies.
+                    If you are selected to participate in this Study we may share some Demographic Data with the Customer.
                     The Demographic Data is anonymized and not tied to your personal information.</p>
                     <br>
-                    <p>For more information about how we use, collect, and share Contract Data and Demographic Data, 
+                    <p>For more information about how we use, collect, and share Contract Data and Demographic Data,
                     as well as your rights to that data, visit our <a href="https://www.telusinternational.com/privacy-policy/contributors" target="_blank">Community Data Privacy Notice</a>.</p>
                     <br>
-                    <p><strong>Work Product Data</strong> refers to data we, or our Customer, collect specific to this Study. Whether we collect Work Product Data on behalf 
-                    of our Customer or our Customer collects it directly, our Customer controls how it is used and shared. 
-                    For more information about how the Work Product Data will be used, stored, and shared you should review the Customer’s 
-                    Informed Consent Form, which will be shared with you before collecting Work Product Data. 
-                    If you are selected, the name of our customer will be provided to you before the initiation of the Study if required by applicable Laws. 
-                    If you choose not to participate after being informed of the Customer’s name, and reviewing the Informed Consent Form, 
+                    <p><strong>Work Product Data</strong> refers to data we, or our Customer, collect specific to this Study. Whether we collect Work Product Data on behalf
+                    of our Customer or our Customer collects it directly, our Customer controls how it is used and shared.
+                    For more information about how the Work Product Data will be used, stored, and shared you should review the Customer’s
+                    Informed Consent Form, which will be shared with you before collecting Work Product Data.
+                    If you are selected, the name of our customer will be provided to you before the initiation of the Study if required by applicable Laws.
+                    If you choose not to participate after being informed of the Customer’s name, and reviewing the Informed Consent Form,
                     you may withdraw from the Study, and withdraw any consent that was provided to transmit your information to the Customer, without detriment.</p>
                     <br>
-                    <p><strong>Special Category Data</strong>. Some of our studies involve the collection of data that may be more sensitive than others.  
+                    <p><strong>Special Category Data</strong>. Some of our studies involve the collection of data that may be more sensitive than others.
                     If this Study involves such data, we will separately ask your consent to collect and transmit it to our Customer</p>
                     <br>
-                    <p>If you have any questions or would like additional information about this Study before submitting a request to participate, 
+                    <p>If you have any questions or would like additional information about this Study before submitting a request to participate,
                     please contact us at <a href="mailto:aisourcing@telusinternational.ai" target="_blank">aisourcing@telusinternational.ai</a>.</p>
                     <br>
-                    <p>By clicking submit I acknowledge that I have read and understand the information provided about the Study, 
-                    and wish to be considered for participation. I understand that submission of this form is not a guarantee that I will be included in the Study and that 
-                    I will not receive any compensation described in this document unless I am selected to participate and complete the Study. 
+                    <p>By clicking submit I acknowledge that I have read and understand the information provided about the Study,
+                    and wish to be considered for participation. I understand that submission of this form is not a guarantee that I will be included in the Study and that
+                    I will not receive any compensation described in this document unless I am selected to participate and complete the Study.
                     I further understand that participation in this Study is voluntary.</p>`
                 }, {
                     type: "html",
@@ -1201,9 +1201,10 @@ export const surveyJson = {
                             "Need assistance walking",
                             "Need assistance standing or have difficulty remaining standing for 10-20 minutes (for example, you feel unsteady on your feet)",
                             "Previously had a seizure, or have an epileptic condition",
-                            "Sensitivity to enclosed spaces"
+                            "Sensitivity to enclosed spaces",
+                            "None"
                         ],
-                        showNoneItem: true,
+                        showNoneItem: false,
                         noneText: "None of the above",
                         isRequired: true,
                     }, {
@@ -1252,15 +1253,15 @@ export const surveyJson = {
                              your eligibility. If you are selected for the Project, some of the above data may also be collected or transmitted as part
                              of the Project itself.</p>
                             <br>
-                            <p>When we collect Special Category Data it is subject to the TELUS International Data Annotation Solutions Community Data 
+                            <p>When we collect Special Category Data it is subject to the TELUS International Data Annotation Solutions Community Data
                             Privacy Notice. If we transmit Sensitive Data Category Data to our Customer, or when our Customer collects it as part of the Project itself, our Customer's privacy notice
-                            describes how they will use, share, or retain it, including whether they can disclose it to others. If we transmit Sensitive Category Data 
-                            to our Customer, we will collect a double opt-in before we transmit Sensitive Category Data to our Customer. You will then be informed 
-                            about the identity of Customer on a separate page, and asked again whether you consent to your Special Category Data being transmitted to them. 
-                            You may choose on this page, or at that time, not to proceed. If you choose not to proceed we will interpret that as a decision that you 
+                            describes how they will use, share, or retain it, including whether they can disclose it to others. If we transmit Sensitive Category Data
+                            to our Customer, we will collect a double opt-in before we transmit Sensitive Category Data to our Customer. You will then be informed
+                            about the identity of Customer on a separate page, and asked again whether you consent to your Special Category Data being transmitted to them.
+                            You may choose on this page, or at that time, not to proceed. If you choose not to proceed we will interpret that as a decision that you
                             do not want to consent to have your Special Category Data transmitted to the Customer. TIAI may be compensated as part of identifying participants in the Project.</p>
                             <br>
-                            <p>Providing your consent is optional. You may withdraw your consent at any time by completing this form. You can retain a copy of this consent by printing it out from your computer or contacting 
+                            <p>Providing your consent is optional. You may withdraw your consent at any time by completing this form. You can retain a copy of this consent by printing it out from your computer or contacting
                             us at <a href="mailto:aisourcing@telusinternational.ai" target="_blank">aisourcing@telusinternational.ai</a>.</p>
                             <br>
                             [ ] I consent to TIAI’s collection and use of the above Special Category Data for the purposes

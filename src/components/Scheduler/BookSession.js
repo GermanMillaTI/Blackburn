@@ -9,6 +9,7 @@ import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
 
 function BookSession({ participants, timeslots, setShowBookSession, selectedSessionId, setJustBookedSession }) {
     const [searchBarText, setSearchBarText] = useState("");
+    const genderToBook = timeslots[selectedSessionId]['gender'];
 
     const updateValue = (path, value) => {
         realtimeDb.ref(path).update(value);
@@ -116,8 +117,11 @@ function BookSession({ participants, timeslots, setShowBookSession, selectedSess
                         <tbody>
 
                             {Object.keys(participants).sort((a, b) => a < b ? -1 : 1).map(participantId => {
+                                const gender = participants[participantId]['gender'];
+                                if (gender !== genderToBook) return null;
+
                                 const filterResult = participantFilter(participantId);
-                                //if (filterResult.length === 0) return null;
+                                if (filterResult.length === 0 && searchBarText !== '') return null;
 
                                 const participantInfo = participants[participantId];
 

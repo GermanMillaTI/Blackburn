@@ -168,6 +168,7 @@ function Scheduler({ setUpdateSession, updateSession }) {
                             <th>Name</th>
                             <th>Email</th>
                             <th>Comments</th>
+                            <th>Gender to book</th>
                             <th>Functions</th>
                         </tr>
                     </thead>
