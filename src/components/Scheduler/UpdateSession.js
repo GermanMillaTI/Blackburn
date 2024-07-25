@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { realtimeDb } from '../../firebase/config';
 import Swal from 'sweetalert2';

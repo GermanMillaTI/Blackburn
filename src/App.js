@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import Registration from './components/Form/Registration';
 import LoginPage from './components/LoginPage';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { realtimeDb, auth } from './firebase/config';
 import { ref, onValue, off } from 'firebase/database';
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,6 +20,7 @@ import SchedulerExternal from './components/Scheduler/SchedulerExternal';
 import Overview from './components/Scheduler/Overview';
 import SessionStats from './components/Stats/SessionStats';
 import Log from './components/Log';
+import BookSession2 from './components/Scheduler/BookSession2';
 
 import './App.css';
 
@@ -27,6 +28,7 @@ function App() {
   const [userId, setUserId] = useState('');
   const [updateSession, setUpdateSession] = useState("");
   const [timeslotforLog, setTimeslotforLog] = useState("");
+  const [showBookSession2, setShowBookSession2] = useState("");
 
   const [filterDataFromStats, setFilterDataFromStats] = useState(false);
   const showDocs = useSelector((state) => state.userInfo.showDocs);
@@ -71,11 +73,7 @@ function App() {
         return <Participants
           filterDataFromStats={filterDataFromStats}
           setFilterDataFromStats={setFilterDataFromStats}
-          setUpdateSession={setUpdateSession}
-          timeslotforLog={timeslotforLog}
-          setTimeslotforLog={setTimeslotforLog}
-          updateSession={updateSession}
-
+          setShowBookSession2={setShowBookSession2}
         />;
       // case "/files":
       //   return <FilesView />;
@@ -107,6 +105,7 @@ function App() {
     {showDocs && <CheckDocuments />}
     {showUpdateSession && <UpdateSession showUpdateSession={showUpdateSession} />}
     {showSessionStats && <SessionStats setFilterDataFromStats={setFilterDataFromStats} />}
+    {showBookSession2 && <BookSession2 showBookSession2={showBookSession2} setShowBookSession2={setShowBookSession2} />}
     {showLog && <Log />}
   </div>
 }

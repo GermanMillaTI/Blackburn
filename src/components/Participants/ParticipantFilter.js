@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useEffect, useReducer } from 'react';
 import './ParticipantFilter.css';
 import Constants from '../Constants';

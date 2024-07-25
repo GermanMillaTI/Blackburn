@@ -1,6 +1,6 @@
 import { listAll, ref as storeRef, } from "firebase/storage";
 import { storage } from "../../firebase/config";
-import React, { useState, useEffect, } from 'react';
+import { useState, useEffect, } from 'react';
 import './index.css'
 
 

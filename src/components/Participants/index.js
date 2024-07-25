@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import { realtimeDb } from '../../firebase/config';
@@ -10,7 +10,6 @@ import GetSkinTone from '../CommonFunctions/GetSkinTone';
 import ParticipantCard from './ParticipantCard';
 import UpdateSession from '../Scheduler/UpdateSession';
 import GetBMIRange from '../CommonFunctions/GetBMIRange';
-import BookSession2 from '../Scheduler/BookSession2';
 import CheckDocuments from '../CheckDocuments';
 
 import './index.css';
@@ -30,15 +29,13 @@ const defaultFilterStats = {
     furtherSessions: Object.assign({}, ...['Yes', 'No'].map(k => ({ [k]: 0 }))),
 };
 
-function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataFromStats }) {
+function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBookSession2 }) {
 
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userRole = userInfo['role'];
     const [shownParticipants, setShownParticipants] = useState([]);
     const [participants, setParticipants] = useState({});
     const [sessions, setSessions] = useState({});
-    const showUpdateSession = useSelector((state) => state.userInfo.showUpdateSession);
-    const showBookSession2 = useSelector((state) => state.userInfo.showBookSession2);
 
     useEffect(() => {
         document.getElementById('navbarTitle').innerText = 'Participants';
@@ -129,12 +126,11 @@ function Participants({ showLog, setShowLog, filterDataFromStats, setFilterDataF
                     key={"participant-card-" + participantId}
                     participantId={participantId}
                     participants={participants}
+                    setShowBookSession2={setShowBookSession2}
                 />
             })
             }
         </div>
-        {showBookSession2 && <BookSession2 showBookSession2={showBookSession2} />}
-
     </div>
 };
 

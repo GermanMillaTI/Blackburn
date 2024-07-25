@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { renderToString } from 'react-dom/server';
 import { auth } from '../../firebase/config'
 import { signOut } from 'firebase/auth';

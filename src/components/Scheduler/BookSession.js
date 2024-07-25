@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { realtimeDb } from '../../firebase/config';
 import Swal from 'sweetalert2';
-import Constants from '../Constants';
+
 import './BookSession.css';
+import Constants from '../Constants';
 import LogEvent from '../CommonFunctions/LogEvent';
 import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
 
 function BookSession({ participants, timeslots, setShowBookSession, selectedSessionId, setJustBookedSession }) {
     const [searchBarText, setSearchBarText] = useState("");
     const genderToBook = timeslots[selectedSessionId]['gender'];
-
-    const updateValue = (path, value) => {
-        realtimeDb.ref(path).update(value);
-    }
 
     function participantFilter(participantId) {
         const searchText = (searchBarText || '').toString().toLowerCase().trim();
@@ -42,7 +39,6 @@ function BookSession({ participants, timeslots, setShowBookSession, selectedSess
             confirmButtonText: 'Yes',
             html: "<b>" + TimeSlotFormat(selectedSessionId) + "<br/>" +
                 participantInfo['firstName'] + " " + participantInfo['lastName'] + "</b>"
-
         }).then((result) => {
             if (result.isConfirmed) {
                 let data = {
@@ -56,23 +52,23 @@ function BookSession({ participants, timeslots, setShowBookSession, selectedSess
 
                 // Save the session
                 let path = "/timeslots/" + selectedSessionId;
-                updateValue(path, data);
+                realtimeDb.ref(path).update(data);
                 setJustBookedSession(selectedSessionId);
                 setShowBookSession(false);
 
                 LogEvent({
-                    value: `Booked session`,
+                    value: 'Booked session',
                     participantId: participantId,
                     action: 8
                 })
 
-                updateValue('/participants/' + participantId, { status: 2 })
+                realtimeDb.ref('/participants/' + participantId).update({ status: 2 });
 
                 LogEvent({
                     participantId: participantId,
                     value: "Participant status: '" + "Scheduled" + "'",
                     action: 0
-                })
+                });
             }
         })
     }
@@ -80,28 +76,23 @@ function BookSession({ participants, timeslots, setShowBookSession, selectedSess
     useEffect(() => {
         const handleEsc = (event) => { if (event.keyCode === 27) setShowBookSession(false) };
         window.addEventListener('keydown', handleEsc);
-        return () => { window.removeEventListener('keydown', handleEsc) };
+        return () => window.removeEventListener('keydown', handleEsc);
     }, []);
 
     return ReactDOM.createPortal((
-        <div className="modal-book-session-backdrop" onClick={(e) => { if (e.target.className === "modal-book-session-backdrop") setShowBookSession(false) }}>
-            <div className="modal-book-session-main-container">
-                <div className="modal-book-session-header">
-                    Booking an appointment
-                </div>
-                <div
-                    className="modal-book-session-sub-header">
-                    {TimeSlotFormat(selectedSessionId)}
-                </div>
+        <div id="modalBookSessionBackdrop" onClick={(e) => { if (e.target.id === "modalBookSessionBackdrop") setShowBookSession(false) }}>
+            <div id="mainContainer">
+                <div id="header">Booking an appointment</div>
+                <div id="subHeader">{TimeSlotFormat(selectedSessionId)}</div>
                 <input
-                    className="search-bar-for-schedule"
+                    id="searchBar"
                     placeholder="Search..."
                     value={searchBarText}
                     onChange={(e) => setSearchBarText(e.target.value.toLocaleLowerCase())}
                     autoFocus
                 />
-                <div className="search-table-for-schedule-container">
-                    <table className="search-table-for-schedule">
+                <div id="tableContainer">
+                    <table>
                         <thead>
                             <tr>
                                 <th>Participant ID</th>
@@ -115,7 +106,6 @@ function BookSession({ participants, timeslots, setShowBookSession, selectedSess
                             </tr>
                         </thead>
                         <tbody>
-
                             {Object.keys(participants).sort((a, b) => a < b ? -1 : 1).map(participantId => {
                                 const gender = participants[participantId]['gender'];
                                 if (gender !== genderToBook) return null;
@@ -126,22 +116,22 @@ function BookSession({ participants, timeslots, setShowBookSession, selectedSess
                                 const participantInfo = participants[participantId];
 
                                 return <tr key={'book-session-row' + participantId} onClick={() => bookSession(participantId)}>
-                                    <td className={(filterResult.includes('Participant ID') ? "filter-highlighted-cell" : "") + " center-tag"}>
+                                    <td className={(filterResult.includes('Participant ID') ? "highlighted-cell" : "") + " center-tag"}>
                                         {participantId}
                                     </td>
-                                    <td className={filterResult.includes('Name') ? "filter-highlighted-cell" : ""}>
+                                    <td className={filterResult.includes('Name') ? "highlighted-cell" : ""}>
                                         {participantInfo['firstName'] + ' ' + participantInfo['lastName']}
                                     </td>
-                                    <td className={filterResult.includes('E-mail') ? "filter-highlighted-cell" : ""}>
+                                    <td className={filterResult.includes('E-mail') ? "highlighted-cell" : ""}>
                                         {participantInfo['email']}
                                     </td>
-                                    <td className={(filterResult.includes('Phone') ? "filter-highlighted-cell" : "") + " center-tag"}>
+                                    <td className={(filterResult.includes('Phone') ? "highlighted-cell" : "") + " center-tag"}>
                                         {participantInfo['phone'].replace("T: ", "")}
                                     </td>
                                     <td className="center-tag">
                                         {Constants['genders'][participantInfo['gender']]}
                                     </td>
-                                    <td className={(filterResult.includes('Year of birth') ? "filter-highlighted-cell" : "") + " center-tag"}>
+                                    <td className={(filterResult.includes('Year of birth') ? "highlighted-cell" : "") + " center-tag"}>
                                         {participantInfo['dob'].substring(0, 4)}
                                     </td>
                                     <td className="center-tag">

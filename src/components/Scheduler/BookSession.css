@@ -1,4 +1,4 @@
-.modal-book-session-backdrop {
+#modalBookSessionBackdrop {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +11,7 @@
     z-index: 100;
 }
 
-.modal-book-session-main-container {
+#modalBookSessionBackdrop #mainContainer {
     width: 90%;
     height: 90%;
     display: flex;
@@ -23,26 +23,24 @@
     overflow: hidden;
 }
 
-.modal-book-session-header {
-    top: 0px;
-    position: sticky;
+#modalBookSessionBackdrop #mainContainer #header {
     padding: .2em;
     font-weight: bold;
     text-align: center;
-    background-color: #E0E0E2;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
     font-size: 1.3em;
 }
 
-.modal-book-session-sub-header {
-    top: 0px;
-    position: sticky;
+#modalBookSessionBackdrop #mainContainer #subHeader {
     padding: .2em;
     font-weight: bold;
     text-align: center;
-    background-color: #E0E0E2;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
 }
 
-.search-bar-for-schedule {
+#modalBookSessionBackdrop #mainContainer #searchBar {
     margin: 1em;
     border: 1px solid gray;
     width: 20em;
@@ -51,47 +49,43 @@
     box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
 }
 
-.search-table-for-schedule-container {
+#modalBookSessionBackdrop #mainContainer #tableContainer {
     width: 100%;
     overflow-y: auto;
 }
 
-.search-table-for-schedule {
+#modalBookSessionBackdrop #mainContainer #tableContainer table {
     width: 100%;
     margin: 0 auto 2.5em auto;
     border-collapse: collapse;
 }
 
-.search-table-for-schedule tr:nth-child(even) {
+#modalBookSessionBackdrop #mainContainer #tableContainer table tr:nth-child(even) {
     background: rgba(255, 255, 255, 0.644);
 }
 
-.search-table-for-schedule th {
+#modalBookSessionBackdrop #mainContainer #tableContainer table th {
     min-width: 5em;
     position: sticky;
     top: -1px;
-    background-color: #e1e2e4;
     padding: .3em 1em;
     border: 1px solid rgb(199, 198, 198);
-    background: #fff;
     cursor: default;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
 }
 
-.search-table-for-schedule td {
+#modalBookSessionBackdrop #mainContainer #tableContainer table td {
     max-width: 20em;
     padding: .2em 1em;
     border: 1px solid rgb(199, 198, 198);
 }
 
-.search-table-for-schedule .row2 {
-    background: rgba(255, 255, 255, 0.644);
-}
-
-.search-table-for-schedule tr:hover {
+#modalBookSessionBackdrop #mainContainer #tableContainer table tr:hover {
     background: #224bd436;
     cursor: pointer;
 }
 
-.filter-highlighted-cell {
+#modalBookSessionBackdrop #mainContainer #tableContainer table .highlighted-cell {
     font-weight: bold;
 }

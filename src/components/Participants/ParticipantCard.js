@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { realtimeDb } from '../../firebase/config';
 import Swal from 'sweetalert2';
 import { renderToString } from 'react-dom/server';
@@ -7,7 +7,7 @@ import md5 from 'md5';
 import ICFModal from '../ICFModal';
 import { ref, onValue, off } from 'firebase/database';
 import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
-import { setShowUpdateSession, setShowBookSession2, setShowDocs } from '../../Redux/Features';
+import { setShowUpdateSession, setShowDocs } from '../../Redux/Features';
 
 
 import './ParticipantCard.css';
@@ -17,7 +17,7 @@ import BMICalculator from '../CommonFunctions/BMICalculator';
 import LogEvent from '../CommonFunctions/LogEvent';
 import FormatTime from '../CommonFunctions/FormatTime';
 
-function ParticipantCard({ participantId, participants }) {
+function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userId = userInfo['userId'];
     const [showICFs, setShowICFs] = useState(false);
@@ -410,7 +410,7 @@ function ParticipantCard({ participantId, participants }) {
             })}
 
             {!["Rejected", "Withdrawn", "Completed", "Not Selected", "Duplicate"].includes(Constants['participantStatuses'][participantInfo['status']]) &&
-                <button className="book-session-button" onClick={() => dispatch(setShowBookSession2(participantId))}>
+                <button className="book-session-button" onClick={() => setShowBookSession2(participantId)}>
                     Schedule session
                 </button>}
         </div>

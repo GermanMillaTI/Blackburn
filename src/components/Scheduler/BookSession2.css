@@ -1,4 +1,4 @@
-.modal-book-session2-backdrop {
+#modalBookSession2Backdrop {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,54 +11,53 @@
     z-index: 100;
 }
 
-.modal-book-session2-main-container {
-    width: 90%;
+#modalBookSession2Backdrop #mainContainer {
     display: flex;
     flex-direction: column;
     margin-left: 2em;
-    background: #E0E0E2;
+    background: #C0D0EC;
     position: absolute;
     border-radius: .2em;
     overflow: hidden;
 }
 
-.modal-book-session2-header {
-    top: 0px;
-    position: sticky;
+#modalBookSession2Backdrop #mainContainer #header {
     padding: .2em;
     font-weight: bold;
     text-align: center;
-    background-color: #E0E0E2;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
     font-size: 1.3em;
 }
 
-.modal-book-session2-sub-header {
-    top: 0px;
-    position: sticky;
+#modalBookSession2Backdrop #mainContainer #subHeader {
     padding: .2em;
     font-weight: bold;
     text-align: center;
-    background-color: #E0E0E2;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
 }
 
-.session2-table-container {
+#modalBookSession2Backdrop #mainContainer #tableContainer {
     height: 100%;
     overflow-x: auto;
+    padding: 1em;
 }
 
-.session2-table {
+#modalBookSession2Backdrop #mainContainer table {
     border-collapse: collapse;
 }
 
-.session2-table-header-cell {
+#modalBookSession2Backdrop #mainContainer table th {
     width: 8em;
     min-width: 8em;
     border: 1px solid gray;
-    background: #fff;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
     padding: .5em 0em;
 }
 
-.session2-table-cell {
+#modalBookSession2Backdrop #mainContainer table td {
     width: 8em;
     min-width: 8em;
     border: 1px solid gray;
@@ -67,16 +66,16 @@
     font-weight: bold;
 }
 
-.free-sessions {
+#modalBookSession2Backdrop #mainContainer table td.free-sessions {
     background: rgb(103, 237, 185);
     cursor: pointer;
 }
 
-.free-sessions:hover {
+#modalBookSession2Backdrop #mainContainer table td.free-sessions:hover {
     background: rgb(206, 246, 231);
 }
 
-.booked-sessions {
+#modalBookSession2Backdrop #mainContainer table td.booked-sessions {
     cursor: not-allowed;
     background: rgb(237, 103, 103);
 }
