@@ -27,6 +27,7 @@ const defaultFilterStats = {
     hairColors: Object.assign({}, ...Object.values(Constants['hairColor']).map(k => ({ [k]: 0 }))),
     bmiRanges: Object.assign({}, ...Constants['bmiRanges'].map(k => ({ [k]: 0 }))),
     furtherSessions: Object.assign({}, ...['Yes', 'No'].map(k => ({ [k]: 0 }))),
+    hasIcf: Object.assign({}, ...['Yes', 'No'].map(k => ({ [k]: 0 }))),
 };
 
 function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBookSession2 }) {
@@ -106,6 +107,7 @@ function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBook
                     return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
                 });
                 const multipleEthnicities = [...new Set(ethnicityGroups)].length > 1 ? 'Yes' : 'No';
+                const hasIcf = participantInfo['icfs'] ? 'Yes' : 'No';
 
                 ethnicityGroups.forEach(ethnicityGroup => filterStats['ethnicityGroups'][ethnicityGroup]++);
                 filterStats['genders'][gender]++;
@@ -119,6 +121,7 @@ function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBook
                 filterStats['hairColors'][hairColor]++;
                 filterStats['facialHairs'][facialHair]++;
                 filterStats['furtherSessions'][furtherSession]++;
+                filterStats['hasIcf'][hasIcf]++;
 
                 if (index >= 100) return null;
 

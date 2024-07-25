@@ -38,85 +38,62 @@ function ICF() {
     const params = useParams();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const pptId = params['participantId']
-    survey.setValue("referenceId", pptId)
+    const pptId = params['participantId'];
+    survey.setValue("referenceId", pptId);
     survey.setValue("icfEmail", searchParams.get('email'));
 
-
     useEffect(() => {
-        const path = `/participants/${params['participantId']}/`;
+        const path = '/participants/' + pptId + '/';
         const pptRef = ref(realtimeDb, path);
 
-        const listener = onValue(pptRef, (res) => {
-            const snapshot = res.val() || {}
-            setNotFound(Object.keys(snapshot).length === 0 || snapshot['email'] !== searchParams.get('email'))
+        const listener = onValue(pptRef, res => {
+            const snapshot = res.val() || {};
+            setNotFound(Object.keys(snapshot).length === 0 || snapshot['email'] !== searchParams.get('email'));
             setLoading(false);
         })
 
-        return () => {
-            off(pptRef, "value", listener)
-        }
-
+        return () => off(pptRef, "value", listener);
     }, [pptId, searchParams])
 
     useEffect(() => {
-
         const completeFunction = async (sender, options) => {
             options.allow = false;
 
-            let senderObj = {};
+            const externalUrl = await uploadICFSignature(sender.data['externalIcfSignature'], pptId, 'icfExternal');
+            const faceHandsUrl = await uploadICFSignature(sender.data['faceHandsIcfsignature'], pptId, 'icfFaceHands');
+            const fullBodyUrl = await uploadICFSignature(sender.data['FullBodyIcfsignature'], pptId, 'icfFullBody');
 
-            const externalUrl = await uploadICFSignature(sender.data['externalIcfSignature'], pptId, `icfExternal`)
-            const faceHandsUrl = await uploadICFSignature(sender.data['faceHandsIcfsignature'], pptId, `icfFaceHands`);
-            const fullBodyUrl = await uploadICFSignature(sender.data['FullBodyIcfsignature'], pptId, `icfFullBody`);
-
-            senderObj['icfExternal'] = externalUrl;
-            senderObj['icfDate'] = new Date();
-
-            senderObj['icfFaceHands'] = faceHandsUrl;
-            senderObj['icfFullBody'] = fullBodyUrl;
+            const senderObj = {
+                icfExternal: externalUrl,
+                icfFaceHands: faceHandsUrl,
+                icfFullBody: fullBodyUrl,
+                icfDate: new Date()
+            }
 
             options.allow = true;
 
-            //db record
-            const firebasePath = `/participants/${pptId}/icfs`;
-            updateValue(firebasePath, senderObj)
-
+            updateValue('/participants/' + pptId + '/icfs', senderObj);
             setShowICFty(true);
         }
 
         survey.onCompleting.add(completeFunction);
 
-        return () => {
-            survey.onCompleting.remove(completeFunction);
-        }
-
-
+        return () => survey.onCompleting.remove(completeFunction);
     }, [])
 
-
-    return (
-        <>
-            {loading ? (
-                <div></div>
-            ) : (
-                <>
-                    {showICFty && <div id="ThankyouPage">
-                        <img className="telus-logo" src={telus} style={{ width: "fit-content", maxWidth: "100%" }} alt="TELUS Logo" />
-                        <h4>Thank you for your registration.</h4><br />
-                        <p>We will review your registration and contact you with any further steps.</p>
-                    </div>}
-                    {notFound && <div id="ThankyouPage">
-                        <img className="telus-logo" src={telus} style={{ width: "fit-content", maxWidth: "100%" }} alt="TELUS Logo" />
-                        <h4>The link provided does not exist. <a href="/registration" >Back to the registration form</a></h4><br />
-                    </div>}
-                    {!notFound && <Survey model={survey}></Survey>}
-                </>
-
-            )}
-
-        </>
-    )
+    if (loading) return <div>Loading...</div>;
+    return <>
+        {showICFty && <div id="ThankyouPage">
+            <img className="telus-logo" src={telus} style={{ width: "fit-content", maxWidth: "100%" }} alt="TELUS Logo" />
+            <h4>Thank you for your registration.</h4><br />
+            <p>We will review your registration and contact you with any further steps.</p>
+        </div>}
+        {notFound && <div id="ThankyouPage">
+            <img className="telus-logo" src={telus} style={{ width: "fit-content", maxWidth: "100%" }} alt="TELUS Logo" />
+            <h4>The link provided does not exist. <a href="/registration" >Back to the registration form</a></h4><br />
+        </div>}
+        {!notFound && <Survey model={survey}></Survey>}
+    </>
 };
 
 export default ICF;

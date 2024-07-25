@@ -19,7 +19,8 @@ const defaultFilterValues = {
     hairColors: Object.values(Constants['hairColor']),
     facialHairs: Object.values(Constants['facialHair']),
     bmiRanges: Constants['bmiRanges'],
-    furtherSessions: ["Yes", "No"]
+    furtherSessions: ["Yes", "No"],
+    hasIcf: ["Yes", "No"],
 }
 
 const filterReducer = (state, event) => {
@@ -150,6 +151,9 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
 
         const furtherSession = participantInfo['furtherSessions'] || false === true ? "Yes" : "No";
         if (!filterData['furtherSessions'].includes(furtherSession)) return false;
+
+        const hasIcf = participantInfo['icfs'] ? "Yes" : "No";
+        if (!filterData['hasIcf'].includes(hasIcf)) return false;
 
         // Check date of registration
         let dateOfRegistration;
@@ -310,16 +314,32 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
             </div>
         </div>
 
-        <div className="filter-main-container">
-            <span className="filter-header">BMI range</span>
-            <div className="filter-container">
-                {Constants['bmiRanges'].map((val, i) => {
-                    return <div key={"filter-bmi-" + i} className="checkbox-filter">
-                        <input id={"filter-bmi-" + val} name={val} type="checkbox" alt="bmiRanges" onChange={setFilterData} checked={filterData['bmiRanges'].includes(val)} />
-                        <label htmlFor={"filter-bmi-" + val}>{val + " (" + filterStats['bmiRanges'][val] + ")"}</label>
-                        <button name={val} alt="bmiRanges" className="filter-this-button" onClick={setFilterData}>!</button>
-                    </div>
-                })}
+        <div className="filter-column">
+            <div className="filter-main-container">
+                <span className="filter-header">BMI range</span>
+                <div className="filter-container">
+                    {Constants['bmiRanges'].map((val, i) => {
+                        return <div key={"filter-bmi-" + i} className="checkbox-filter">
+                            <input id={"filter-bmi-" + val} name={val} type="checkbox" alt="bmiRanges" onChange={setFilterData} checked={filterData['bmiRanges'].includes(val)} />
+                            <label htmlFor={"filter-bmi-" + val}>{val + " (" + filterStats['bmiRanges'][val] + ")"}</label>
+                            <button name={val} alt="bmiRanges" className="filter-this-button" onClick={setFilterData}>!</button>
+                        </div>
+                    })}
+                </div>
+            </div>
+
+            <div className="filter-main-container growing-item">
+                <span className="filter-header">Repeat</span>
+                <div className="filter-container">
+                    {["Yes", "No"].map((val, i) => {
+                        val = val.toString();
+                        return <div key={"filter-furtherSessions-" + i} className="checkbox-filter">
+                            <input id={"filter-furtherSessions-" + val} name={val} type="checkbox" alt="furtherSessions" onChange={setFilterData} checked={filterData['furtherSessions'].includes(val)} />
+                            <label htmlFor={"filter-furtherSessions-" + val}>{val + " (" + filterStats['furtherSessions'][val] + ")"}</label>
+                            <button name={val} alt="furtherSessions" className="filter-this-button" onClick={setFilterData}>!</button>
+                        </div>
+                    })}
+                </div>
             </div>
         </div>
 
@@ -399,18 +419,19 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
             </div>
 
             <div className="filter-main-container growing-item">
-                <span className="filter-header">Repeat</span>
+                <span className="filter-header">Has ICF</span>
                 <div className="filter-container">
                     {["Yes", "No"].map((val, i) => {
                         val = val.toString();
-                        return <div key={"filter-furtherSessions-" + i} className="checkbox-filter">
-                            <input id={"filter-furtherSessions-" + val} name={val} type="checkbox" alt="furtherSessions" onChange={setFilterData} checked={filterData['furtherSessions'].includes(val)} />
-                            <label htmlFor={"filter-furtherSessions-" + val}>{val + " (" + filterStats['furtherSessions'][val] + ")"}</label>
-                            <button name={val} alt="furtherSessions" className="filter-this-button" onClick={setFilterData}>!</button>
+                        return <div key={"filter-hasIcf-" + i} className="checkbox-filter">
+                            <input id={"filter-hasIcf-" + val} name={val} type="checkbox" alt="hasIcf" onChange={setFilterData} checked={filterData['hasIcf'].includes(val)} />
+                            <label htmlFor={"filter-hasIcf-" + val}>{val + " (" + filterStats['hasIcf'][val] + ")"}</label>
+                            <button name={val} alt="hasIcf" className="filter-this-button" onClick={setFilterData}>!</button>
                         </div>
                     })}
                 </div>
             </div>
+
         </div>
     </div>
 };

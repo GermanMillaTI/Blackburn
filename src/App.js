@@ -21,6 +21,7 @@ import Overview from './components/Scheduler/Overview';
 import SessionStats from './components/Stats/SessionStats';
 import Log from './components/Log';
 import BookSession2 from './components/Scheduler/BookSession2';
+import BookingPlatform from './components/BookingPlatform';
 
 import './App.css';
 
@@ -96,6 +97,7 @@ function App() {
       <Route path='/scheduler' element={(userId && Object.keys(userInfo || {}).length > 0) && userInfo['role'] === 'admin' ? getElement("/scheduler") : getElement("/login")} />
       <Route path='/scheduler-external' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/scheduler-external") : getElement("/login")} />
       <Route path="/icf/:participantId" element={<ICF />} />
+      <Route path="/booking/:participantId" element={<BookingPlatform />} />
       <Route path="/participants" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/participants") : getElement("/login")} />
       <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
       <Route path='/overview' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/overview") : getElement("/login")} />
