@@ -1,0 +1,44 @@
+#tableOfSessions table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+#tableOfSessions table th {
+    width: 8em;
+    min-width: 8em;
+    border: 1px solid gray;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
+    padding: .5em 0em;
+}
+
+#tableOfSessions table td {
+    width: 8em;
+    min-width: 8em;
+    border: 1px solid gray;
+    padding: .5em 0em;
+    text-align: center;
+    font-weight: bold;
+}
+
+#tableOfSessions table td.free-sessions {
+    background: rgb(103, 237, 185);
+    cursor: pointer;
+}
+
+#tableOfSessions table td.free-sessions:hover {
+    background: rgb(206, 246, 231);
+}
+
+#tableOfSessions table td.booked-sessions {
+    cursor: not-allowed;
+    background: rgb(237, 103, 103);
+}
+
+@media only screen and (max-width: 1000px) {
+    #tableOfSessions {
+        max-width: 100%;
+        overflow-x: auto;
+        padding: 1em;
+    }
+}

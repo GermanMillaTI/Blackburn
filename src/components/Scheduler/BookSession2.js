@@ -43,15 +43,13 @@ function BookSession2({ showBookSession2, setShowBookSession2 }) {
     }, [participantId]);
 
     function bookSession(sessionId) {
-        let backupSession = timeslots[sessionId]['backup'] === true;
 
         Swal.fire({
             title: "Booking an appointment",
             showCancelButton: true,
-            confirmButtonText: backupSession ? 'Yes (backup)' : 'Yes',
+            confirmButtonText: 'Book',
             html: "<b>" + TimeSlotFormat(sessionId) + "<br/>" +
-                participantInfo['firstName'] + " " + participantInfo['lastName'] + "</b>" +
-                (backupSession ? "<br/><br/><b><u>!!! BACKUP SESSION !!!</u></b><br/>" : ""),
+                participantInfo['firstName'] + " " + participantInfo['lastName'] + "</b>"
 
         }).then((result) => {
             if (result.isConfirmed) {

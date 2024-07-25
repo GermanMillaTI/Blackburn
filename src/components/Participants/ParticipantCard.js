@@ -3,7 +3,6 @@ import { realtimeDb } from '../../firebase/config';
 import Swal from 'sweetalert2';
 import { renderToString } from 'react-dom/server';
 import { useSelector, useDispatch } from 'react-redux';
-import md5 from 'md5';
 import ICFModal from '../ICFModal';
 import { ref, onValue, off } from 'firebase/database';
 import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
@@ -64,7 +63,8 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
         if (!swalAnswer.isConfirmed) return;
 
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyJVtGd_9WgJy5HwIB1_Y_qZG9YCBlbG1Y5uLVn7d3k9FbknSvOTuL_0aASWwsv6hQZOA/exec';
-        const icfUrl = `https://blackburn-la.web.app/icf/${participantId}?email=${participantInfo['email']}`;
+        const icfUrl = 'https://blackburn-la.web.app/icf/' + participantId + '?email=' + participantInfo['email'];
+        const bookingPlatformUrl = 'https://blackburn-la.web.app/booking/' + participantId;
 
         fetch(scriptURL, {
             method: 'POST',
@@ -75,7 +75,7 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
                 "firstName": participantInfo['firstName'],
                 "lastName": participantInfo['lastName'],
                 "email": participantInfo['email'],
-                "icfUrl": emailType == 'ICF Request' ? icfUrl : emailType == "Handoff" ? "https://blackburn-appointments.web.app/#" + md5('p_' + participantId) + '&' + participantId : "",
+                "icfUrl": emailType == 'ICF Request' ? icfUrl : emailType == "Handoff" ? bookingPlatformUrl : "",
                 "sessionDate": "",
                 "userId": userId
             })
@@ -84,7 +84,7 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
 
         if (emailType == 'ICF Request' && participantInfo['status'] != 1) {
             tempObject['status'] = 1;
-            LogEvent({ participantId: participantId, action: 2, value: `Sent ${emailType} email` });
+            LogEvent({ participantId: participantId, action: 2, value: 'Sent ' + emailType + ' email' });
         }
 
         if (Object.keys(tempObject).length > 0) updateValue("/participants/" + participantId, tempObject);
@@ -352,7 +352,7 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
                         })
                         return;
 
-                        let url = "https://blackburn-appointments.web.app/#" + md5('p_' + participantId) + "&" + participantId
+                        let url = 'https://blackburn-la.web.app/booking/' + participantId;
                         navigator.clipboard.writeText(url);
 
                         Swal.fire({

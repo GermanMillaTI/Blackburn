@@ -1,8 +1,53 @@
 #bookingPlatform {
-    display: flex;
-    flex-direction: column;
-    gap: .5em;
-    width: 100%;
-    background-color: var(--body-color);
+    position: absolute;
     overflow: auto;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    cursor: default;
+}
+
+#bookingPlatform #mainContainer {
+    width: 90%;
+    max-width: 75em;
+    margin: 0 auto;
+}
+
+#bookingPlatform #background {
+    z-index: -2;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+}
+
+#bookingPlatform #background2 {
+    z-index: -1;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    max-width: 80em;
+    height: 100%;
+    background: #E4E9F7;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, .31);
+}
+
+@media only screen and (max-width: 1000px) {
+    #bookingPlatform {
+        width: 100%;
+    }
+
+    #bookingPlatform #background,
+    #bookingPlatform #background2 {
+        display: none;
+    }
+
+    #bookingPlatform #mainContainer {
+        width: 100%;
+        overflow-x: auto;
+    }
 }
