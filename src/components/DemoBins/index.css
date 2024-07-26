@@ -1,4 +1,4 @@
-.modal-bins-backdrop {
+#demoBins {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +11,7 @@
     z-index: 100;
 }
 
-.modal-bins-main-container {
+#demoBins #mainContainer {
     display: flex;
     flex-direction: column;
     margin-left: 2em;
@@ -21,63 +21,58 @@
     overflow: hidden;
 }
 
-.modal-bins-header {
-    top: 0px;
-    position: sticky;
+#demoBins #mainContainer #header {
     padding: .2em;
     font-weight: bold;
     text-align: center;
-    background-color: #a3bcff;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
     font-size: 1.3em;
 }
 
-.modal-bins-content {
+#demoBins #mainContainer #content {
     height: 100%;
 }
 
-.table-of-bins {
+#demoBins #mainContainer #content table {
     margin: .5em 1em 1em 1em;
     border-collapse: collapse;
 }
 
-.table-of-bins th,
-.table-of-bins td {
+#demoBins #mainContainer #content table th,
+#demoBins #mainContainer #content table td {
     border: 1px solid rgba(0, 0, 0, 0.233);
     min-width: 11em;
     text-align: center;
     font-weight: bold;
 }
 
-.table-of-bins th {
+#demoBins #mainContainer #content table th {
     padding: .3em .3em;
     background: #fff;
 }
 
-.table-of-bins td {
+#demoBins #mainContainer #content table td {
     background: rgb(240, 240, 240);
 }
 
-.table-of-bins td:hover {
+#demoBins #mainContainer #content table td:hover {
     background: white;
     cursor: pointer;
 }
 
-.demo-bin-0 {
+#demoBins #mainContainer #content table .demo-bin-0 {
     user-select: none;
     background: rgba(120, 240, 120, 0.5) !important;
 }
 
-.demo-bin-1 {
+#demoBins #mainContainer #content table .demo-bin-1 {
     user-select: none;
     background: #FACA69 !important;
 }
 
-.demo-bin-2 {
+#demoBins #mainContainer #content table .demo-bin-2 {
     user-select: none;
     background: #C12335 !important;
     color: white
-}
-
-.table-of-stats td span.demo-status {
-    width: 100%;
 }

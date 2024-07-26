@@ -111,7 +111,15 @@ const Constants = {
         "Other": "Other"
     },
     ethDbMap2: {
-        "African/African-American/Black": "AfrAfrAmBlack",
+        // "African/African-American/Black": "AfrAfrAmBlack",
+        // "Med / Mid East": "MedMidEast",
+        // "Latin / S. Amer": "LatinSAmer",
+        // "East Asian": "EastAsian",
+        // "South Asian": "SouthAsian",
+        // "N. European": "NEuropean",
+        // "Other": "Other"
+
+        "Afr./Afr-Am./Black": "AfrAfrAmBlack",
         "Med / Mid East": "MedMidEast",
         "Latin / S. Amer": "LatinSAmer",
         "East Asian": "EastAsian",

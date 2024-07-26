@@ -1,16 +1,13 @@
 import { useEffect, useState, useReducer } from 'react';
 import ReactDOM from 'react-dom';
 import { realtimeDb } from '../../firebase/config';
-import { ref, onValue, off, get } from 'firebase/database';
 import Constants from '../Constants';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { isStatsActive } from '../../Redux/Features';
 
-
 import './index.css';
-import './Bins.css';
 
 const filterReducer = (state, event) => {
     let newState = JSON.parse(JSON.stringify(state));
@@ -28,7 +25,7 @@ const filterReducer = (state, event) => {
     return newState;
 }
 
-function Stats({ setFilterDataFromStats }) {
+function Stats({ setShowStats, setFilterDataFromStats }) {
     const navigate = useNavigate();
     const [database, setDatabase] = useState({});
     const [demos, setDemos] = useState({});
@@ -37,7 +34,6 @@ function Stats({ setFilterDataFromStats }) {
         statuses: ["Blank", "Not Selected"],
         statuses2: ["Contacted", "Scheduled", "Completed"],
     });
-    const dispatch = useDispatch();
     const userInfo = useSelector((state) => state.userInfo.value || {});
 
 
@@ -69,25 +65,22 @@ function Stats({ setFilterDataFromStats }) {
             facialHairs: Object.values(Constants['facialHair']),
             bmiRanges: Constants['bmiRanges'],
             furtherSessions: ['Yes', 'No'],
+            hasIcf: ['Yes', 'No'],
         });
 
         navigate('participants');
-        dispatch(isStatsActive(false));
+        setShowStats(false);
     }
 
     useEffect(() => {
-        const pptRef = ref(realtimeDb, '/participants');
-        const demoRef = ref(realtimeDb, '/demoBins');
-        const listener = onValue(pptRef, (res) => setDatabase(res.val() || {}));
-        const listener2 = onValue(demoRef, (res) => setDemos(res.val() || {}));
+        const listener1 = realtimeDb.ref('/participants').on('value', snapshot => setDatabase(snapshot.val() || {}));
+        const listener2 = realtimeDb.ref('/demoBins').on('value', snapshot => setDemos(snapshot.val() || {}));
 
         return () => {
-            realtimeDb.ref('/participants').off('value', listener);
+            realtimeDb.ref('/participants').off('value', listener1);
             realtimeDb.ref('/demoBins').off('value', listener2);
         }
     }, []);
-
-
 
     useEffect(() => {
         let tempStats = getDefaultNumbers();
@@ -110,7 +103,7 @@ function Stats({ setFilterDataFromStats }) {
     }, [database, demos])
 
     useEffect(() => {
-        const handleEsc = (event) => { if (event.keyCode === 27) dispatch(isStatsActive(false)); };
+        const handleEsc = (event) => { if (event.keyCode === 27) setShowStats(false); };
         window.addEventListener('keydown', handleEsc);
         return () => { window.removeEventListener('keydown', handleEsc) };
     }, []);
@@ -118,11 +111,9 @@ function Stats({ setFilterDataFromStats }) {
     if (Object.values(demos).length === 0) return;
 
     return ReactDOM.createPortal((
-        <div className="modal-stats-backdrop" onClick={(e) => { if (e.target.className == "modal-stats-backdrop") dispatch(isStatsActive(false)); }}>
-            <div className='modal-stats-main-container'>
-                <div className="modal-stats-header">
-                    Participant stats
-                </div>
+        <div id="participantStats" onClick={(e) => { if (e.target.id === "participantStats") setShowStats(false); }}>
+            <div id="mainContainer">
+                <div id="header">Participant stats</div>
 
                 <div className="stats-filter-element">
                     <div><span className="first-number">First number:</span></div>
@@ -144,78 +135,78 @@ function Stats({ setFilterDataFromStats }) {
                     })}
                 </div>
 
-                <div className="modal-stats-content">
-                    {['Male', 'Female'].map((gender) => {
-                        return <table key={gender} className="table-of-stats">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        {gender}
-                                    </th>
-                                    {Object.keys(Constants['ethnicityGroups']).map(eth => {
-                                        return <th key={'stats-header-' + eth}>{eth}</th>
+                <div id="content">
+                    <div>
+                        {['Male', 'Female'].map((gender) => {
+                            return <table key={gender}>
+                                <thead>
+                                    <tr>
+                                        <th>{gender}</th>
+                                        {Object.keys(Constants['ethnicityGroups']).map(eth => {
+                                            return <th key={'stats-header-' + eth}>{eth}</th>
+                                        })}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {Constants['listOfAgeRanges'].map(ageRange => {
+                                        return <tr key={ageRange}>
+                                            <th>{ageRange}</th>
+                                            {Object.keys(Constants['ethnicityGroups']).map(columnName => {
+                                                let eth = Constants['ethnicityGroups'][columnName].map(el => Constants['ethnicities'][el])
+                                                let output = eth.reduce((a, b) => {
+                                                    return filterData['statuses'].reduce((x, y) => {
+                                                        return stats[b][ageRange][gender][y] + x
+                                                    }, 0) + a
+                                                }, 0);
+                                                let output2 = eth.reduce((a, b) => {
+                                                    return filterData['statuses2'].reduce((x, y) => {
+                                                        return stats[b][ageRange][gender][y] + x
+                                                    }, 0) + a
+                                                }, 0);
+                                                output = parseFloat(output.toFixed(1));
+                                                output2 = parseFloat(output2.toFixed(1));
+
+                                                let binClassTag = "";
+                                                if (columnName != "Total") {
+                                                    binClassTag = "demo-bin-" + demos[gender][Constants['ethDbMap2'][columnName]][ageRange];
+                                                }
+
+
+                                                return <td className={"stats-demo-bin-cell " + (binClassTag)}>
+                                                    <span className="first-number" onClick={() => selectDemoBin(filterData['statuses'], eth, [ageRange], gender)}>{output}</span>
+                                                    <span className="second-number" onClick={() => selectDemoBin(filterData['statuses2'], eth, [ageRange], gender)}>{output2}</span>
+                                                </td>
+                                            })}
+
+                                        </tr>
                                     })}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {Constants['listOfAgeRanges'].map(ageRange => {
-                                    return <tr key={ageRange}>
-                                        <th>{ageRange}</th>
+                                    <tr>
+                                        <th className="stats-total-row">Total</th>
                                         {Object.keys(Constants['ethnicityGroups']).map(columnName => {
                                             let eth = Constants['ethnicityGroups'][columnName].map(el => Constants['ethnicities'][el])
                                             let output = eth.reduce((a, b) => {
                                                 return filterData['statuses'].reduce((x, y) => {
-                                                    return stats[b][ageRange][gender][y] + x
+                                                    return Constants['listOfAgeRanges'].reduce((q, w) => { return stats[b][w][gender][y] + q }, 0) + x
                                                 }, 0) + a
                                             }, 0);
                                             let output2 = eth.reduce((a, b) => {
                                                 return filterData['statuses2'].reduce((x, y) => {
-                                                    return stats[b][ageRange][gender][y] + x
+                                                    return Constants['listOfAgeRanges'].reduce((q, w) => { return stats[b][w][gender][y] + q }, 0) + x
                                                 }, 0) + a
                                             }, 0);
                                             output = parseFloat(output.toFixed(1));
                                             output2 = parseFloat(output2.toFixed(1));
 
-                                            let binClassTag = "";
-                                            if (columnName != "Total") {
-                                                binClassTag = "demo-bin-" + demos[gender][Constants['ethDbMap2'][columnName]][ageRange];
-                                            }
-
-
-                                            return <td className={"stats-demo-bin-cell " + (binClassTag)}>
-                                                <span className="first-number" onClick={() => selectDemoBin(filterData['statuses'], eth, [ageRange], gender)}>{output}</span>
-                                                <span className="second-number" onClick={() => selectDemoBin(filterData['statuses2'], eth, [ageRange], gender)}>{output2}</span>
+                                            return <td className="stats-demo-bin-cell stats-total-row">
+                                                <span className="first-number" >{output}</span>
+                                                <span className="second-number">{output2}</span>
                                             </td>
                                         })}
-
                                     </tr>
-                                })}
-                                <tr>
-                                    <th className="stats-total-row">Total</th>
-                                    {Object.keys(Constants['ethnicityGroups']).map(columnName => {
-                                        let eth = Constants['ethnicityGroups'][columnName].map(el => Constants['ethnicities'][el])
-                                        let output = eth.reduce((a, b) => {
-                                            return filterData['statuses'].reduce((x, y) => {
-                                                return Constants['listOfAgeRanges'].reduce((q, w) => { return stats[b][w][gender][y] + q }, 0) + x
-                                            }, 0) + a
-                                        }, 0);
-                                        let output2 = eth.reduce((a, b) => {
-                                            return filterData['statuses2'].reduce((x, y) => {
-                                                return Constants['listOfAgeRanges'].reduce((q, w) => { return stats[b][w][gender][y] + q }, 0) + x
-                                            }, 0) + a
-                                        }, 0);
-                                        output = parseFloat(output.toFixed(1));
-                                        output2 = parseFloat(output2.toFixed(1));
-
-                                        return <td className="stats-demo-bin-cell stats-total-row">
-                                            <span className="first-number" >{output}</span>
-                                            <span className="second-number">{output2}</span>
-                                        </td>
-                                    })}
-                                </tr>
-                            </tbody>
-                        </table>
-                    })}
+                                </tbody>
+                            </table>
+                        })}
+                    </div>
                 </div>
             </div>
         </div>

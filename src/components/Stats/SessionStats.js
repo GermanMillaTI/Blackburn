@@ -10,7 +10,6 @@ import { setSessionStats } from '../../Redux/Features';
 
 
 import './index.css';
-import './Bins.css';
 import { object } from 'prop-types';
 
 const filterReducer = (state, event) => {

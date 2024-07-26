@@ -16,7 +16,7 @@ import BMICalculator from '../CommonFunctions/BMICalculator';
 import LogEvent from '../CommonFunctions/LogEvent';
 import FormatTime from '../CommonFunctions/FormatTime';
 
-function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
+function ParticipantCard({ participantId, participants, setShowBookSession2, demoBins }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userId = userInfo['userId'];
     const [showICFs, setShowICFs] = useState(false);
@@ -39,12 +39,12 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
     let ethnicityGroups = participantInfo['ethnicities'].toString().split(';').map(eth => {
         return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
     });
-    ethnicityGroups = [...new Set(ethnicityGroups)].sort((a, b) => a > b ? 1 : -1).join(', ');
+    const ethnicityGroups2 = [...new Set(ethnicityGroups)].sort((a, b) => a > b ? 1 : -1).join(', ');
 
     let ethnicities = participantInfo['ethnicities'].toString().split(';').map(eth => {
         return Constants['ethnicitiesDisplay'][eth]
     })
-    ethnicities = ethnicities.join(";")
+    ethnicities = ethnicities.join(";");
 
     const sendMail = async (emailType) => {
 
@@ -130,6 +130,20 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
         })
     }
 
+    const ageRange = GetAgeRange(participantInfo)['ageRange'];
+    const gender = Constants['genders'][participantInfo['gender']];
+    let isDemoBinOpen = true;
+    ethnicityGroups.map(group => {
+        const group2 = Constants['ethDbMap2'][group];
+        try {
+            if (!isDemoBinOpen) return;
+
+            if (demoBins[gender][group2][ageRange] !== 0) isDemoBinOpen = false;
+        } catch (e) {
+            isDemoBinOpen = false;
+        }
+    })
+
     return <div className="participant-card">
         <div className="participant-card-column column-1">
             {participantInfo['registeredAs'] === 1 && <span className="registered-by-parent">Registered by parent or guardian</span>}
@@ -192,7 +206,7 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
             <div className="participant-attribute-container">
                 <span className="field-label">Metadata</span>
                 <span>
-                    {Constants['genders'][participantInfo['gender']]} / {GetAgeRange(participantInfo)['ageRange']} ({participantInfo['dob']})
+                    {gender} / {ageRange} ({participantInfo['dob']})
                 </span>
             </div>
             <div className="participant-attribute-container">
@@ -219,7 +233,7 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
             <div className={"participant-attribute-container " + (ethnicities.split(';').length > 1 ? 'multiple-ethnicities' : '')}>
                 <span className="field-label">Ethnicity</span>
                 <span>
-                    {ethnicityGroups}
+                    {ethnicityGroups2}
                     {participantInfo['status'] != 3 && <a className='copy-email-link fas fa-edit'
                         title='Update Ethnicities'
                         onClick={(e) => {
@@ -324,7 +338,6 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
 
             {showICFs && <ICFModal setShowICFs={setShowICFs} participantId={participantId} />}
             <div className="participant-attribute-container">
-
                 <span className="field-label">Status</span>
 
                 <select className="participant-data-selector growing-item"
@@ -337,6 +350,11 @@ function ParticipantCard({ participantId, participants, setShowBookSession2 }) {
                         return <option key={"participant-status-" + statusId} value={statusId} selected={statusId == participantInfo['status']}>{status}</option>
                     })}
                 </select>
+            </div>
+
+            <div className="participant-attribute-container">
+                <span className="field-label">Demo bin</span>
+                <span className={'demo-bin-marker' + (isDemoBinOpen ? '' : ' closed-demo-bin')}>{isDemoBinOpen ? 'Open' : 'Closed'}</span>
             </div>
 
             {participantInfo['icfs'] && !["Rejected", "Withdrawn", "Completed", "Not Selected", "Duplicate"].includes(Constants['participantStatuses'][participantInfo['status']]) &&

@@ -1,16 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
 import { realtimeDb } from '../../firebase/config';
-import { ref, onValue, off } from 'firebase/database';
 import Constants from '../Constants';
 import ParticipantFilter from './ParticipantFilter';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import GetSkinTone from '../CommonFunctions/GetSkinTone';
 import ParticipantCard from './ParticipantCard';
-import UpdateSession from '../Scheduler/UpdateSession';
 import GetBMIRange from '../CommonFunctions/GetBMIRange';
-import CheckDocuments from '../CheckDocuments';
 
 import './index.css';
 
@@ -36,6 +32,7 @@ function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBook
     const userRole = userInfo['role'];
     const [shownParticipants, setShownParticipants] = useState([]);
     const [participants, setParticipants] = useState({});
+    const [demoBins, setDemoBins] = useState({});
     const [sessions, setSessions] = useState({});
 
     useEffect(() => {
@@ -44,26 +41,15 @@ function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBook
 
     useEffect(() => {
         if (!['admin'].includes(userRole)) return null;
-
-        const path = '/participants';
-        const pptRef = ref(realtimeDb, path);
-
-        const sessionsPath = '/timeslots';
-        const sessionsRef = ref(realtimeDb, sessionsPath);
-
-        const sessionsListener = onValue(sessionsRef, (res) => {
-            setSessions(res.val() || {});
-        });
-
-        const listener = onValue(pptRef, (res) => {
-            setParticipants(res.val() || {});
-        });
+        const listener1 = realtimeDb.ref("/participants").on('value', snapshot => setParticipants(snapshot.val() || {}));
+        const listener2 = realtimeDb.ref("/demoBins").on('value', snapshot => setDemoBins(snapshot.val() || {}));
+        const listener3 = realtimeDb.ref("/timeslots").on('value', snapshot => setSessions(snapshot.val() || {}));
 
         return () => {
-            off(pptRef, "value", listener);
-            off(sessionsRef, "value", sessionsListener);
+            realtimeDb.ref("/participants").off('value', listener1);
+            realtimeDb.ref("/demoBins").off('value', listener2);
+            realtimeDb.ref("/timeslots").off('value', listener3);
         }
-
     }, []);
 
     // Reset filterstats
@@ -130,6 +116,7 @@ function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBook
                     participantId={participantId}
                     participants={participants}
                     setShowBookSession2={setShowBookSession2}
+                    demoBins={demoBins}
                 />
             })
             }

@@ -11,7 +11,7 @@ import Navbar from './components/Navbar';
 import Participants from './components/Participants';
 // import FilesView from './components/FilesView';
 import Stats from './components/Stats';
-import Bins from './components/Stats/Bins';
+import DemoBins from './components/DemoBins';
 import ICF from './components/Form/ICF';
 import Scheduler from './components/Scheduler';
 import UpdateSession from './components/Scheduler/UpdateSession';
@@ -30,6 +30,8 @@ function App() {
   const [updateSession, setUpdateSession] = useState("");
   const [timeslotforLog, setTimeslotforLog] = useState("");
   const [showBookSession2, setShowBookSession2] = useState("");
+  const [showStats, setShowStats] = useState(false);
+  const [showDemoBins, setShowDemoBins] = useState(false);
 
   const [filterDataFromStats, setFilterDataFromStats] = useState(false);
   const showDocs = useSelector((state) => state.userInfo.showDocs);
@@ -89,7 +91,7 @@ function App() {
   }
 
   return <div id="mainApplication">
-    {userInfo['role'] && <Navbar setUserId={setUserId} />}
+    {userInfo['role'] && <Navbar setUserId={setUserId} setShowStats={setShowStats} setShowDemoBins={setShowDemoBins} />}
     <Routes>
       <Route path="/" element={getElement("/")} />
       <Route path="/login" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/overview") : getElement("/login")} />
@@ -102,8 +104,8 @@ function App() {
       <Route path="/files" element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/files") : getElement("/login")} />
       <Route path='/overview' element={(userId && Object.keys(userInfo || {}).length > 0) ? getElement("/overview") : getElement("/login")} />
     </Routes>
-    {isStatsActive && <Stats setFilterDataFromStats={setFilterDataFromStats} />}
-    {isDemoStatsActive && <Bins />}
+    {showStats && <Stats setShowStats={setShowStats} setFilterDataFromStats={setFilterDataFromStats} />}
+    {showDemoBins && <DemoBins setShowDemoBins={setShowDemoBins} />}
     {showDocs && <CheckDocuments />}
     {showUpdateSession && <UpdateSession showUpdateSession={showUpdateSession} />}
     {showSessionStats && <SessionStats setFilterDataFromStats={setFilterDataFromStats} />}

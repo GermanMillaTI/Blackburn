@@ -39,7 +39,7 @@ const customButtonStyle = {
     textTransform: 'none',
 };
 
-function Navbar({ setUserId }) {
+function Navbar({ setUserId, setShowStats, setShowDemoBins }) {
     const userInfo = useSelector((state) => state.userInfo.value || {});
     const userRole = userInfo['role'];
     const admin = ['admin'].includes(userRole);
@@ -83,8 +83,6 @@ function Navbar({ setUserId }) {
         })
     }
 
-
-
     return (
         <ThemeProvider theme={theme}>
             <nav id="navbar">
@@ -95,10 +93,10 @@ function Navbar({ setUserId }) {
                 {admin && <a href="/scheduler" onClick={(e) => { e.preventDefault(); navigate("/scheduler"); }}>Scheduler</a>}
                 {(admin || apple) && <a href="/overview" onClick={(e) => { e.preventDefault(); navigate("/overview"); }}>Overview</a>}
                 {(admin || apple) && <a href="/scheduler-external" onClick={(e) => { e.preventDefault(); navigate("/scheduler-external"); }}>Scheduler external</a>}
-                {/* {(admin || apple) && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(isStatsActive(true)); }}>Participant stats</a>}
-                {(admin || apple) && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(setSessionStats(true)); }}>Session stats</a>} */}
+                {(admin || apple) && <a href="/stats" onClick={(e) => { e.preventDefault(); setShowStats(true); }}>Participant stats</a>}
+                {/* {(admin || apple) && <a href="/stats" onClick={(e) => { e.preventDefault(); dispatch(setSessionStats(true)); }}>Session stats</a>} */}
                 {/* {admin && <a href='#' onClick={(e) => { e.preventDefault(); dispatch(setShowLog(true)); }}>Activity log</a>} */}
-                {/* {admin && <a href="/demo-bins" onClick={(e) => { e.preventDefault(); dispatch(isDemoStatsActive(true)); }}>Demo bins</a>} */}
+                {admin && <a href="/demo-bins" onClick={(e) => { e.preventDefault(); setShowDemoBins(true); }}>Demo bins</a>}
                 {/* {["zoltan.bathori@telusinternational.com"].includes(auth.currentUser.email) && <a href="/files" onClick={(e) => { e.preventDefault(); navigate("/files"); }}>Files</a>} */}
                 <a href="/" onClick={(e) => { e.preventDefault(); handleLogout(); navigate("/"); }}>Logout</a>
             </nav>

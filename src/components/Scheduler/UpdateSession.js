@@ -147,6 +147,7 @@ export default ({ showUpdateSession }) => {
 
 
     function updateEthnicity() {
+        return; // not working properly
         const HTMLContent = () => {
 
             return <>
@@ -507,7 +508,7 @@ export default ({ showUpdateSession }) => {
                                 </tr>
                                 <tr>
                                     <td className="participant-table-left">Ethnicities</td>
-                                    <td className="participant-table-right">
+                                    {/* <td className="participant-table-right">
                                         {ethnicities.toString().split(";").join(", ")}
                                         {participantInfo['status'] != 3 && <a className='copy-email-link fas fa-edit'
                                             title='Update Ethnicities'
@@ -516,7 +517,7 @@ export default ({ showUpdateSession }) => {
                                                 updateEthnicity();
                                             }} target='_blank'></a>
                                         }
-                                    </td>
+                                    </td> */}
                                 </tr>
                                 <tr>
                                     <td className="participant-table-left">Skin tone / Range</td>
