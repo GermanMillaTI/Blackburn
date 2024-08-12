@@ -2,22 +2,17 @@ import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { realtimeDb } from '../../firebase/config';
 import Swal from 'sweetalert2';
-import { format } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
-
-import md5 from 'md5';
-import { ref, onValue, off } from 'firebase/database';
 import { setShowUpdateSession, setShowDocs } from '../../Redux/Features';
-import './UpdateSession.css';
+import { renderToString } from 'react-dom/server';
+
+import './index.css';
 import Constants from '../Constants';
 import LogEvent from '../CommonFunctions/LogEvent';
-import { renderToString } from 'react-dom/server';
 import TimeSlotFormat from '../CommonFunctions/TimeSlotFormat';
 import GetAgeRange from '../CommonFunctions/GetAgeRange';
 import GetSkinTone from '../CommonFunctions/GetSkinTone';
-import { object } from 'prop-types';
 import GetBMIRange from '../CommonFunctions/GetBMIRange';
-
 
 export default ({ showUpdateSession }) => {
     const userInfo = useSelector((state) => state.userInfo.value || {});
@@ -29,50 +24,31 @@ export default ({ showUpdateSession }) => {
 
     const sessionId = showUpdateSession;
     const [session, setSession] = useState({});
-    const [participantId, setParticipantId] = useState('');
     const [participantInfo, setParticipantInfo] = useState({});
-    const [ethnicities, setEthnicities] = useState([]);
     const [tattoos, setTattoos] = useState([]);
     const [piercings, setPiercings] = useState([]);
     const dispatch = useDispatch();
 
+    const participantId = session['participantId'];
+
     useEffect(() => {
-        const path = '/timeslots/' + showUpdateSession;
-        const pptRef = ref(realtimeDb, path);
-
-        const listener = onValue(pptRef, (res) => {
-            const temp = res.val() || {};
-            setSession(temp);
-            const participantId = temp['participantId'];
-
-            setParticipantId(participantId);
-        });
-
-        return () => off(pptRef, "value", listener);
+        const listener = realtimeDb.ref('/timeslots/' + showUpdateSession).on('value', snapshot => setSession(snapshot.val() || {}));
+        return () => realtimeDb.ref('/timeslots/' + showUpdateSession).off('value', listener);
     }, []);
+
+    useEffect(() => {
+        const participantId = session['participantId'];
+        if (!participantId) return;
+
+        const listener = realtimeDb.ref('/participants/' + participantId).on('value', snapshot => setParticipantInfo(snapshot.val() || {}));
+        return () => realtimeDb.ref('/participants/' + participantId).off('value', listener);
+    }, [session['participantId']]);
 
     useEffect(() => {
         const handleEsc = (event) => { if (event.keyCode === 27) dispatch(setShowUpdateSession("")) };
         window.addEventListener('keydown', handleEsc);
         return () => { window.removeEventListener('keydown', handleEsc) };
     }, []);
-
-    useEffect(() => {
-        if (participantId == '') return;
-
-        const pptPath = '/participants/' + participantId;
-        const pptInfoRef = ref(realtimeDb, pptPath);
-
-        const pptListener = onValue(pptInfoRef, (res) => {
-            const temp = res.val() || {};
-            setParticipantInfo(temp)
-        });
-
-        return () => {
-            off(pptInfoRef, "value", pptListener);
-
-        }
-    }, [participantId]);
 
     useEffect(() => {
         if (Object.keys(participantInfo).length === 0) return;
@@ -88,18 +64,6 @@ export default ({ showUpdateSession }) => {
         tempPiercings = tempPiercings.join(";")
         setTattoos(tempArray);
         setPiercings(tempPiercings);
-
-    }, [participantInfo])
-
-
-    useEffect(() => {
-        if (Object.keys(participantInfo).length === 0) return;
-        let tempArray = participantInfo['ethnicities'].toString().split(';').map(eth => {
-            return Constants['ethnicitiesDisplay'][eth]
-        })
-
-        tempArray = tempArray.join(";")
-        setEthnicities(tempArray)
 
     }, [participantInfo])
 
@@ -133,7 +97,7 @@ export default ({ showUpdateSession }) => {
 
                 LogEvent({
                     participantId: participantId,
-                    value: `Cancelled session ${sessionId}`,
+                    value: 'Cancelled session ' + sessionId,
                     action: 9
                 })
 
@@ -142,21 +106,15 @@ export default ({ showUpdateSession }) => {
         })
     }
 
-
-
-
-
     function updateEthnicity() {
-        return; // not working properly
+        const ethnicities = participantInfo['ethnicities'].toString().split(';');
         const HTMLContent = () => {
-
             return <>
-                {Object.values(Constants['ethnicitiesDisplay']).sort().map((val, i) => {
-                    return <div key={"popup-filter-eth" + i} className="update-ethnicity-row">
-                        <input id={"popup-filter-" + val} name={val} type="checkbox" checked={ethnicities.includes(val) ? true : false} />
-                        <label htmlFor={"popup-filter-" + val}>{val} <strong>{`
-                        (${Constants.getKeyByValue(Constants['ethDbMap2'],
-                            Constants['ethDbMap'][Constants['ethnicities'][Constants.getKeyByValue(Constants['ethnicitiesDisplay'], val)]])})`}</strong>
+                {Object.keys(Constants['ethnicitiesDisplay']).sort((a, b) => Constants['ethnicitiesDisplay'][a].toString().localeCompare(Constants['ethnicitiesDisplay'][b].toString())).map(ethnicityId => {
+                    const ethnicity = Constants['ethnicitiesDisplay'][ethnicityId];
+                    return <div key={"popup-filter-eth" + ethnicityId} className="update-ethnicity-row">
+                        <input id={"popup-filter-" + ethnicity} name={ethnicity} type="checkbox" checked={ethnicities.includes(ethnicityId) ? true : false} />
+                        <label htmlFor={"popup-filter-" + ethnicity}>{ethnicity} <strong>{Constants.getKeyByValue(Constants['ethDbMap2'], Constants['ethDbMap'][Constants['ethnicities'][Constants.getKeyByValue(Constants['ethnicitiesDisplay'], ethnicity)]])}</strong>
                         </label>
                     </div>
                 })}
@@ -171,15 +129,14 @@ export default ({ showUpdateSession }) => {
             html: renderToString(<HTMLContent />)
         }).then((result) => {
             if (result.isConfirmed) {
-                let checkboxes = document.querySelectorAll("[id^='popup-filter-']");
-                let list = "";
-                checkboxes.forEach(x => list += (x.checked ? Constants.getKeyByValue(Constants['ethnicitiesDisplay'], x.name) + ";" : ""));
+                const checkboxes = document.querySelectorAll("[id^='popup-filter-']");
+                let list = [];
+                checkboxes.forEach(x => {
+                    if (x.checked) list.push(Constants.getKeyByValue(Constants['ethnicitiesDisplay'], x.name));
+                });
 
-                list = list.trim();
-                list = list.substring(0, list.length - 1);
-
-                if (list) {
-                    updateValue("/participants/" + participantId, { ethnicities: list });
+                if (list.length > 0) {
+                    updateValue("/participants/" + participantId, { ethnicities: list.join(';') });
 
                     LogEvent({
                         participantId: participantId,
@@ -194,7 +151,6 @@ export default ({ showUpdateSession }) => {
 
     function updateTattoos() {
         const HTMLContent = () => {
-
             return <>
                 {Object.values(Constants['tattoos']).sort().map((val, i) => {
                     return <div key={"popup-filter-eth" + i} className="update-ethnicity-row">
@@ -237,7 +193,6 @@ export default ({ showUpdateSession }) => {
 
     function updatePiercings() {
         const HTMLContent = () => {
-
             return <>
                 {Object.values(Constants['piercings']).sort().map((val, i) => {
                     return <div key={"popup-filter-eth" + i} className="update-ethnicity-row">
@@ -292,19 +247,6 @@ export default ({ showUpdateSession }) => {
             </select>
         }
 
-        const saveSkinColor = () => {
-            skintone = document.getElementById("newSkinTone").value
-
-            updateValue("/participants/" + participantId, { skintone: parseInt(skintone) });
-
-            LogEvent({
-                participantId: participantId,
-                value: skintone,
-                action: 13
-            })
-        }
-
-
         Swal.fire({
             title: "Updating Skin tone",
             confirmButtonText: "Save",
@@ -312,12 +254,17 @@ export default ({ showUpdateSession }) => {
             html: renderToString(<HTMLContent />)
         }).then((result) => {
             if (result.isConfirmed) {
-                saveSkinColor();
+                skintone = document.getElementById("newSkinTone").value;
+                updateValue("/participants/" + participantId, { skintone: parseInt(skintone) });
+
+                LogEvent({
+                    participantId: participantId,
+                    value: skintone,
+                    action: 13
+                })
             }
         });
     }
-
-
 
     function updateHeight() {
         let heightFt = participantInfo['heightFt'];
@@ -332,21 +279,6 @@ export default ({ showUpdateSession }) => {
             </div>
         }
 
-        const saveHeight = () => {
-            heightFt = document.getElementById("newHeightFt").value;
-            heightIn = document.getElementById("newHeightIn").value;
-
-            updateValue("/participants/" + participantId, { heightFt: parseFloat(heightFt) });
-            updateValue("/participants/" + participantId, { heightIn: parseFloat(heightIn) });
-
-            LogEvent({
-                participantId: participantId,
-                value: `${heightFt}' ${heightIn}''`,
-                action: 13
-            })
-        }
-
-
         Swal.fire({
             title: "Updating Height",
             confirmButtonText: "Save",
@@ -354,7 +286,17 @@ export default ({ showUpdateSession }) => {
             html: renderToString(<HTMLContent />)
         }).then((result) => {
             if (result.isConfirmed) {
-                saveHeight();
+                heightFt = document.getElementById("newHeightFt").value;
+                heightIn = document.getElementById("newHeightIn").value;
+
+                updateValue("/participants/" + participantId, { heightFt: parseFloat(heightFt) });
+                updateValue("/participants/" + participantId, { heightIn: parseFloat(heightIn) });
+
+                LogEvent({
+                    participantId: participantId,
+                    value: heightFt + "' " + heightIn + "''",
+                    action: 13
+                })
             }
         });
     }
@@ -366,19 +308,6 @@ export default ({ showUpdateSession }) => {
             return <input type="number" id="newWeight" defaultValue={weight} />
         }
 
-        const saveWeight = () => {
-            weight = document.getElementById("newWeight").value;
-
-
-            updateValue("/participants/" + participantId, { weightLbs: weight });
-            LogEvent({
-                participantId: participantId,
-                value: weight,
-                action: 13
-            })
-        }
-
-
         Swal.fire({
             title: "Updating Weight (lb)",
             confirmButtonText: "Save",
@@ -386,44 +315,52 @@ export default ({ showUpdateSession }) => {
             html: renderToString(<HTMLContent />)
         }).then((result) => {
             if (result.isConfirmed) {
-                saveWeight();
+                weight = document.getElementById("newWeight").value;
+
+
+                updateValue("/participants/" + participantId, { weightLbs: weight });
+                LogEvent({
+                    participantId: participantId,
+                    value: weight,
+                    action: 13
+                })
             }
         });
     }
 
+    if (Object.keys(participantInfo).length === 0) return null;
 
-
+    let ethnicityGroups = participantInfo['ethnicities'].toString().split(';').map(eth => {
+        return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
+    });
+    const ethnicityGroups2 = [...new Set(ethnicityGroups)].sort((a, b) => a > b ? 1 : -1).join(', ');
 
     return ReactDOM.createPortal((
-        <div className="modal-book-update-session-backdrop" onClick={(e) => { if (e.target.className == "modal-book-update-session-backdrop") dispatch(setShowUpdateSession("")) }}>
-            <div className="modal-book-update-session-main-container">
-                <div className="modal-book-update-session-header">
-                    Update session
-                </div>
-                <div className="update-session-container">
+        <div id="updateSession" onClick={(e) => { if (e.target.id === "updateSession") dispatch(setShowUpdateSession("")) }}>
+            <div id="mainContainer">
+                <div id="header">Update session</div>
+                <div id="content">
                     <div>
-                        <div className="sub-header">
-                            Participant Information
-                        </div>
+                        <div className="sub-header">Participant Information</div>
                         <table>
-                            <tbody className="participant-table">
+                            <tbody>
                                 <tr>
-                                    <td className="participant-table-left">{"# " + participantId}</td>
-                                    <td className="participant-table-right">{`${participantInfo['firstName']} ${participantInfo['lastName']}`}
+                                    <td>{"# " + participantId}</td>
+                                    <td>{participantInfo['firstName'] + ' ' + participantInfo['lastName']}</td>
+                                </tr>
+                                <tr>
+                                    <td>Identification</td>
+                                    <td>
+                                        <button id="docButton" onClick={() => dispatch(setShowDocs(participantId))}>
+                                            Open
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left">Identification</td>
-                                    <button className="participant-table-right doc-button" onClick={(e) => {
-                                        e.preventDefault();
-                                        dispatch(setShowDocs(participantId));
-                                    }}>Open</button>
-                                </tr>
-                                <tr>
-                                    <td className="participant-table-left">E-mail</td>
-                                    <td className="participant-table-right">
+                                    <td>E-mail</td>
+                                    <td>
                                         {participantInfo['email']}
-                                        <a className="copy-email-link fas fa-copy"
+                                        <a className="fas fa-copy"
                                             title="Copy email"
                                             onClick={(e) => {
                                                 e.preventDefault();
@@ -444,10 +381,10 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left">Phone</td>
-                                    <td className="participant-table-right">
+                                    <td>Phone</td>
+                                    <td>
                                         {participantInfo['phone']}
-                                        <a className="copy-email-link fas fa-copy"
+                                        <a className="fas fa-copy"
                                             title="Copy phone"
                                             onClick={(e) => {
                                                 e.preventDefault();
@@ -468,74 +405,67 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left">Country of residence</td>
-                                    <td className="participant-table-right">{participantInfo['country']}</td>
+                                    <td>Country of residence</td>
+                                    <td>{participantInfo['country']}</td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left">City, State</td>
-                                    <td className="participant-table-right">{`${participantInfo['residenceCity']}, ${Constants['usStates'][participantInfo['residenceState']]}`}</td>
+                                    <td>City, State</td>
+                                    <td>{participantInfo['residenceCity']}, {Constants['usStates'][participantInfo['residenceState']]}</td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left">Age range / Gender</td>
-                                    <td className="participant-table-right">{GetAgeRange(participantInfo)['ageRange'] + " / " + Constants['genders'][participantInfo['gender']]}</td>
-                                </tr>
-
-                                <tr>
-                                    <td className="participant-table-left">Tattoos</td>
-                                    <td className="participant-table-right">
-                                        {tattoos.toString().split(";").join(", ")}
-                                        {participantInfo['status'] != 3 && <a className='copy-email-link fas fa-edit'
-                                            title='Update Tattoos list'
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                updateTattoos();
-                                            }} target='_blank'></a>
-                                        }
+                                    <td>Date of birth</td>
+                                    <td>
+                                        {participantInfo['dob']}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left">Piercings</td>
-                                    <td className="participant-table-right">
-                                        {piercings.toString().split(";").join(", ")}
-                                        {participantInfo['status'] != 3 && <a className='copy-email-link fas fa-edit'
-                                            title='Update Tattoos list'
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                updatePiercings();
-                                            }} target='_blank'></a>
-                                        }
-                                    </td>
+                                    <td>Age range / Gender</td>
+                                    <td>{GetAgeRange(participantInfo)['ageRange'] + " / " + Constants['genders'][participantInfo['gender']]}</td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left">Ethnicities</td>
-                                    {/* <td className="participant-table-right">
-                                        {ethnicities.toString().split(";").join(", ")}
-                                        {participantInfo['status'] != 3 && <a className='copy-email-link fas fa-edit'
-                                            title='Update Ethnicities'
+                                    <td>Ethnicities</td>
+                                    <td>
+                                        {ethnicityGroups2}
+                                        {/* {participantInfo['status'] !== 3 && */}
+                                        <a className='fas fa-edit'
+                                            title='Update ethnicities'
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 updateEthnicity();
-                                            }} target='_blank'></a>
-                                        }
-                                    </td> */}
-                                </tr>
-                                <tr>
-                                    <td className="participant-table-left">Skin tone / Range</td>
-                                    <td className="participant-table-right">
-                                        {participantInfo['skintone']} / {GetSkinTone(participantInfo)['skinRange']}
-                                        <a className='copy-email-link fas fa-edit'
-                                            title='Update Skin tone'
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                updateSkinColor();
-                                            }} target='_blank'></a>
+                                            }} target='_blank' />
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td className="participant-table-left">Hair Color</td>
-                                    <td className="participant-table-right">
-                                        <select className="session-data-selector"
+                                    <td>Tattoos</td>
+                                    <td>
+                                        {tattoos.toString().split(";").join(", ")}
+                                        {participantInfo['status'] != 3 && <a className='fas fa-edit'
+                                            title='Update tattoos list'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                updateTattoos();
+                                            }} target='_blank' />
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Piercings</td>
+                                    <td>
+                                        {piercings.toString().split(";").join(", ")}
+                                        {participantInfo['status'] != 3 && <a className='fas fa-edit'
+                                            title='Update tattoos list'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                updatePiercings();
+                                            }} target='_blank' />
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Hair Color</td>
+                                    <td>
+                                        <select
                                             onChange={(e) => {
                                                 updateValue("/participants/" + participantId, { hairColor: parseInt(e.currentTarget.value) });
                                                 LogEvent({ participantId, action: 13, value: parseInt(e.currentTarget.value), userId: userId });
@@ -549,9 +479,9 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left">Hair Type</td>
-                                    <td className="participant-table-right">
-                                        <select className="session-data-selector"
+                                    <td>Hair Type</td>
+                                    <td>
+                                        <select
                                             onChange={(e) => {
                                                 updateValue("/participants/" + participantId, { hairType: parseInt(e.currentTarget.value) });
                                                 LogEvent({ participantId, action: 13, value: parseInt(e.currentTarget.value), userId: userId });
@@ -565,9 +495,9 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left">Hair Length</td>
-                                    <td className="participant-table-right">
-                                        <select className="session-data-selector"
+                                    <td>Hair Length</td>
+                                    <td>
+                                        <select
                                             onChange={(e) => {
                                                 updateValue("/participants/" + participantId, { hairLength: parseInt(e.currentTarget.value) });
                                                 LogEvent({ participantId, action: 13, value: parseInt(e.currentTarget.value), userId: userId });
@@ -582,9 +512,9 @@ export default ({ showUpdateSession }) => {
                                 </tr>
 
                                 <tr>
-                                    <td className="participant-table-left">Facial hair</td>
-                                    <td className="participant-table-right">
-                                        <select className="session-data-selector"
+                                    <td>Facial hair</td>
+                                    <td>
+                                        <select
                                             onChange={(e) => {
                                                 updateValue("/participants/" + participantId, { facialHair: parseInt(e.currentTarget.value) });
                                                 LogEvent({ participantId, action: 13, value: parseInt(e.currentTarget.value), userId: userId });
@@ -598,14 +528,14 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left">Facial Makeup</td>
-                                    <td className="participant-table-right">
-                                        <select className="session-data-selector"
+                                    <td>Facial Makeup</td>
+                                    <td>
+                                        <select
                                             onChange={(e) => {
                                                 updateValue("/timeslots/" + sessionId, { makeup: parseInt(e.currentTarget.value) });
                                                 LogEvent({
                                                     participantId: participantId,
-                                                    value: `${Constants['makeup'][parseInt(e.target.value)]}`,
+                                                    value: Constants['makeup'][parseInt(e.target.value)],
                                                     action: 13
                                                 })
                                             }}
@@ -617,11 +547,22 @@ export default ({ showUpdateSession }) => {
                                         </select>
                                     </td>
                                 </tr>
-
                                 <tr>
-                                    <td className="participant-table-left">Height</td>
-                                    <td className="participant-table-right">{`${participantInfo['heightFt']}' ${participantInfo['heightIn']}''`}
-                                        <a className='copy-email-link fas fa-edit'
+                                    <td>Skin tone / Range</td>
+                                    <td>
+                                        {participantInfo['skintone']} / {GetSkinTone(participantInfo)['skinRange']}
+                                        <a className='fas fa-edit'
+                                            title='Update skin tone'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                updateSkinColor();
+                                            }} target='_blank' />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Height</td>
+                                    <td>{participantInfo['heightFt']}' {participantInfo['heightIn']}''
+                                        <a className='fas fa-edit'
                                             title='Update Height'
                                             onClick={(e) => {
                                                 e.preventDefault();
@@ -630,9 +571,9 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left">Weight (lb)</td>
-                                    <td className="participant-table-right">{`${parseFloat(participantInfo['weightLbs']).toFixed(2)}`}
-                                        <a className='copy-email-link fas fa-edit'
+                                    <td>Weight (lb)</td>
+                                    <td>{parseFloat(participantInfo['weightLbs']).toFixed(2)}
+                                        <a className='fas fa-edit'
                                             title='Update Weight'
                                             onClick={(e) => {
                                                 e.preventDefault();
@@ -640,28 +581,21 @@ export default ({ showUpdateSession }) => {
                                             }} target='_blank'></a>
                                     </td>
                                 </tr>
-
                                 <tr>
-                                    <td className="participant-table-left">Date of birth</td>
-                                    <td className="participant-table-right">
-                                        {participantInfo['dob']}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="participant-table-left">BMI (Range)</td>
-                                    <td className="participant-table-right">
+                                    <td>BMI (Range)</td>
+                                    <td>
                                         {Object.values(GetBMIRange(participantInfo)).join(" (") + ")"}
                                     </td>
                                 </tr>
 
 
                                 <tr>
-                                    <td className="participant-table-left">Participant comments</td>
+                                    <td>Participant comments</td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left" colSpan="2">
+                                    <td colSpan="2">
                                         <textarea
-                                            className="ppt-comment"
+                                            id="participantComment"
                                             defaultValue={participantInfo['comment']}
                                             onBlur={(e) => {
                                                 const newComment = e.currentTarget.value;
@@ -687,65 +621,28 @@ export default ({ showUpdateSession }) => {
                                         />
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td className="participant-table-left">&nbsp;</td>
-                                </tr>
-
-
-
-
-                                <tr>
-                                    <td className="participant-table-left">&nbsp;</td>
-                                </tr>
-
-                                <tr>
-                                    <td className="participant-table-left">&nbsp;</td>
-                                </tr>
-
-                                {
-                                    session['status'] === "Completed" && <tr className='client-info-container'>
-                                        <td className="participant-table-center" colSpan="2">Client Info: {participantId}</td>
-
-                                    </tr>
-                                }
-
-                                <tr>
-                                    <td className="participant-table-left">&nbsp;</td>
-                                </tr>
-
-                                <tr>
-                                    <td className="participant-table-left">&nbsp;</td>
-                                </tr>
-
                             </tbody>
                         </table>
                     </div>
                     <div>
-                        <div className="sub-header">
-                            Session Information
-                        </div>
+                        <div className="sub-header">Session Information</div>
                         <table>
                             <tbody>
                                 <tr>
-                                    <td className="participant-table-left">Time</td>
-                                    <td className="participant-table-right">
+                                    <td>Time</td>
+                                    <td>
                                         {TimeSlotFormat(sessionId)}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className="participant-table-left">Station</td>
-                                    <td className="participant-table-right">{sessionId.substring(14) + (session['backup'] ? " (backup session)" : "")}</td>
-                                </tr>
-
-                                <tr>
-                                    <td className="participant-table-left">Session status</td>
-                                    <td className="participant-table-right">
-                                        <select className="session-data-selector"
+                                    <td>Session status</td>
+                                    <td>
+                                        <select
                                             onChange={(e) => {
                                                 updateValue("/timeslots/" + sessionId, { status: parseInt(e.currentTarget.value) });
                                                 LogEvent({
                                                     participantId: participantId,
-                                                    value: `Session ${sessionId} changed to ${Constants['sessionStatuses'][parseInt(e.target.value)]}`,
+                                                    value: 'Session ' + sessionId + ' changed to ' + Constants['sessionStatuses'][parseInt(e.target.value)],
                                                     action: 4
                                                 })
                                             }}
@@ -758,13 +655,10 @@ export default ({ showUpdateSession }) => {
                                         </select>
                                     </td>
                                 </tr>
-
-
-
                                 <tr>
-                                    <td className="participant-table-left">Participant status</td>
-                                    <td className="participant-table-right">
-                                        <select className="session-data-selector"
+                                    <td>Participant status</td>
+                                    <td>
+                                        <select
                                             onChange={(e) => {
                                                 updateValue("/participants/" + participantId, { status: parseInt(e.currentTarget.value) });
                                                 if (e.currentTarget.value == "Duplicate" && participantInfo['not_duplicate']) {
@@ -784,67 +678,64 @@ export default ({ showUpdateSession }) => {
                                         </select>
                                     </td>
                                 </tr>
-                                {(session['bonus'] || !participantInfo['bonus_amount']) &&
+                                {(session['bonus'] || !participantInfo['bonus_amount']) && <tr>
+                                    <td>Bonus Info</td>
+                                    <td className="participant-table-right bonus-container" colSpan="2">
 
-                                    <tr>
-                                        <td className="participant-table-left">Bonus Info</td>
-                                        <td className="participant-table-right bonus-container" colSpan="2">
+                                        <select className='session-data-selector'
+                                            onChange={(e) => {
+                                                updateValue("/timeslots/" + sessionId + "/", { bonus: parseInt(e.currentTarget.value) });
+                                                LogEvent({
+                                                    participantId: participantId,
+                                                    value: parseInt(e.currentTarget.value) === 0 ? `Removal of bonus for ${sessionId}` : `set of bonus of $${e.currentTarget.value} for ${sessionId}`,
+                                                    action: parseInt(e.currentTarget.value) === 0 ? 12 : 11
+                                                })
+                                            }}
+                                        >
+                                            {Constants['bonusList'].map(el => {
+                                                return <option key={el} value={el} selected={el === session['bonus']}>${parseFloat(el)}</option>
+                                            })}
+                                        </select>
 
-                                            <select className='session-data-selector'
-                                                onChange={(e) => {
-                                                    updateValue("/timeslots/" + sessionId + "/", { bonus: parseInt(e.currentTarget.value) });
+                                    </td>
+                                </tr>}
+                                <tr>
+                                    <td>Repeat?</td>
+                                    <td>
+                                        <input
+                                            type='checkbox'
+                                            value={true}
+                                            checked={participantInfo['furtherSessions'] === true ? true : false}
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    updateValue("/participants/" + participantId, { furtherSessions: true })
                                                     LogEvent({
-                                                        participantId: participantId,
-                                                        value: parseInt(e.currentTarget.value) === 0 ? `Removal of bonus for ${sessionId}` : `set of bonus of $${e.currentTarget.value} for ${sessionId}`,
-                                                        action: parseInt(e.currentTarget.value) === 0 ? 12 : 11
-                                                    })
-                                                }}
-                                            >
-                                                {Constants['bonusList'].map(el => {
-                                                    return <option key={el} value={el} selected={el === session['bonus']}>${parseFloat(el)}</option>
-                                                })}
-                                            </select>
+                                                        participantId,
+                                                        action: 13,
+                                                        value: `Further sessions: true`,
+                                                        userId: userId
+                                                    });
+                                                } else {
+                                                    realtimeDb.ref('/participants/' + participantId + '/furtherSessions').remove();
 
-                                        </td>
-                                    </tr>
-                                }
-                                <tr>
-                                    <td className="participant-table-left">Repeat?</td>
-                                    <input
-                                        type='checkbox'
-                                        value={true}
-                                        checked={participantInfo['furtherSessions'] === true ? true : false}
-                                        onChange={(e) => {
-                                            if (e.target.checked) {
-                                                updateValue("/participants/" + participantId, { furtherSessions: true })
-                                                LogEvent({
-                                                    participantId,
-                                                    action: 13,
-                                                    value: `Further sessions: true`,
-                                                    userId: userId
-                                                });
-                                            } else {
-                                                realtimeDb.ref(`/participants/${participantId}/furtherSessions`).remove();
-
-                                                LogEvent({
-                                                    participantId,
-                                                    action: 13,
-                                                    value: `Further sessions: false`,
-                                                    userId: userId
-                                                });
-                                            }
-                                        }}
-                                    ></input>
+                                                    LogEvent({
+                                                        participantId,
+                                                        action: 13,
+                                                        value: `Further sessions: false`,
+                                                        userId: userId
+                                                    });
+                                                }
+                                            }}
+                                        />
+                                    </td>
                                 </tr>
 
-                                <tr>
-                                    <td className="participant-table-left">Session comments</td>
-                                </tr>
+                                <tr><td>Session comments</td></tr>
 
-                                <tr className="participant-table-left">
+                                <tr>
                                     <td colSpan="2">
                                         <textarea
-                                            className="session-comment"
+                                            id="sessionComment"
                                             defaultValue={session['comments']}
                                             onBlur={(e) => {
                                                 const newComment = e.currentTarget.value;
@@ -852,7 +743,7 @@ export default ({ showUpdateSession }) => {
                                                     updateValue("/timeslots/" + sessionId, { comments: newComment });
                                                     LogEvent({
                                                         participantId: participantId,
-                                                        value: `Comments on Session Id ${sessionId}`,
+                                                        value: 'Comments on Session Id ' + sessionId,
                                                         action: 5
                                                     })
                                                 }
@@ -870,29 +761,21 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className="cancel-button-row" colSpan="2">
-                                        <button className="cancel-session-button" onClick={() => cancelSession(sessionId)}>Cancel session</button>
+                                    <td colSpan="2" className='center-tag'>
+                                        <button id="cancelSessionButton" onClick={() => cancelSession(sessionId)}>Cancel session</button>
                                     </td>
                                 </tr>
 
-
-
-
-                                {participantInfo['bonus_amount'] &&
-                                    <tr>
-                                        <td className="participant-table-right bonus-container" colSpan="2">
-                                            <input type="checkbox" checked={['Scheduled', 'Checked In', 'Completed'].includes(Constants['sessionStatuses'][session['status']])} disabled />
-                                            <label> Extra bonus ($ {participantInfo['bonus_amount']}) <i>Offered during the handoff</i></label>
-                                        </td>
-                                    </tr>
-                                }
-
+                                {participantInfo['bonus_amount'] && <tr>
+                                    <td className="participant-table-right bonus-container" colSpan="2">
+                                        <input type="checkbox" checked={['Scheduled', 'Checked In', 'Completed'].includes(Constants['sessionStatuses'][session['status']])} disabled />
+                                        <label> Extra bonus ($ {participantInfo['bonus_amount']}) <i>Offered during the handoff</i></label>
+                                    </td>
+                                </tr>}
                             </tbody>
                         </table>
                     </div>
-
                 </div>
-
             </div>
         </div>
     ), document.body);

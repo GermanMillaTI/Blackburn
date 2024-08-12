@@ -14,7 +14,7 @@ import Stats from './components/Stats';
 import DemoBins from './components/DemoBins';
 import ICF from './components/Form/ICF';
 import Scheduler from './components/Scheduler';
-import UpdateSession from './components/Scheduler/UpdateSession';
+import UpdateSession from './components/UpdateSession';
 import CheckDocuments from './components/CheckDocuments';
 import SchedulerExternal from './components/Scheduler/SchedulerExternal';
 import Overview from './components/Scheduler/Overview';

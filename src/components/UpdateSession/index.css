@@ -1,0 +1,161 @@
+#updateSession {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+#updateSession #mainContainer {
+    height: 100%;
+    min-width: 50%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 2em;
+    background-color: var(--body-color);
+    position: absolute;
+    overflow: hidden;
+}
+
+#updateSession #mainContainer #header {
+    padding: .2em;
+    font-weight: bold;
+    text-align: center;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
+    font-size: 1.3em;
+}
+
+#updateSession #mainContainer .sub-header {
+    top: 0px;
+    position: sticky;
+    padding: .5em;
+    font-weight: bold;
+    text-align: center;
+}
+
+#updateSession #mainContainer #content {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 0 1em;
+    gap: 2em;
+    overflow-y: auto;
+}
+
+#updateSession #mainContainer #content #docButton {
+    padding: 0 1em;
+    border: none;
+    font-weight: bold;
+    background: var(--telus-color-1);
+    color: var(--link-text-1);
+    cursor: pointer;
+    border-radius: .3em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
+    outline: none;
+}
+
+#updateSession #mainContainer #content #docButton:hover {
+    color: var(--link-hover-text-1);
+}
+
+#updateSession #mainContainer #content table {
+    display: inline-block;
+    border-collapse: collapse;
+}
+
+#updateSession #mainContainer #content table tr td:nth-child(1) {
+    padding: .2em 1em .2em .2em;
+    font-weight: bold;
+}
+
+#updateSession #mainContainer #content table tr td:nth-child(2) {
+    padding: .1em;
+    max-width: 30em;
+}
+
+#updateSession #mainContainer #content #participantComment {
+    font-size: 1em;
+    width: 25em;
+    border-radius: .3em;
+    padding: .3em;
+    resize: vertical;
+    min-height: 8em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
+    outline: none;
+}
+
+#updateSession #mainContainer #content #sessionComment {
+    font-size: 1em;
+    width: 25em;
+    border-radius: .3em;
+    padding: .3em;
+    resize: vertical;
+    min-height: 8em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
+    outline: none;
+}
+
+#updateSession #mainContainer #content .fas {
+    color: var(--telus-color-1);
+    margin-left: .5em;
+}
+
+#updateSession #mainContainer #content .fas:hover {
+    color: var(--telus-color-2);
+}
+
+#updateSession #mainContainer #content select {
+    min-width: 7.5em;
+    font-size: 1em;
+    border-radius: .3em;
+    padding: 0em .3em;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
+    outline: none;
+}
+
+#updateSession #mainContainer #content #cancelSessionButton {
+    padding: 0em .6em;
+    border: none;
+    font-weight: bold;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
+    cursor: pointer;
+    outline: none;
+    border-radius: .2em;
+    color: #fff;
+    background: #c20a6f;
+}
+
+#updateSession #mainContainer #content #cancelSessionButton:hover {
+    color: var(--link-hover-text-1);
+}
+
+#updateSession .center-tag {
+    text-align: center;
+}
+
+#updateSession .bonus-container input,
+#updateSession .bonus-container label {
+    cursor: pointer;
+    user-select: none;
+}
+
+.update-ethnicity-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.update-ethnicity-row label {
+    padding: .1em .3em;
+    cursor: pointer;
+    user-select: none;
+}
+
+.update-ethnicity-row input[type=checkbox] {
+    cursor: pointer;
+}

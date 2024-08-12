@@ -26,10 +26,8 @@ function ParticipantCard({ participantId, participants, setShowBookSession2, dem
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const path = '/timeslots';
-        const pptRef = ref(realtimeDb, path);
-        const listener = onValue(pptRef, (res) => setTimeslots(res.val() || {}));
-        return () => off(pptRef, "value", listener);
+        const listener1 = realtimeDb.ref('/timeslots').on('value', res => setTimeslots(res.val() || {}));
+        return () => realtimeDb.ref('/timeslots').off('value', listener1);
     }, [])
 
     const updateValue = (path, value) => {
@@ -411,20 +409,18 @@ function ParticipantCard({ participantId, participants, setShowBookSession2, dem
         </div>
 
         <div className={"participant-card-column column-3"}>
-            <span className="participant-attribute-header">Sessions {participantInfo['external_id'] ? " (" + participantInfo['external_id'] + ")" : ""}</span>
+            <span className="participant-attribute-header">Sessions {participantInfo['appleId'] ? " (" + participantInfo['appleId'] + ")" : ""}</span>
             {Object.keys(timeslots || {}).map(timeslotId => {
                 const session = timeslots[timeslotId];
-                const station = parseInt(timeslotId.substring(14)) > 100 ? 'Backup' : timeslotId.substring(14);
                 if (participantId !== session['participantId']) return null;
-                return (
-                    <button
-                        key={"session" + timeslotId}
-                        className="session-button"
-                        onClick={() => dispatch(setShowUpdateSession(timeslotId))}
-                    >
-                        {TimeSlotFormat(timeslotId) + " (" + station + ")" + ": " + Constants['sessionStatuses'][session['status']]}
-                    </button>
-                )
+                const status = Constants['participantStatuses'][session['status']];
+                return <button
+                    key={"session" + timeslotId}
+                    className="session-button"
+                    onClick={() => dispatch(setShowUpdateSession(timeslotId))}
+                >
+                    {TimeSlotFormat(timeslotId) + ": " + status}
+                </button>
             })}
 
             {!["Rejected", "Withdrawn", "Completed", "Not Selected", "Duplicate"].includes(Constants['participantStatuses'][participantInfo['status']]) &&
@@ -460,7 +456,7 @@ function ParticipantCard({ participantId, participants, setShowBookSession2, dem
                     <span className="field-label">{t.substring(0, 16).replaceAll('_', ' ')}</span>
                     <span className="email-history-content">
                         <span>{emailTitle}</span>
-                        {appointmentTime && <span>{appointmentTime}</span>}
+                        {appointmentTime && <span> {appointmentTime}</span>}
                     </span>
                 </div>
             })}

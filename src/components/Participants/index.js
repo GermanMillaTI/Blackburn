@@ -74,6 +74,7 @@ function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBook
 
         <div id="participantTable">
             {shownParticipants.map((participantId, index) => {
+                participantId = parseInt(participantId);
                 const participantInfo = participants[participantId];
 
                 if (!participantInfo) return null; //prevents attempting to render after deleting ppts
