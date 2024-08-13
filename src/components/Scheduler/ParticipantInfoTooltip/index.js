@@ -30,7 +30,7 @@ function ParticipantInfoTooltip({ participants, timeslots, participantId, sessio
     const appleId = participantInfo['appleId'] || "";
     const sessionInfo = timeslots[sessionId];
 
-    const clientContributions = appleId ? client['contributions'][appleId] : [];
+    const clientContributions = client['contributions'][appleId || ''] || [];
 
     var discrepancies = {
         dateOfBirth: false,

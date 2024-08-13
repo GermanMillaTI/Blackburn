@@ -16,7 +16,7 @@ function TableOfSessions({ participantId, participantInfo }) {
 
     useEffect(() => {
         if (Object.keys(participantInfo).length === 0) return;
-        const listener = realtimeDb.ref("/timeslots").orderByChild('status').equalTo('').on('value', res => {
+        const listener = realtimeDb.ref("/timeslots").orderByChild('status').equalTo(null).on('value', res => {
             let data = res.val() || {};
             let temp = {};
             Object.keys(data).map(sessionId => {
@@ -62,12 +62,11 @@ function TableOfSessions({ participantId, participantInfo }) {
             if (result.isConfirmed) {
                 let data = {
                     status: 0,
-                    participantId: participantId,
-                    confirmed: "no",
+                    participantId: parseInt(participantId),
                     remind: true
                 }
 
-                if (data['locked'] === true) data['locked'] = false;
+                if (data['locked'] === true) delete data['locked'];
 
                 // Save the session
                 realtimeDb.ref("/timeslots/" + sessionId).update(data);
@@ -106,7 +105,7 @@ function TableOfSessions({ participantId, participantInfo }) {
                             let nextFreeLab = "";
                             let free = bookedSessions < totalOfSessions;
                             if (free) {
-                                nextFreeLab = Object.keys(timeslots).filter(key => key.startsWith(sessionId) && !timeslots[key]['participantId']).sort((a, b) => a < b ? 1 : -1).sort((a, b) => timeslots[a]['backup'] ? 1 : -1)[0].substring(14);
+                                nextFreeLab = Object.keys(timeslots).filter(key => key.startsWith(sessionId) && !timeslots[key]['participantId']).sort((a, b) => a < b ? 1 : -1)[0].substring(14);
                                 sessionIdWithLab = day.replaceAll('-', '') + '_' + timeslot.replaceAll(':', '') + '_' + nextFreeLab;
                             }
                             return (

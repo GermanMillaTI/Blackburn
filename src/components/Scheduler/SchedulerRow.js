@@ -27,7 +27,6 @@ function SchedulerRow({ participants, timeslots, sessionId, index, array, client
     const participantId = timeslots[sessionId]['participantId'];
     const participantInfo = participants[participantId] || {};
 
-    // Update value in DB
     function cancelSession(sessionId) {
         Swal.fire({
             title: "Are you sure?",
@@ -36,22 +35,15 @@ function SchedulerRow({ participants, timeslots, sessionId, index, array, client
             confirmButtonText: 'Yes, cancel!'
         }).then((result) => {
             if (result.isConfirmed) {
-                let path = "/timeslots/" + sessionId;
-                let data = {
-                    participantId: "",
-                    status: "",
-                    confirmed: "",
-                    remind: false,
-                    comments: ""
-                }
-
-                // Set the bonuses to false
-                let bonuses = timeslots[sessionId]['bonus'];
-                if (bonuses) {
-                    data['bonus'] = JSON.parse(JSON.stringify(bonuses));
-                    Object.keys(bonuses).map(bonusId => {
-                        data['bonus'][bonusId]['a'] = false;
-                    })
+                const path = "/timeslots/" + sessionId;
+                const data = {
+                    participantId: null,
+                    bonus: null,
+                    failedComp: null,
+                    makeup: null,
+                    status: null,
+                    remind: null,
+                    comments: null
                 }
 
                 updateValue(path, data);
@@ -115,7 +107,7 @@ function SchedulerRow({ participants, timeslots, sessionId, index, array, client
     }
 
     function unlockSession(sessionId) {
-        updateValue("/timeslots/" + sessionId, { locked: false });
+        realtimeDb.ref("/timeslots/" + sessionId + "/locked").remove();
         LogEvent({
             value: 'Unlocked session: ' + sessionId,
             action: 7
@@ -142,7 +134,7 @@ function SchedulerRow({ participants, timeslots, sessionId, index, array, client
             {participantId ? (participantInfo['firstName'] + " " + participantInfo['lastName']) : ""}
         </td>
         <td >
-            {participantId ? (participantInfo['email']) : ""}
+            {participantInfo['email']}
         </td>
         <td>
             {timeslots[sessionId]['comments']}
@@ -152,12 +144,12 @@ function SchedulerRow({ participants, timeslots, sessionId, index, array, client
         </td>
         <td className="center-tag">
             <div className="buttons-of-timeslot">
-                {timeslots[sessionId]['status'] === "" && !timeslots[sessionId]['locked'] && <button className="update-timeslot-button book-button" onClick={() => { setSelectedSessionId(sessionId); setShowBookSession(true) }}>Book</button>}
-                {timeslots[sessionId]['status'] === "" && !timeslots[sessionId]['locked'] && <button className="update-timeslot-button lock-button" onClick={() => { lockSession(sessionId) }}>Lock</button>}
-                {timeslots[sessionId]['status'] === "" && timeslots[sessionId]['locked'] === true && <button className="update-timeslot-button unlock-button" onClick={() => { unlockSession(sessionId) }}>Unlock</button>}
+                {timeslots[sessionId]['status'] === undefined && !timeslots[sessionId]['locked'] && <button className="update-timeslot-button book-button" onClick={() => { setSelectedSessionId(sessionId); setShowBookSession(true) }}>Book</button>}
+                {timeslots[sessionId]['status'] === undefined && !timeslots[sessionId]['locked'] && <button className="update-timeslot-button lock-button" onClick={() => { lockSession(sessionId) }}>Lock</button>}
+                {timeslots[sessionId]['status'] === undefined && timeslots[sessionId]['locked'] === true && <button className="update-timeslot-button unlock-button" onClick={() => { unlockSession(sessionId) }}>Unlock</button>}
                 {timeslots[sessionId]['status'] === 0 && timeslots[sessionId]['remind'] == true && <button className="update-timeslot-button remind-button" onClick={() => sendReminder(sessionId)}>Remind</button>}
-                {timeslots[sessionId]['status'] !== "" && <button className="update-timeslot-button update-button" onClick={() => dispatch(setShowUpdateSession(sessionId))}>Update</button>}
-                {timeslots[sessionId]['status'] !== "" && <button className="update-timeslot-button cancel-button" onClick={() => cancelSession(sessionId)}>Cancel</button>}
+                {timeslots[sessionId]['status'] !== undefined && <button className="update-timeslot-button update-button" onClick={() => dispatch(setShowUpdateSession(sessionId))}>Update</button>}
+                {timeslots[sessionId]['status'] !== undefined && <button className="update-timeslot-button cancel-button" onClick={() => cancelSession(sessionId)}>Cancel</button>}
             </div>
         </td>
         {showBookSession && <BookSession participants={participants} timeslots={timeslots} setShowBookSession={setShowBookSession} selectedSessionId={selectedSessionId} setJustBookedSession={setJustBookedSession} />}

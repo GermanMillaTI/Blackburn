@@ -43,12 +43,11 @@ function BookSession({ participants, timeslots, setShowBookSession, selectedSess
             if (result.isConfirmed) {
                 let data = {
                     status: 0,
-                    participantId: participantId,
-                    confirmed: "no",
+                    participantId: parseInt(participantId),
                     remind: true
                 }
 
-                if (data['locked'] === true) data['locked'] = false;
+                if (data['locked'] === true) delete data['locked'];
 
                 // Save the session
                 let path = "/timeslots/" + selectedSessionId;
@@ -58,7 +57,7 @@ function BookSession({ participants, timeslots, setShowBookSession, selectedSess
 
                 LogEvent({
                     value: 'Booked session',
-                    participantId: participantId,
+                    participantId: parseInt(participantId),
                     action: 8
                 })
 

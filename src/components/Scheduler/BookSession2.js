@@ -55,12 +55,11 @@ function BookSession2({ showBookSession2, setShowBookSession2 }) {
             if (result.isConfirmed) {
                 let data = {
                     status: 0,
-                    participantId: participantId,
-                    confirmed: "no",
+                    participantId: parseInt(participantId),
                     remind: true
                 }
 
-                if (data['locked'] === true) data['locked'] = false;
+                if (data['locked'] === true) delete data['locked'];
 
                 // Save the session
                 updateValue("/timeslots/" + sessionId, data);
@@ -68,7 +67,7 @@ function BookSession2({ showBookSession2, setShowBookSession2 }) {
 
                 LogEvent({
                     value: 'Booked session',
-                    participantId: participantId,
+                    participantId: parseInt(participantId),
                     action: 8
                 });
 
@@ -141,7 +140,7 @@ function BookSession2({ showBookSession2, setShowBookSession2 }) {
                                         let nextFreeLab = "";
                                         let free = bookedSessions < totalOfSessions;
                                         if (free) {
-                                            nextFreeLab = Object.keys(timeslots).filter(key => key.startsWith(sessionId) && !timeslots[key]['participantId']).sort((a, b) => a < b ? 1 : -1).sort((a, b) => timeslots[a]['backup'] ? 1 : -1)[0].substring(14);
+                                            nextFreeLab = Object.keys(timeslots).filter(key => key.startsWith(sessionId) && !timeslots[key]['participantId']).sort((a, b) => a < b ? 1 : -1)[0].substring(14);
                                             sessionIdWithLab = day.replaceAll('-', '') + '_' + timeslot.replaceAll(':', '') + '_' + nextFreeLab;
                                         }
                                         return (

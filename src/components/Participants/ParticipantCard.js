@@ -389,10 +389,23 @@ function ParticipantCard({ participantId, participants, setShowBookSession2, dem
                 <textarea className="participant-comment"
                     defaultValue={participantInfo['comment']}
                     onBlur={(e) => {
-                        const newComment = e.currentTarget.value;
-                        if (newComment != participantInfo['comment']) {
-                            updateValue("/participants/" + participantId, { comment: newComment });
-                            LogEvent({ participantId, action: 1, value: newComment, userId: userId });
+                        const newComment = (e.currentTarget.value || '').toString().trim();
+                        if (newComment === "" && participantInfo['comment'] !== "") {
+                            realtimeDb.ref('/participants/' + participantId + '/comment').remove();
+                            LogEvent({
+                                participantId: parseInt(participantId),
+                                action: 1,
+                                value: '',
+                                userId: userId
+                            });
+                        } else if (newComment !== participantInfo['comment']) {
+                            realtimeDb.ref('/participants/' + participantId).update({ comment: newComment });
+                            LogEvent({
+                                participantId: parseInt(participantId),
+                                action: 1,
+                                value: newComment,
+                                userId: userId
+                            });
                         }
                     }}
                     placeholder="Comments..."
@@ -434,22 +447,17 @@ function ParticipantCard({ participantId, participants, setShowBookSession2, dem
             {participantInfo['history'] && Object.keys(participantInfo['history']).map((t) => {
                 let emailTitle = participantInfo['history'][t]['title'];
                 let appointmentTime = "";
-                if (emailTitle.startsWith('Handoff')) {
-                    emailTitle = emailTitle.replace("(", "($ ");
-                }
-                else if (emailTitle.startsWith('Confirmation') && emailTitle.length > 15) {
+                if (emailTitle.startsWith('Confirmation') && emailTitle.length > 15) {
                     appointmentTime = emailTitle.substring(13, 17) + "-" +
                         emailTitle.substring(17, 19) + "-" +
                         emailTitle.substring(19, 21) + " " +
-                        FormatTime(emailTitle.substring(22, 24) + ":" + emailTitle.substring(24, 26)) +
-                        " (" + (parseInt(emailTitle.substring(27)) > 100 ? 'Backup' : emailTitle.substring(27)) + ")";
+                        FormatTime(emailTitle.substring(22, 24) + ":" + emailTitle.substring(24, 26));;
                     emailTitle = 'Confirmation';
                 } else if (emailTitle.startsWith('Reminder') && emailTitle.length > 15) {
                     appointmentTime = emailTitle.substring(9, 13) + "-" +
                         emailTitle.substring(13, 15) + "-" +
                         emailTitle.substring(15, 17) + " " +
-                        FormatTime(emailTitle.substring(18, 20) + ":" + emailTitle.substring(20, 22)) +
-                        " (" + (parseInt(emailTitle.substring(23)) > 100 ? 'Backup' : emailTitle.substring(23)) + ")";
+                        FormatTime(emailTitle.substring(18, 20) + ":" + emailTitle.substring(20, 22));
                     emailTitle = 'Reminder';
                 }
                 return <div key={participantId + t} className="participant-attribute-container">

@@ -75,22 +75,15 @@ export default ({ showUpdateSession }) => {
             confirmButtonText: 'Yes, cancel!'
         }).then((result) => {
             if (result.isConfirmed) {
-                let path = "/timeslots/" + sessionId;
+                const path = "/timeslots/" + sessionId;
                 let data = {
-                    participantId: "",
-                    status: "",
-                    confirmed: "",
-                    remind: false,
-                    comments: ""
-                }
-
-                // Set the bonuses to false
-                let bonuses = session['bonus'];
-                if (bonuses) {
-                    data['bonus'] = JSON.parse(JSON.stringify(bonuses));
-                    Object.keys(bonuses).map(bonusId => {
-                        data['bonus'][bonusId]['a'] = false;
-                    })
+                    participantId: null,
+                    bonus: null,
+                    failedComp: null,
+                    makeup: null,
+                    status: null,
+                    remind: null,
+                    comments: null
                 }
 
                 updateValue(path, data);
@@ -328,6 +321,52 @@ export default ({ showUpdateSession }) => {
         });
     }
 
+
+    function updateAppleId() {
+        let appleId = participantInfo['appleId'];
+
+        Swal.fire({
+            title: 'Apple ID',
+            showCancelButton: true,
+            confirmButtonText: 'Save',
+            html: 'Format: "TL_xxxxxx"<br/>E.g.: "TL_12ne31"<br/><br/><input id="appleIdInputBox" value="' + (appleId || "") + '" style="padding: .2em; font-size: 1em; font-weight: bold;"/> ',
+            didOpen: () => {
+                const input = document.getElementById('appleIdInputBox');
+                input.focus();
+                input.select();
+
+                input.addEventListener("keypress", function (event) {
+                    if (event.key === "Enter") Swal.clickConfirm();
+                });
+            },
+            preConfirm: () => {
+                const input = document.getElementById('appleIdInputBox');
+                const newAppleId = input ? input.value.toString().trim() : '';
+                const rx = new RegExp(/^TL_[a-zA-Z0-9_.-]{6}$/);
+                if (!newAppleId.match(rx) && newAppleId !== '') {
+                    Swal.showValidationMessage('The expected format is: "TL_" + 6 numbers and/ or letters.');
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const input = document.getElementById('appleIdInputBox');
+                const newAppleId = input ? input.value.toString().trim() : '';
+                const rx = new RegExp(/^TL_[a-zA-Z0-9_.-]{6}$/);
+                if (newAppleId === '') {
+                    realtimeDb.ref('/participants/' + participantId + '/appleId').remove();
+                } else if (newAppleId.match(rx)) {
+                    const newId = "TL_" + newAppleId.substring(3).toLowerCase();
+                    realtimeDb.ref('/participants/' + participantId + '/appleId').set(newId);
+                } else {
+                    Swal.fire({
+                        title: 'The ID is not saved!',
+                        html: '<span>The expected format is:</span><br/> <span>"TL_" + 6 numbers and/ or letters.</span>'
+                    })
+                }
+            }
+        })
+    }
+
     if (Object.keys(participantInfo).length === 0) return null;
 
     let ethnicityGroups = participantInfo['ethnicities'].toString().split(';').map(eth => {
@@ -463,7 +502,7 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Hair Color</td>
+                                    <td>Hair color</td>
                                     <td>
                                         <select
                                             onChange={(e) => {
@@ -479,7 +518,7 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Hair Type</td>
+                                    <td>Hair type</td>
                                     <td>
                                         <select
                                             onChange={(e) => {
@@ -495,7 +534,7 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Hair Length</td>
+                                    <td>Hair length</td>
                                     <td>
                                         <select
                                             onChange={(e) => {
@@ -528,7 +567,7 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Facial Makeup</td>
+                                    <td>Facial makeup</td>
                                     <td>
                                         <select
                                             onChange={(e) => {
@@ -588,7 +627,6 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
 
-
                                 <tr>
                                     <td>Participant comments</td>
                                 </tr>
@@ -598,11 +636,19 @@ export default ({ showUpdateSession }) => {
                                             id="participantComment"
                                             defaultValue={participantInfo['comment']}
                                             onBlur={(e) => {
-                                                const newComment = e.currentTarget.value;
-                                                if (newComment != participantInfo['comment']) {
-                                                    updateValue("/participants/" + participantId, { comment: newComment });
+                                                const newComment = (e.currentTarget.value || '').toString().trim();
+                                                if (newComment === "" && participantInfo['comment'] !== "") {
+                                                    realtimeDb.ref('/participants/' + participantId + '/comment').remove();
                                                     LogEvent({
-                                                        participantId,
+                                                        participantId: parseInt(participantId),
+                                                        action: 1,
+                                                        value: '',
+                                                        userId: userId
+                                                    });
+                                                } else if (newComment !== participantInfo['comment']) {
+                                                    realtimeDb.ref('/participants/' + participantId).update({ comment: newComment });
+                                                    LogEvent({
+                                                        participantId: parseInt(participantId),
                                                         action: 1,
                                                         value: newComment,
                                                         userId: userId
@@ -639,7 +685,7 @@ export default ({ showUpdateSession }) => {
                                     <td>
                                         <select
                                             onChange={(e) => {
-                                                updateValue("/timeslots/" + sessionId, { status: parseInt(e.currentTarget.value) });
+                                                realtimeDb.ref('/timeslots/' + sessionId).update({ status: parseInt(e.currentTarget.value), failedComp: null });
                                                 LogEvent({
                                                     participantId: participantId,
                                                     value: 'Session ' + sessionId + ' changed to ' + Constants['sessionStatuses'][parseInt(e.target.value)],
@@ -648,7 +694,6 @@ export default ({ showUpdateSession }) => {
                                             }}
                                         >
                                             {Object.keys(Constants['sessionStatuses']).map((s, i) => {
-                                                if (Constants['sessionStatuses'][s] === "Comp. for Waiting" && !session['backup']) return;
                                                 const status = Constants['sessionStatuses'][s];
                                                 return <option key={"data-session-status" + s} value={s} selected={s == session['status']}>{status}</option>
                                             })}
@@ -678,50 +723,71 @@ export default ({ showUpdateSession }) => {
                                         </select>
                                     </td>
                                 </tr>
-                                {(session['bonus'] || !participantInfo['bonus_amount']) && <tr>
-                                    <td>Bonus Info</td>
+                                {session['status'] === 6 && <tr>
+                                    <td>Compensation for failed</td>
                                     <td className="participant-table-right bonus-container" colSpan="2">
 
                                         <select className='session-data-selector'
                                             onChange={(e) => {
-                                                updateValue("/timeslots/" + sessionId + "/", { bonus: parseInt(e.currentTarget.value) });
+                                                const bonusToSave = parseInt(e.currentTarget.value);
+                                                if (bonusToSave === 0) realtimeDb.ref("/timeslots/" + sessionId + "/failedComp").remove();
+                                                else realtimeDb.ref("/timeslots/" + sessionId + "/failedComp").set(bonusToSave);
+                                            }}
+                                        >
+                                            {Constants['failedCompensationList'].map(bonusAmount => {
+                                                return <option key={'bonus-' + bonusAmount} value={bonusAmount} selected={bonusAmount === (session['failedComp'] || 0)}>
+                                                    ${parseFloat(bonusAmount)}
+                                                </option>
+                                            })}
+                                        </select>
+                                    </td>
+                                </tr>}
+                                <tr>
+                                    <td>Bonus</td>
+                                    <td className="participant-table-right bonus-container" colSpan="2">
+
+                                        <select className='session-data-selector'
+                                            onChange={(e) => {
+                                                const bonusToSave = parseInt(e.currentTarget.value);
+                                                if (bonusToSave === 0) realtimeDb.ref("/timeslots/" + sessionId + "/bonus").remove();
+                                                else realtimeDb.ref("/timeslots/" + sessionId + "/bonus").set(bonusToSave);
                                                 LogEvent({
                                                     participantId: participantId,
-                                                    value: parseInt(e.currentTarget.value) === 0 ? `Removal of bonus for ${sessionId}` : `set of bonus of $${e.currentTarget.value} for ${sessionId}`,
-                                                    action: parseInt(e.currentTarget.value) === 0 ? 12 : 11
+                                                    value: bonusToSave === 0 ? 'Removal of bonus for ' + sessionId : 'Set of bonus of $' + bonusToSave + ' for ' + sessionId,
+                                                    action: bonusToSave === 0 ? 12 : 11
                                                 })
                                             }}
                                         >
-                                            {Constants['bonusList'].map(el => {
-                                                return <option key={el} value={el} selected={el === session['bonus']}>${parseFloat(el)}</option>
+                                            {Constants['bonusList'].map(bonusAmount => {
+                                                return <option key={'bonus-' + bonusAmount} value={bonusAmount} selected={bonusAmount === (session['bonus'] || 0)}>
+                                                    ${parseFloat(bonusAmount)}
+                                                </option>
                                             })}
                                         </select>
-
                                     </td>
-                                </tr>}
+                                </tr>
                                 <tr>
                                     <td>Repeat?</td>
                                     <td>
                                         <input
                                             type='checkbox'
                                             value={true}
-                                            checked={participantInfo['furtherSessions'] === true ? true : false}
+                                            checked={participantInfo['furtherSessions'] === true}
                                             onChange={(e) => {
                                                 if (e.target.checked) {
-                                                    updateValue("/participants/" + participantId, { furtherSessions: true })
+                                                    realtimeDb.ref('/participants/' + participantId + '/furtherSessions').set(true);
                                                     LogEvent({
                                                         participantId,
                                                         action: 13,
-                                                        value: `Further sessions: true`,
+                                                        value: 'Further sessions: true',
                                                         userId: userId
                                                     });
                                                 } else {
                                                     realtimeDb.ref('/participants/' + participantId + '/furtherSessions').remove();
-
                                                     LogEvent({
                                                         participantId,
                                                         action: 13,
-                                                        value: `Further sessions: false`,
+                                                        value: 'Further sessions: false',
                                                         userId: userId
                                                     });
                                                 }
@@ -730,19 +796,32 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
 
-                                <tr><td>Session comments</td></tr>
+                                <tr>
+                                    <td>Apple ID</td>
+                                    <td>
+                                        <button id="appleIdButton" onClick={() => updateAppleId()}>{participantInfo['appleId'] || "Missing ID!"}</button>
+                                    </td>
+                                </tr>
 
+                                <tr><td>Session comments</td></tr>
                                 <tr>
                                     <td colSpan="2">
                                         <textarea
                                             id="sessionComment"
                                             defaultValue={session['comments']}
                                             onBlur={(e) => {
-                                                const newComment = e.currentTarget.value;
-                                                if (newComment != session['comments']) {
-                                                    updateValue("/timeslots/" + sessionId, { comments: newComment });
+                                                const newComment = (e.currentTarget.value || '').toString().trim();
+                                                if (newComment === "" && session['comments'] !== "") {
+                                                    realtimeDb.ref('/timeslots/' + sessionId + '/comments').remove();
                                                     LogEvent({
-                                                        participantId: participantId,
+                                                        participantId: parseInt(participantId),
+                                                        value: '',
+                                                        action: 5
+                                                    })
+                                                } else if (newComment !== session['comments']) {
+                                                    realtimeDb.ref('/timeslots/' + sessionId).update({ comments: newComment });
+                                                    LogEvent({
+                                                        participantId: parseInt(participantId),
                                                         value: 'Comments on Session Id ' + sessionId,
                                                         action: 5
                                                     })
@@ -765,13 +844,6 @@ export default ({ showUpdateSession }) => {
                                         <button id="cancelSessionButton" onClick={() => cancelSession(sessionId)}>Cancel session</button>
                                     </td>
                                 </tr>
-
-                                {participantInfo['bonus_amount'] && <tr>
-                                    <td className="participant-table-right bonus-container" colSpan="2">
-                                        <input type="checkbox" checked={['Scheduled', 'Checked In', 'Completed'].includes(Constants['sessionStatuses'][session['status']])} disabled />
-                                        <label> Extra bonus ($ {participantInfo['bonus_amount']}) <i>Offered during the handoff</i></label>
-                                    </td>
-                                </tr>}
                             </tbody>
                         </table>
                     </div>

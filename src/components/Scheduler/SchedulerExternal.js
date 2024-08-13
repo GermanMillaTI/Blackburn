@@ -35,12 +35,10 @@ const filterReducer = (state, event) => {
     return newState;
 }
 
-function SchedulerExternal({ setUpdateSession, updateSession }) {
-    const [days, setDays] = useState([]);
+function SchedulerExternal({ }) {
     const [csvData, setCsvData] = useState([[]]);
     const [participants, setParticipants] = useState({});
     const [timeslots, setTimeslots] = useState({});
-    const [highlightedTimeslots, setHighlightedTimeslots] = useState([]);
     const [filterData, setFilterData] = useReducer(filterReducer, {
         date: [format(new Date(), "yyyy-MM-dd")],
         sessionStatuses: ['Blank', 'Locked', ...Object.values(Constants['sessionStatuses'])],
@@ -48,6 +46,8 @@ function SchedulerExternal({ setUpdateSession, updateSession }) {
     });
 
     useEffect(() => {
+        document.getElementById('navbarTitle').innerText = 'Scheduler';
+
         const listener = realtimeDb.ref('/timeslots').on('value', timeslots => setTimeslots(timeslots.val() || {}));
         const listener2 = realtimeDb.ref('/participants').on('value', participants => setParticipants(participants.val() || {}));
 
@@ -56,22 +56,7 @@ function SchedulerExternal({ setUpdateSession, updateSession }) {
             realtimeDb.ref('/participants').off('value', listener2);
         }
     }, []);
-    useEffect(() => {
-        document.getElementById('navbarTitle').innerText = 'Scheduler';
-    }, []);
 
-    useMemo(() => {
-        if (Object.keys(timeslots).length === 0) return null;
-
-        var temp = [];
-        for (var timeslotId in timeslots) {
-            let timeslotDate = timeslotId.substring(0, 4) + "-" + timeslotId.substring(4, 6) + "-" + timeslotId.substring(6, 8);
-            if (!temp.includes(timeslotDate)) temp.push(timeslotDate);
-        }
-
-        setDays(temp);
-
-    }, [JSON.stringify(timeslots)]);
 
     function getCSVData() {
         let headers = document.querySelectorAll('#tableHeaders tr th');
@@ -151,12 +136,8 @@ function SchedulerExternal({ setUpdateSession, updateSession }) {
                                 <td className='center-tag'>{participantInfo ? Constants['hairType'][participantInfo['hairType']] : ""}</td>
                                 <td className='center-tag'>{participantInfo ? Constants['facialHair'][participantInfo['facialHair']] : ""}</td>
                                 <td className='center-tag'>{Constants['makeup'][timeslots[timeslotId]['makeup']]}</td>
-                                <td className='center-tag'>{participantInfo ?
-                                    participantInfo['tattoos'] === "4" ? "No" : "Yes"
-                                    : ""}</td>
-                                <td className='center-tag'>{participantInfo ?
-                                    participantInfo['piercings    '] === "4" ? "No" : "Yes"
-                                    : ""}</td>
+                                <td className='center-tag'>{participantInfo ? participantInfo['tattoos'] === "4" ? "No" : "Yes" : ""}</td>
+                                <td className='center-tag'>{participantInfo ? participantInfo['piercings'] === "4" ? "No" : "Yes" : ""}</td>
                             </tr>
                         })}
                     </tbody>
