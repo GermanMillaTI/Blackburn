@@ -44,10 +44,9 @@ function BookSession({ participants, timeslots, setShowBookSession, selectedSess
                 let data = {
                     status: 0,
                     participantId: parseInt(participantId),
-                    remind: true
+                    remind: true,
+                    locked: null
                 }
-
-                if (data['locked'] === true) delete data['locked'];
 
                 // Save the session
                 let path = "/timeslots/" + selectedSessionId;

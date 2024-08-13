@@ -24,7 +24,8 @@ function SchedulerRow({ participants, timeslots, sessionId, index, array, client
         realtimeDb.ref(path).update(value);
     }
 
-    const participantId = timeslots[sessionId]['participantId'];
+    const sessionInfo = timeslots[sessionId] || {};
+    const participantId = sessionInfo['participantId'];
     const participantInfo = participants[participantId] || {};
 
     function cancelSession(sessionId) {
@@ -49,7 +50,7 @@ function SchedulerRow({ participants, timeslots, sessionId, index, array, client
                 updateValue(path, data);
 
                 LogEvent({
-                    participantId: timeslots[sessionId]['participantId'],
+                    participantId: sessionInfo['participantId'],
                     value: 'Cancelled session: ' + sessionId,
                     action: 9
                 })
@@ -67,7 +68,7 @@ function SchedulerRow({ participants, timeslots, sessionId, index, array, client
             html: "Are you sure?"
         }).then((result) => {
             if (result.isConfirmed) {
-                updateValue("/timeslots/" + sessionId, { remind: false });
+                realtimeDb.ref("/timeslots/" + sessionId + "/remind").remove();
 
                 const scriptURL = 'https://script.google.com/macros/s/AKfycbyJVtGd_9WgJy5HwIB1_Y_qZG9YCBlbG1Y5uLVn7d3k9FbknSvOTuL_0aASWwsv6hQZOA/exec';
                 fetch(scriptURL, {
@@ -114,17 +115,24 @@ function SchedulerRow({ participants, timeslots, sessionId, index, array, client
         })
     }
 
+    // Removing old 'remind' parameters
+    if (sessionInfo['remind'] !== undefined) {
+        const currentDate = parseInt(format(new Date(), 'yyyyMMdd'));
+        const timeslotDate = parseInt(sessionId.substring(0, 8));
+        if (currentDate - timeslotDate > 1) realtimeDb.ref("/timeslots/" + sessionId + "/remind").remove();
+    }
+
     return (<tr key={"schedule-row-" + index} className={(justBookedSession == sessionId ? "highlighted-session-row" : "") + (index < array.length - 1 ? (sessionId.substring(0, 13) != array[index + 1].substring(0, 13) ? " day-separator" : "") : "")}>
         <td className="center-tag no-wrap">
             {TimeSlotFormat(sessionId)}
         </td>
-        <td className={"center-tag " + (timeslots[sessionId]['locked'] === true ? "locked-session-cell" : "")}>
-            {timeslots[sessionId]['locked'] === true ? "Locked" : Constants['sessionStatuses'][timeslots[sessionId]['status']]}
+        <td className={"center-tag " + (sessionInfo['locked'] === true ? "locked-session-cell" : "")}>
+            {sessionInfo['locked'] === true ? "Locked" : Constants['sessionStatuses'][sessionInfo['status']]}
         </td>
         <td className="center-tag">
             {Constants['participantStatuses'][participantInfo['status']] || ""}
         </td>
-        {timeslots[sessionId]['participantId'] ?
+        {sessionInfo['participantId'] ?
             <ParticipantInfoTooltip participants={participants} timeslots={timeslots} participantId={participantId} sessionId={sessionId} client={client} />
             : <td></td>}
         <td className="center-tag">
@@ -137,19 +145,19 @@ function SchedulerRow({ participants, timeslots, sessionId, index, array, client
             {participantInfo['email']}
         </td>
         <td>
-            {timeslots[sessionId]['comments']}
+            {sessionInfo['comments']}
         </td>
         <td className="center-tag">
-            {Constants['genders'][timeslots[sessionId]['gender']]}
+            {Constants['genders'][sessionInfo['gender']]}
         </td>
         <td className="center-tag">
             <div className="buttons-of-timeslot">
-                {timeslots[sessionId]['status'] === undefined && !timeslots[sessionId]['locked'] && <button className="update-timeslot-button book-button" onClick={() => { setSelectedSessionId(sessionId); setShowBookSession(true) }}>Book</button>}
-                {timeslots[sessionId]['status'] === undefined && !timeslots[sessionId]['locked'] && <button className="update-timeslot-button lock-button" onClick={() => { lockSession(sessionId) }}>Lock</button>}
-                {timeslots[sessionId]['status'] === undefined && timeslots[sessionId]['locked'] === true && <button className="update-timeslot-button unlock-button" onClick={() => { unlockSession(sessionId) }}>Unlock</button>}
-                {timeslots[sessionId]['status'] === 0 && timeslots[sessionId]['remind'] == true && <button className="update-timeslot-button remind-button" onClick={() => sendReminder(sessionId)}>Remind</button>}
-                {timeslots[sessionId]['status'] !== undefined && <button className="update-timeslot-button update-button" onClick={() => dispatch(setShowUpdateSession(sessionId))}>Update</button>}
-                {timeslots[sessionId]['status'] !== undefined && <button className="update-timeslot-button cancel-button" onClick={() => cancelSession(sessionId)}>Cancel</button>}
+                {sessionInfo['status'] === undefined && !sessionInfo['locked'] && <button className="update-timeslot-button book-button" onClick={() => { setSelectedSessionId(sessionId); setShowBookSession(true) }}>Book</button>}
+                {sessionInfo['status'] === undefined && !sessionInfo['locked'] && <button className="update-timeslot-button lock-button" onClick={() => { lockSession(sessionId) }}>Lock</button>}
+                {sessionInfo['status'] === undefined && sessionInfo['locked'] === true && <button className="update-timeslot-button unlock-button" onClick={() => { unlockSession(sessionId) }}>Unlock</button>}
+                {sessionInfo['status'] === 0 && sessionInfo['remind'] == true && <button className="update-timeslot-button remind-button" onClick={() => sendReminder(sessionId)}>Remind</button>}
+                {sessionInfo['status'] !== undefined && <button className="update-timeslot-button update-button" onClick={() => dispatch(setShowUpdateSession(sessionId))}>Update</button>}
+                {sessionInfo['status'] !== undefined && <button className="update-timeslot-button cancel-button" onClick={() => cancelSession(sessionId)}>Cancel</button>}
             </div>
         </td>
         {showBookSession && <BookSession participants={participants} timeslots={timeslots} setShowBookSession={setShowBookSession} selectedSessionId={selectedSessionId} setJustBookedSession={setJustBookedSession} />}

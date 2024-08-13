@@ -63,10 +63,9 @@ function TableOfSessions({ participantId, participantInfo }) {
                 let data = {
                     status: 0,
                     participantId: parseInt(participantId),
-                    remind: true
+                    remind: true,
+                    locked: null
                 }
-
-                if (data['locked'] === true) delete data['locked'];
 
                 // Save the session
                 realtimeDb.ref("/timeslots/" + sessionId).update(data);
