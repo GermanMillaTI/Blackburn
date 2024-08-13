@@ -426,7 +426,7 @@ function ParticipantCard({ participantId, participants, setShowBookSession2, dem
             {Object.keys(timeslots || {}).map(timeslotId => {
                 const session = timeslots[timeslotId];
                 if (participantId !== session['participantId']) return null;
-                const status = Constants['participantStatuses'][session['status']];
+                const status = Constants['sessionStatuses'][session['status'] || 0];
                 return <button
                     key={"session" + timeslotId}
                     className="session-button"

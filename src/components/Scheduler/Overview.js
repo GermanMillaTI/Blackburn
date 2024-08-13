@@ -11,10 +11,7 @@ function Overview() {
     const [database, setDatabase] = useState({});
 
     useEffect(() => {
-        const path = '/timeslots';
-        const pptRef = ref(realtimeDb, path);
-
-        const listener = onValue(pptRef, (res) => {
+        const listener = realtimeDb.ref('/timeslots').orderByChild('status').startAt(0).on('value', (res) => {
             let temp = res.val() || {};
 
             let stats = {};
@@ -27,13 +24,12 @@ function Overview() {
                 } else {
                     stats[el.substring(0, 4) + "-" + el.substring(4, 6) + "-" + el.substring(6, 8)][Constants['sessionStatuses'][temp[el]['status']]] += 1;
                 }
-
             })
 
             setDatabase(stats);
         });
 
-        return () => off(pptRef, "value", listener);
+        return () => realtimeDb.ref('/timeslots').off('value', listener);
     }, [])
 
     useEffect(() => {
@@ -80,7 +76,10 @@ function Overview() {
                             <th>Scheduled</th>
                             <th>Checked In</th>
                             <th>Completed</th>
+                            <th>Failed</th>
+                            <th>Rescheduled</th>
                             <th>No Show</th>
+                            <th>Withdrawn</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,7 +92,10 @@ function Overview() {
                                     <td className='center-tag'>{database[key]['Scheduled'] || ""}</td>
                                     <td className='center-tag'>{database[key]['Checked In'] || ""}</td>
                                     <td className='center-tag'>{database[key]['Completed'] || ""}</td>
-                                    <td className='center-tag'>{database[key]['No Show'] || ""}</td>
+                                    <td className='center-tag'>{((database[key]['Failed - Comp.'] || 0) + (database[key]['Failed - No Comp.'] || 0)) || ""}</td>
+                                    <td className='center-tag'>{database[key]['Rescheduled'] || ""}</td>
+                                    <td className='center-tag'>{database[key]['NoShow'] || ""}</td>
+                                    <td className='center-tag'>{database[key]['Withdrawn'] || ""}</td>
                                 </tr>
                             })}
                     </tbody>

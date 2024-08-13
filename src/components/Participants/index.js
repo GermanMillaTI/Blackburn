@@ -43,7 +43,7 @@ function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBook
         if (!['admin'].includes(userRole)) return null;
         const listener1 = realtimeDb.ref("/participants").on('value', snapshot => setParticipants(snapshot.val() || {}));
         const listener2 = realtimeDb.ref("/demoBins").on('value', snapshot => setDemoBins(snapshot.val() || {}));
-        const listener3 = realtimeDb.ref("/timeslots").on('value', snapshot => setSessions(snapshot.val() || {}));
+        const listener3 = realtimeDb.ref("/timeslots").orderByChild('status').startAt(0).on('value', snapshot => setSessions(snapshot.val() || {}));
 
         return () => {
             realtimeDb.ref("/participants").off('value', listener1);
