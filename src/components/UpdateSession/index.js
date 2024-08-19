@@ -685,7 +685,7 @@ export default ({ showUpdateSession }) => {
                                     <td>
                                         <select
                                             onChange={(e) => {
-                                                realtimeDb.ref('/timeslots/' + sessionId).update({ status: parseInt(e.currentTarget.value), failedComp: null });
+                                                realtimeDb.ref('/timeslots/' + sessionId).update({ status: parseInt(e.currentTarget.value), failedComp: null, noEar: null });
                                                 LogEvent({
                                                     participantId: participantId,
                                                     value: 'Session ' + sessionId + ' changed to ' + Constants['sessionStatuses'][parseInt(e.target.value)],
@@ -767,7 +767,7 @@ export default ({ showUpdateSession }) => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Repeat?</td>
+                                    <td>Repeat</td>
                                     <td>
                                         <input
                                             type='checkbox'
@@ -788,6 +788,36 @@ export default ({ showUpdateSession }) => {
                                                         participantId,
                                                         action: 13,
                                                         value: 'Further sessions: false',
+                                                        userId: userId
+                                                    });
+                                                }
+                                            }}
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>No ear</td>
+                                    <td>
+                                        <input
+                                            type='checkbox'
+                                            value={true}
+                                            checked={session['noEar'] === true}
+                                            disabled={session['status'] !== 2}
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    realtimeDb.ref('/timeslots/' + sessionId + '/noEar').set(true);
+                                                    LogEvent({
+                                                        participantId,
+                                                        action: 14,
+                                                        value: true,
+                                                        userId: userId
+                                                    });
+                                                } else {
+                                                    realtimeDb.ref('/timeslots/' + sessionId + '/noEar').remove();
+                                                    LogEvent({
+                                                        participantId,
+                                                        action: 14,
+                                                        value: false,
                                                         userId: userId
                                                     });
                                                 }

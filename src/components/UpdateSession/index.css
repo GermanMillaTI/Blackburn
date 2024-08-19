@@ -147,6 +147,7 @@
 
 #updateSession input[type=checkbox] {
     cursor: pointer;
+    margin-top: .3em;
 }
 
 #updateSession #appleIdButton {

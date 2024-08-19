@@ -58,10 +58,10 @@
 } */
 
 .buttons-of-timeslot {
-    width: 16.8em;
     display: flex;
-    margin: 0 auto;
+    flex-direction: column;
     gap: .5em;
+    padding: .5em 0;
 }
 
 .update-timeslot-button {

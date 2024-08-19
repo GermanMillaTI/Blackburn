@@ -66,6 +66,8 @@ function Stats({ setShowStats, setFilterDataFromStats }) {
             bmiRanges: Constants['bmiRanges'],
             furtherSessions: ['Yes', 'No'],
             hasIcf: ['Yes', 'No'],
+            sessionStatuses: ['Blank', ...Object.values(Constants['sessionStatuses'])],
+            noEar: ['Yes', 'No']
         });
 
         navigate('participants');

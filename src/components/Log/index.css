@@ -107,13 +107,6 @@
     background: rgba(254, 217, 93, 0.55);
 }
 
-.buttons-of-timeslot {
-    width: 16.8em;
-    display: flex;
-    margin: 0 auto;
-    gap: .5em;
-}
-
 .update-timeslot-button {
     width: 5.5em;
     border: none;

@@ -24,6 +24,8 @@ const defaultFilterStats = {
     bmiRanges: Object.assign({}, ...Constants['bmiRanges'].map(k => ({ [k]: 0 }))),
     furtherSessions: Object.assign({}, ...['Yes', 'No'].map(k => ({ [k]: 0 }))),
     hasIcf: Object.assign({}, ...['Yes', 'No'].map(k => ({ [k]: 0 }))),
+    sessionStatuses: Object.assign({}, ...['Blank', ...Object.values(Constants['sessionStatuses'])].map(k => ({ [k]: 0 }))),
+    noEar: Object.assign({}, ...['Yes', 'No'].map(k => ({ [k]: 0 }))),
 };
 
 function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBookSession2 }) {
@@ -58,11 +60,11 @@ function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBook
     return <div id="participants">
         <ParticipantFilter
             participants={participants}
+            sessions={sessions}
             setShownParticipants={setShownParticipants}
             filterStats={filterStats}
             filterDataFromStats={filterDataFromStats}
             setFilterDataFromStats={setFilterDataFromStats}
-            sessions={sessions}
         />
 
         <span id="filterNote">
@@ -89,12 +91,18 @@ function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBook
                 const hairType = Constants['hairType'][participantInfo['hairType']];
                 const hairColor = Constants['hairColor'][participantInfo['hairColor']];
                 const ethnicities = participantInfo['ethnicities']
-                const furtherSession = participantInfo['furtherSessions'] || false === true ? "Yes" : "No"
+                const furtherSession = participantInfo['furtherSessions'] ? "Yes" : "No"
                 let ethnicityGroups = ethnicities.toString().split(';').map(eth => {
                     return Object.keys(Constants['ethnicityGroups']).find(group => Constants['ethnicityGroups'][group].includes(parseInt(eth)));
                 });
                 const multipleEthnicities = [...new Set(ethnicityGroups)].length > 1 ? 'Yes' : 'No';
                 const hasIcf = participantInfo['icfs'] ? 'Yes' : 'No';
+
+                const participantSessionIds = Object.keys(sessions).filter(sessionId => sessions[sessionId]['participantId'] === participantId).sort((a, b) => a.localeCompare(b));
+                const lastSessionId = participantSessionIds.length > 0 ? participantSessionIds.pop() : null;
+                const lastSession = lastSessionId ? sessions[lastSessionId] : null;
+                const lastSessionStatus = lastSessionId ? Constants['sessionStatuses'][lastSession['status']] : 'Blank';
+                const noEar = lastSessionId ? (lastSession['noEar'] ? 'Yes' : 'No') : 'No';
 
                 ethnicityGroups.forEach(ethnicityGroup => filterStats['ethnicityGroups'][ethnicityGroup]++);
                 filterStats['genders'][gender]++;
@@ -109,6 +117,8 @@ function Participants({ filterDataFromStats, setFilterDataFromStats, setShowBook
                 filterStats['facialHairs'][facialHair]++;
                 filterStats['furtherSessions'][furtherSession]++;
                 filterStats['hasIcf'][hasIcf]++;
+                filterStats['sessionStatuses'][lastSessionStatus]++;
+                filterStats['noEar'][noEar]++;
 
                 if (index >= 100) return null;
 

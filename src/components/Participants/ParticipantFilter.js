@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useEffect, useReducer } from 'react';
 import './ParticipantFilter.css';
 import Constants from '../Constants';
@@ -21,6 +20,8 @@ const defaultFilterValues = {
     bmiRanges: Constants['bmiRanges'],
     furtherSessions: ["Yes", "No"],
     hasIcf: ["Yes", "No"],
+    sessionStatuses: ['Blank', ...Object.values(Constants['sessionStatuses'])].map(status => status),
+    noEar: ["Yes", "No"]
 }
 
 const filterReducer = (state, event) => {
@@ -149,7 +150,7 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
         const facialHair = Constants['facialHair'][participantInfo['facialHair']];
         if (!filterData['facialHairs'].includes(facialHair)) return false;
 
-        const furtherSession = participantInfo['furtherSessions'] || false === true ? "Yes" : "No";
+        const furtherSession = participantInfo['furtherSessions'] ? "Yes" : "No";
         if (!filterData['furtherSessions'].includes(furtherSession)) return false;
 
         const hasIcf = participantInfo['icfs'] ? "Yes" : "No";
@@ -192,11 +193,20 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
             if (typeof sessionToList == "undefined") return false
         }
 
+        const participantSessionIds = Object.keys(sessions).filter(sessionId => sessions[sessionId]['participantId'] === participantId).sort((a, b) => a.localeCompare(b));
+        const lastSessionId = participantSessionIds.length > 0 ? participantSessionIds.pop() : null;
+        const lastSession = lastSessionId ? sessions[lastSessionId] : null;
+        const lastSessionStatus = lastSessionId ? Constants['sessionStatuses'][lastSession['status']] : 'Blank';
+        if (!filterData['sessionStatuses'].includes(lastSessionStatus)) return false;
+
+        const noEar = lastSessionId ? (lastSession['noEar'] ? 'Yes' : 'No') : 'No';
+        if (!filterData['noEar'].includes(noEar)) return false;
+
         return true;
     }
 
     useEffect(() => {
-        const filteredParticipants = Object.keys(participants).filter(pid => filterFunction(pid));
+        const filteredParticipants = Object.keys(participants).filter(participantId => filterFunction(parseInt(participantId)));
         setShownParticipants(filteredParticipants);
     }, [JSON.stringify(participants), JSON.stringify(filterData)]);
 
@@ -431,7 +441,36 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
                     })}
                 </div>
             </div>
+        </div>
 
+        <div className="filter-column">
+            <div className="filter-main-container">
+                <span className="filter-header">Last session</span>
+                <div className="filter-container">
+                    {['Blank', ...Object.keys(Constants['sessionStatuses'])].map((statusId, i) => {
+                        const val = Constants['sessionStatuses'][statusId] || "Blank";
+                        return <div key={"filter-session-status-" + i} className="checkbox-filter">
+                            <input id={"filter-session-status-" + val} name={val} type="checkbox" alt="sessionStatuses" onChange={setFilterData} checked={filterData['sessionStatuses'].includes(val)} />
+                            <label htmlFor={"filter-session-status-" + val}>{val + " (" + filterStats['sessionStatuses'][val] + ")"}</label>
+                            <button name={val} alt="sessionStatuses" className="filter-this-button" onClick={setFilterData}>!</button>
+                        </div>
+                    })}
+                </div>
+            </div>
+
+            <div className="filter-main-container growing-item">
+                <span className="filter-header">No ear</span>
+                <div className="filter-container">
+                    {["Yes", "No"].map((val, i) => {
+                        val = val.toString();
+                        return <div key={"filter-no-ear-" + i} className="checkbox-filter">
+                            <input id={"filter-no-ear-" + val} name={val} type="checkbox" alt="noEar" onChange={setFilterData} checked={filterData['noEar'].includes(val)} />
+                            <label htmlFor={"filter-no-ear-" + val}>{val + " (" + filterStats['noEar'][val] + ")"}</label>
+                            <button name={val} alt="noEar" className="filter-this-button" onClick={setFilterData}>!</button>
+                        </div>
+                    })}
+                </div>
+            </div>
         </div>
     </div>
 };

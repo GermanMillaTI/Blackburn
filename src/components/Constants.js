@@ -391,7 +391,8 @@ const Constants = {
         10: "Update session",
         11: "Bonus addition",
         12: "Bonus removal",
-        13: "Update parameter"
+        13: "Update parameter",
+        14: "Session - no ear"
     },
     emailTypes: {
         // Do no modify these in any case !!
