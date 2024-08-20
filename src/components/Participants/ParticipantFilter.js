@@ -100,7 +100,7 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
 
     function filterFunction(participantId) {
         const participantInfo = participants[participantId];
-        if (filterData['participantId'] && !participantId.includes(filterData['participantId'])) return false;
+        if (filterData['participantId'] && !participantId.toString().includes(filterData['participantId'])) return false;
 
         const firstName = participantInfo['firstName'].toLowerCase();
         if (filterData['firstName'] && !firstName.includes(filterData['firstName'].trim())) return false;
