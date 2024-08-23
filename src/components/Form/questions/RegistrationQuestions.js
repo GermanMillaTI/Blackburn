@@ -34,7 +34,7 @@ export const surveyJson = {
                         html: `<div style="text-align: center;">`
                             + `<div style="text-align: left;"><br>`
                             + `<p><span><span style="font-weight: 400;">TELUS International is seeking participants for an onsite study just south of Glendale. During your session onsite, you will be photographed and video-recorded while performing basic movements, which may include walking, sitting, standing up, different gestures, or facial expressions. You may be interacting with props and furniture.
-                     The study will also collect photos, videos, and audios and measurements of individuals’ head, face, and hands in still and moving poses, under various lighting conditions. Finally, a specialist will make an impression of your outer ear. The tasks can be easily completed by anyone and do not require prior experience or special skills.</span></p>`
+                     The study will also collect photos, videos, and audios and measurements of individuals’ head, face, and hands in still and moving poses, under various lighting conditions. Finally, a specialist will make an impression of your ear. The tasks can be easily completed by anyone and do not require prior experience or special skills.</span></p>`
                             + `<p>Payments will be made via Hyperwallet, where you can choose PayPal, bank transfer, or Venmo as the payment method.</p>`
                             + `<br/>`
                             + `<b>Task requirements:</b>`
