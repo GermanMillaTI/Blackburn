@@ -71,6 +71,7 @@ function App() {
       case "/login":
         return <LoginPage setUserId={setUserId} />;
       case "/registration":
+        return null;
         return <Registration />;
       case "/participants":
         return <Participants

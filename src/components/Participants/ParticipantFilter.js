@@ -235,14 +235,14 @@ function ParticipantFilter({ participants, sessions, setShownParticipants, filte
 
                 <span className="inner-header gap">Date of registration</span>
                 <div className="date-selector-element">
-                    <input name="dateOfRegistrationFrom" type="date" onChange={setFilterData} min="2024-03-01" max="2024-12-31" value={filterData['dateOfRegistrationFrom'] || ""} />
-                    <input name="dateOfRegistrationTo" type="date" onChange={setFilterData} min="2024-03-01" max="2024-12-31" value={filterData['dateOfRegistrationTo'] || ""} />
+                    <input name="dateOfRegistrationFrom" type="date" onChange={setFilterData} min="2024-03-01" max="2025-12-31" value={filterData['dateOfRegistrationFrom'] || ""} />
+                    <input name="dateOfRegistrationTo" type="date" onChange={setFilterData} min="2024-03-01" max="2025-12-31" value={filterData['dateOfRegistrationTo'] || ""} />
                 </div>
 
                 <span className="inner-header gap">Date of session(s)</span>
                 <div className="date-selector-element">
-                    <input name="dateOfSessionsFrom" type="date" onChange={setFilterData} min="2024-03-01" max="2024-12-31" value={filterData['dateOfSessionsFrom'] || ""} />
-                    <input name="dateOfSessionsTo" type="date" onChange={setFilterData} min="2024-03-01" max="2024-12-31" value={filterData['dateOfSessionsTo'] || ""} />
+                    <input name="dateOfSessionsFrom" type="date" onChange={setFilterData} min="2024-03-01" max="2025-12-31" value={filterData['dateOfSessionsFrom'] || ""} />
+                    <input name="dateOfSessionsTo" type="date" onChange={setFilterData} min="2024-03-01" max="2025-12-31" value={filterData['dateOfSessionsTo'] || ""} />
                 </div>
 
                 <div className="filter-element">
